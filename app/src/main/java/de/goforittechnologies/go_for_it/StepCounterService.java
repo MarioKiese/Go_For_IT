@@ -34,7 +34,7 @@ public class StepCounterService extends IntentService implements SensorEventList
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
-        publishResults(steps);
+        //publishResults(steps);
 
     }
 
@@ -52,7 +52,9 @@ public class StepCounterService extends IntentService implements SensorEventList
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-    steps = (int)sensorEvent.values[0];
+        steps = (int)sensorEvent.values[0];
+
+        publishResults(steps);
 
     }
 

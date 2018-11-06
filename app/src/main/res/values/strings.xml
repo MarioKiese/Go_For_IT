@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Go_For_IT</string>
+    <string name="et_login_mail">Your Email ...</string>
+    <string name="et_login_password">Your Password ...</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_login_register">Create new Account</string>
+    <string name="desc_imageview_loginicon_content">Logo Login page</string>
+    <string name="action_search_text">Search</string>
+    <string name="action_setting_text">Account settings</string>
+    <string name="action_logout_text">Logout</string>
+    <string name="btn_register">Create new Account</string>
+    <string name="btn_register_login">Already have an Account?</string>
+    <string name="et_confirm_password">Confirm Password ...</string>
+    <string name="et_reg_password">Password ...</string>
+    <string name="et_setup_name_hint">Your Name ...</string>
+    <string name="bt_setup">Save Account Settings</string>
 </resources>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "852286570561",
+    "firebase_url": "https://imove-c416a.firebaseio.com",
+    "project_id": "imove-c416a",
+    "storage_bucket": "imove-c416a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:852286570561:android:08d1a5d8708dbafc",
+        "android_client_info": {
+          "package_name": "de.goforittechnologies.go_for_it"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "852286570561-131q6ckp0jof5qucta2qcmnktc1tjdam.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.goforittechnologies.go_for_it",
+            "certificate_hash": "fafe27908977566b217c78284a0d781e90e90d0e"
+          }
+        },
+        {
+          "client_id": "852286570561-h0njogvu93dltqbqdha2v891dc57n0i7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfVPJDrLeYiLNjibhBpC8cVnFv5UjHjNM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "852286570561-h0njogvu93dltqbqdha2v891dc57n0i7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
