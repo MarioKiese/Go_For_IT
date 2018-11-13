@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_gradient"
     tools:context=".SetupActivity">
 
     <android.support.v7.widget.Toolbar
@@ -38,7 +39,6 @@
         android:hint="@string/et_setup_name_hint"
         android:inputType="textPersonName"
         android:padding="15dp"
-        android:text="Name"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

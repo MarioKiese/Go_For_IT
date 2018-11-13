@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#48af80</color>
     <color name="colorAccent">#00e5ff</color>
     <color name="colorAccentDark">#007387</color>
+    <color name="colorGradientEnd">#2DD6E9</color>
 
     <color name="whiteTransparent50">#80FFFFFF</color>
 </resources>
