@@ -33,8 +33,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.4'
     implementation 'com.google.firebase:firebase-auth:16.0.4'
     implementation 'com.google.firebase:firebase-storage:16.0.4'
+
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     api 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

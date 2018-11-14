@@ -14,4 +14,6 @@
     <string name="et_reg_password">Password ...</string>
     <string name="et_setup_name_hint">Your Name ...</string>
     <string name="bt_setup">Save Account Settings</string>
+    <string name="tvToday">Today</string>
+    <string name="tvSteps">steps</string>
 </resources>
