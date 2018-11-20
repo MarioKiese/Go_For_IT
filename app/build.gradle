@@ -37,6 +37,7 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     api 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation 'org.osmdroid:osmdroid-android:6.0.2'
 
 }
 

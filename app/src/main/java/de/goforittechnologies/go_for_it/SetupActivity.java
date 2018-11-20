@@ -153,6 +153,7 @@ public class SetupActivity extends AppCompatActivity {
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception error = result.getError();
+                Toast.makeText(this, "Error : " + error.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         }

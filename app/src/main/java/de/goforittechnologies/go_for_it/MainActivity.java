@@ -1,12 +1,9 @@
 package de.goforittechnologies.go_for_it;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.graphics.Color;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,18 +12,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     // Widgets
     TextView tvSensorValue;
     private Toolbar tbMain;
+    PieChart pieChart;
 
     SensorManager sensorManager;
     Sensor sensor;
@@ -67,6 +70,23 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Go For IT");
 
         tvSensorValue = findViewById(R.id.tvSensorValue);
+        pieChart = findViewById(R.id.pieChart);
+
+
+        List<PieEntry> entries = new ArrayList<>();
+
+        entries.add(new PieEntry(70.0f));
+        entries.add(new PieEntry(30.0f));
+
+        PieDataSet set = new PieDataSet(entries, "Label");
+        set.setColors(new int[] { Color.WHITE, Color.BLACK });
+        PieData data = new PieData(set);
+
+        pieChart.setData(data);
+        pieChart.setCenterTextColor(R.color.colorAccent);
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.invalidate(); // refresh
+
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -112,6 +132,15 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent settingsIntent = new Intent(MainActivity.this, SetupActivity.class);
                 startActivity(settingsIntent);
+
+                return true;
+
+            case R.id.action_location_btn:
+
+                Intent locationIntent = new Intent(MainActivity.this, MapsActivity.class);
+                startActivity(locationIntent);
+
+                return true;
 
             default:
 
@@ -159,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
 
             tvSensorValue.setText(String.valueOf(msg.what));
+            pieChart.setCenterText(String.valueOf(msg.what) + " Steps");
+            pieChart.invalidate();
 
         }
     }

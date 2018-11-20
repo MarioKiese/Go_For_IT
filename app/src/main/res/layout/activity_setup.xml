@@ -53,7 +53,7 @@
         android:layout_marginEnd="8dp"
         android:backgroundTint="@color/colorAccent"
         android:padding="15dp"
-        android:text="@string/bt_setup"
+        android:text="@string/btn_setup"
         android:textAllCaps="false"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
