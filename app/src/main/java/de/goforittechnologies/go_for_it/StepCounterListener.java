@@ -9,6 +9,7 @@ import android.os.Handler;
 public class StepCounterListener implements SensorEventListener {
 
     private Handler handler;
+    private int steps = 0;
 
     public StepCounterListener(Handler handler) {
         this.handler = handler;
@@ -17,7 +18,7 @@ public class StepCounterListener implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-        int steps = (int) sensorEvent.values[0];
+        steps++;
         handler.sendEmptyMessage(steps);
 
     }

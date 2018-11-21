@@ -42,8 +42,10 @@ public class StepCounterService extends IntentService implements SensorEventList
     public void onCreate() {
         super.onCreate();
 
+        steps = 0;
+
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
 
         sensorManager.registerListener((SensorEventListener) this, sensor, SensorManager.SENSOR_DELAY_UI);
 
@@ -52,7 +54,7 @@ public class StepCounterService extends IntentService implements SensorEventList
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
-        steps = (int)sensorEvent.values[0];
+        steps++;
 
         publishResults(steps);
 
