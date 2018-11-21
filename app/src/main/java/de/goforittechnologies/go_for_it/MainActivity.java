@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null) {
 
             sendToLogin();
-            
+
 
         }
 
