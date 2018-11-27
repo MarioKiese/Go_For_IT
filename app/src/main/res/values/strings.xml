@@ -19,4 +19,7 @@
     <string name="tvSteps">steps</string>
     <string name="btn_start_location">Start</string>
     <string name="btn_stop_location">Stop</string>
+    <string name="tvMax">MAX</string>
+    <string name="tvActive">Active</string>
+    <string name="tvMinutes" >Minutes</string>
 </resources>

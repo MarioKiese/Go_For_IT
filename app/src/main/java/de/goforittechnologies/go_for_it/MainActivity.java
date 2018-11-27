@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Go For IT");
 
-        tvSensorValue = findViewById(R.id.tvSensorValue);
+        //tvSensorValue = findViewById(R.id.tvSensorValue);
         pieChart = findViewById(R.id.pieChart);
 
 
@@ -188,7 +188,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
 
-            tvSensorValue.setText(String.valueOf(msg.what));
             pieChart.setCenterText(String.valueOf(msg.what) + " Steps");
             pieChart.invalidate();
 
