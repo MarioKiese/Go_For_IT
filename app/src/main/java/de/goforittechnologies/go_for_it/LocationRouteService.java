@@ -7,56 +7,72 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import de.goforittechnologies.go_for_it.ui.LocationParcel;
+
 
 public class LocationRouteService extends Service implements LocationListener {
 
-    private LocationManager locationManager;
-    public static List<Location> route = new ArrayList<>();
-    public static Handler updateRouteHandler;
+    private static final String TAG = "LocationRouteService";
+
+    private LocationManager mLocationManager;
+    private ArrayList<LocationParcel> mRoute = new ArrayList<>();
+
+    /*class LocationServiceBinder extends Binder {
+
+        public LocationRouteService getService() {
+
+            return LocationRouteService.this;
+
+        }
+
+    }*/
+
+//    private IBinder mBinder = new LocationServiceBinder();
 
     public LocationRouteService() {
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+
+        Log.i(TAG, "onBind: Start");
+
+        return null;
+
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if (locationManager != null) {
+        mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        if (mLocationManager != null) {
+
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
+
             }
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
         }
 
-        route.clear();
+        mRoute.clear();
 
     }
 
     @Override
     public void onDestroy() {
 
-        locationManager.removeUpdates(this);
+        mLocationManager.removeUpdates(this);
 
         super.onDestroy();
 
@@ -66,13 +82,11 @@ public class LocationRouteService extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
 
-        route.add(location);
+                Log.i(TAG, "Thread id: " + Thread.currentThread().getId());
+                LocationParcel locationParcel = new LocationParcel(location);
 
-        if (updateRouteHandler != null) {
-
-            updateRouteHandler.sendEmptyMessage(1);
-
-        }
+                mRoute.add(locationParcel);
+                sendLocationMessageToActivity(mRoute);
 
     }
 
@@ -90,4 +104,15 @@ public class LocationRouteService extends Service implements LocationListener {
     public void onProviderDisabled(String s) {
 
     }
+
+    private void sendLocationMessageToActivity(ArrayList<LocationParcel> route) {
+
+        Intent locationIntent = new Intent("LocationUpdate");
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("Location", route);
+        locationIntent.putExtra("Location", bundle);
+        LocalBroadcastManager.getInstance(LocationRouteService.this).sendBroadcast(locationIntent);
+
+    }
+
 }

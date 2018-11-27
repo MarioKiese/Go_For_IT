@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,7 +25,12 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.goforittechnologies.go_for_it.storage.DataSource;
+import de.goforittechnologies.go_for_it.storage.MapsData;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static final String TAG = "MainActivity";
 
     // Widgets
     TextView tvSensorValue;
@@ -62,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Log.d(TAG, "onCreate: Start");
+
         mAuth = FirebaseAuth.getInstance();
 
         tbMain = findViewById(R.id.tbMain);
@@ -93,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
 
         stepCounterHandler = new StepCounterHandler();
         stepCounterListener = new StepCounterListener(stepCounterHandler);
+
+        MapsData mapsData = new MapsData(52.016817, 8.905020, 86, 80);
+        Log.d(TAG, "Data: " + mapsData.getLongitude() + " " + mapsData.getLatitude() + " " + mapsData.getAltitude() + " " + mapsData.getHeight());
+        DataSource dataSource = new DataSource(this);
 
     }
 
