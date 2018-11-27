@@ -1,17 +1,15 @@
 package de.goforittechnologies.go_for_it;
 
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -25,10 +23,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Polyline;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.goforittechnologies.go_for_it.ui.LocationParcel;
 
@@ -45,6 +41,10 @@ public class MapsActivity extends AppCompatActivity {
     // Service
     private Intent locationRouteIntent;
     private BroadcastReceiver mBroadcastReceiver;
+
+    // Shared preferences
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
 
 
     // Permissions
@@ -84,6 +84,8 @@ public class MapsActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
 
+                Log.i(TAG, "onReceive: Got data!");
+
                 Bundle bundle = intent.getBundleExtra("Location");
                 ArrayList<LocationParcel> data = bundle.getParcelableArrayList("Location");
 
@@ -105,10 +107,27 @@ public class MapsActivity extends AppCompatActivity {
         // Set broadcast manager
         LocalBroadcastManager.getInstance(MapsActivity.this).registerReceiver(mBroadcastReceiver, new IntentFilter("LocationUpdate"));
 
+        // Set shared preferences
+        pref = getApplicationContext().getSharedPreferences("MapsPref", MODE_PRIVATE);
+        editor = pref.edit();
+
         // Set widgets
         btnStartLocation = findViewById(R.id.btn_start_location);
         btnStopLocation = findViewById(R.id.btn_stop_location);
         chronometer = findViewById(R.id.chronometer);
+
+        // Configure widgets
+        if (pref.getBoolean("service_started", false)) {
+
+            btnStartLocation.setEnabled(false);
+            btnStopLocation.setEnabled(true);
+
+        } else {
+
+            btnStartLocation.setEnabled(true);
+            btnStopLocation.setEnabled(false);
+
+        }
 
         // OnClickListener
         btnStartLocation.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +143,9 @@ public class MapsActivity extends AppCompatActivity {
                 btnStartLocation.setEnabled(false);
                 btnStopLocation.setEnabled(true);
 
+                editor.putBoolean("service_started", true);
+                editor.apply();
+
             }
         });
 
@@ -137,6 +159,9 @@ public class MapsActivity extends AppCompatActivity {
 
                 btnStartLocation.setEnabled(true);
                 btnStopLocation.setEnabled(false);
+
+                editor.putBoolean("service_started", false);
+                editor.apply();
 
             }
         });

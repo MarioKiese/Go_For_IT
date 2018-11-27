@@ -13,15 +13,15 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Binder;
 import android.os.Bundle;
+import android.os.HandlerThread;
 import android.os.IBinder;
+import android.os.Looper;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import java.nio.channels.Channel;
-import java.nio.channels.Channels;
 import java.util.ArrayList;
 
 import de.goforittechnologies.go_for_it.ui.LocationParcel;
@@ -34,34 +34,21 @@ public class LocationRouteService extends Service implements LocationListener {
     private LocationManager mLocationManager;
     private ArrayList<LocationParcel> mRoute = new ArrayList<>();
 
-    /*class LocationServiceBinder extends Binder {
-
-        public LocationRouteService getService() {
-
-            return LocationRouteService.this;
-
-        }
-
-    }*/
-
-//    private IBinder mBinder = new LocationServiceBinder();
-
     public LocationRouteService() {
     }
 
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-
-        Log.i(TAG, "onBind: Start");
-
         return null;
-
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        Log.i(TAG, "onCreate: Start");
+        
         createNotification();
 
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -71,7 +58,13 @@ public class LocationRouteService extends Service implements LocationListener {
 
             }
 
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            HandlerThread handlerThread = new HandlerThread("MyHandlerThread");
+            handlerThread.start();
+            // Now get the Looper from the HandlerThread
+            // NOTE: This call will block until the HandlerThread gets control and initializes its Looper
+            Looper looper = handlerThread.getLooper();
+            // Request location updates to be called back on the HandlerThread
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this, looper);
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             LocationParcel locationParcel = new LocationParcel(lastKnownLocation);
             mRoute.add(locationParcel);
@@ -96,11 +89,11 @@ public class LocationRouteService extends Service implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
 
-                Log.i(TAG, "Thread id: " + Thread.currentThread().getId());
-                LocationParcel locationParcel = new LocationParcel(location);
+        Log.i(TAG, "Thread id: " + Thread.currentThread().getId());
+        LocationParcel locationParcel = new LocationParcel(location);
 
-                mRoute.add(locationParcel);
-                sendLocationMessageToActivity(mRoute);
+        mRoute.add(locationParcel);
+        sendLocationMessageToActivity(mRoute);
 
     }
 
