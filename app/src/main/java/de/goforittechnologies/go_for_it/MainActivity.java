@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,8 +25,11 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import de.goforittechnologies.go_for_it.storage.DataSource;
+import de.goforittechnologies.go_for_it.storage.MapData;
 
+public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
     // Widgets
     TextView tvSensorValue;
     private Toolbar tbMain;
@@ -94,6 +98,14 @@ public class MainActivity extends AppCompatActivity {
         stepCounterHandler = new StepCounterHandler();
         stepCounterListener = new StepCounterListener(stepCounterHandler);
 
+        //test for DB usage
+        MapData date = new MapData(40.0,50.0,60.0,61.0);
+        Log.d(TAG, "onCreate: Content of longitude:"+ date.getLongitude());
+        DataSource dataSource = new DataSource(this);
+        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+        dataSource.open();
+        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+        dataSource.close();
     }
 
     @Override

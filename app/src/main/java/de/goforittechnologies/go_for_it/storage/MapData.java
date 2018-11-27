@@ -1,6 +1,6 @@
 package de.goforittechnologies.go_for_it.storage;
 
-public class MapsData {
+public class MapData {
 
     private double longitude;
     private double latitude;
@@ -8,7 +8,7 @@ public class MapsData {
     private double height;
 
     // Constructor
-    public MapsData(double longitude, double latitude, double altitude, double height) {
+    public MapData(double longitude, double latitude, double altitude, double height) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.altitude = altitude;
