@@ -1,4 +1,4 @@
-package de.goforittechnologies.go_for_it;
+package de.goforittechnologies.go_for_it.logic.services;
 
 import android.app.IntentService;
 import android.app.Service;

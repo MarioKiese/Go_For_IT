@@ -1,4 +1,4 @@
-package de.goforittechnologies.go_for_it;
+package de.goforittechnologies.go_for_it.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,9 +25,9 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.goforittechnologies.go_for_it.R;
+import de.goforittechnologies.go_for_it.logic.StepCounterListener;
 import de.goforittechnologies.go_for_it.storage.DataSource;
-import de.goforittechnologies.go_for_it.storage.DbHelper;
-import de.goforittechnologies.go_for_it.storage.MapData;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";

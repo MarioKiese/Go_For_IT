@@ -1,4 +1,4 @@
-package de.goforittechnologies.go_for_it;
+package de.goforittechnologies.go_for_it.logic;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;

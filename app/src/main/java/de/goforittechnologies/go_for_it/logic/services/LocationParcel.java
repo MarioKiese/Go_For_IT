@@ -1,4 +1,4 @@
-package de.goforittechnologies.go_for_it.ui;
+package de.goforittechnologies.go_for_it.logic.services;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;

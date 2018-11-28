@@ -1,4 +1,4 @@
-package de.goforittechnologies.go_for_it;
+package de.goforittechnologies.go_for_it.storage;
 
 import java.net.URI;
 import java.util.ArrayList;

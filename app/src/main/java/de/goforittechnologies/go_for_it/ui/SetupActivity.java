@@ -1,4 +1,4 @@
-package de.goforittechnologies.go_for_it;
+package de.goforittechnologies.go_for_it.ui;
 
 import android.Manifest;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import de.goforittechnologies.go_for_it.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SetupActivity extends AppCompatActivity {
