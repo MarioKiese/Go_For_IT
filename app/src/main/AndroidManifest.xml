@@ -22,7 +22,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,13 +32,13 @@
         </activity>
 
         <service
-            android:name=".StepCounterService"
+            android:name=".logic.services.StepCounterService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".SetupActivity" />
+        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.RegisterActivity" />
+        <activity android:name=".ui.SetupActivity" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
@@ -48,11 +48,11 @@
             android:resource="@array/preloaded_fonts" />
 
         <service
-            android:name=".LocationRouteService"
+            android:name=".logic.services.LocationRouteService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".MapsActivity" />
+        <activity android:name=".ui.MapsActivity" />
     </application>
 
 </manifest>

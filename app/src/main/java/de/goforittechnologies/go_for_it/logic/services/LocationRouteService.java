@@ -1,4 +1,4 @@
-package de.goforittechnologies.go_for_it;
+package de.goforittechnologies.go_for_it.logic.services;
 
 import android.Manifest;
 import android.app.Notification;
@@ -23,8 +23,6 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-
-import de.goforittechnologies.go_for_it.ui.LocationParcel;
 
 
 public class LocationRouteService extends Service implements LocationListener {
