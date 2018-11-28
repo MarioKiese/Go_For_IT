@@ -6,8 +6,17 @@ public class MapData {
     private double latitude;
     private double altitude;
     private double height;
+    private int id;
 
     // Constructor
+    public MapData(double longitude, double latitude, double altitude, double height, int id) {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.altitude = altitude;
+        this.height = height;
+        this.id = id;
+    }
+
     public MapData(double longitude, double latitude, double altitude, double height) {
         this.longitude = longitude;
         this.latitude = latitude;
@@ -32,6 +41,8 @@ public class MapData {
         return height;
     }
 
+    public int getId() { return id; }
+
     // Setter
     public void setLongitude(double longitude) {
         this.longitude = longitude;
@@ -49,4 +60,16 @@ public class MapData {
         this.height = height;
     }
 
+
+    //
+
+    @Override
+    public String toString() {
+
+
+        return "Longitude: " + longitude+ ", " +
+                "Latitude: " + latitude + ", " +
+                "Altitude: " + altitude + ", " +
+                "Height: "   + height;
+    }
 }

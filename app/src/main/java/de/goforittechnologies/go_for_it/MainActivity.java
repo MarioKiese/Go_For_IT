@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.goforittechnologies.go_for_it.storage.DataSource;
+import de.goforittechnologies.go_for_it.storage.DbHelper;
 import de.goforittechnologies.go_for_it.storage.MapData;
 
 public class MainActivity extends AppCompatActivity {
@@ -99,11 +100,19 @@ public class MainActivity extends AppCompatActivity {
         stepCounterListener = new StepCounterListener(stepCounterHandler);
 
         //test for DB usage
-        MapData date = new MapData(40.0,50.0,60.0,61.0);
-        Log.d(TAG, "onCreate: Content of longitude:"+ date.getLongitude());
+
         DataSource dataSource = new DataSource(this);
         Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
         dataSource.open();
+
+        dataSource.createMapsData(40.0,50.0,60.0,61.0);
+        dataSource.createMapsData(40.0,50.0,60.0,61.0);
+        dataSource.createMapsData(40.0,50.0,60.0,61.0);
+        dataSource.createMapsData(40.0,50.0,60.0,61.0);
+
+        dataSource.getAllMapData();
+
+
         Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
         dataSource.close();
     }

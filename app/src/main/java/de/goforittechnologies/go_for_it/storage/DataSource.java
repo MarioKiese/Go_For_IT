@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DataSource {
 
     private static final String TAG = "DataSource";
@@ -46,21 +49,21 @@ public class DataSource {
         values.put(DbHelper.COLUMN_Latitude, lat);
         values.put(DbHelper.COLUMN_Height, hei);
 
-        long insertId = database.insert(DbHelper.TABLE_STEPS, null, values);
+        long insertId = database.insert(DbHelper.MAP_DATA_TABLE, null, values);
 
-        Cursor cursor = database.query(DbHelper.TABLE_STEPS,
+        Cursor cursor = database.query(DbHelper.MAP_DATA_TABLE,
                 columns, DbHelper.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
         cursor.moveToFirst();
-        MapData mapData = cursorToStepData(cursor);
+        MapData mapData = cursorToMapData(cursor);
         cursor.close();
 
         return mapData;
     }
 
 
-    private MapData cursorToStepData(Cursor cursor) {
+    private MapData cursorToMapData(Cursor cursor) {
         int idIndex = cursor.getColumnIndex(DbHelper.COLUMN_ID);
         int idLongitude = cursor.getColumnIndex(DbHelper.COLUMN_Longitude);
         int idLatitude = cursor.getColumnIndex(DbHelper.COLUMN_Latitude);
@@ -71,10 +74,33 @@ public class DataSource {
         double latitude = cursor.getDouble(idLatitude);
         double altitude = cursor.getDouble(idAltitude);
         double height = cursor.getDouble(idHeight);
-        long id = cursor.getLong(idIndex);
+        //Dont know if necessary for database usage
+        int id = (int)cursor.getLong(idIndex);
 
-        MapData mapData = new MapData(longitude,latitude,altitude,height);
+        MapData mapData = new MapData(longitude,latitude,altitude,height, id);
 
         return mapData;
     }
+
+    public List<MapData> getAllMapData() {
+        List<MapData> mapDataList = new ArrayList<>();
+
+        Cursor cursor = database.query(DbHelper.MAP_DATA_TABLE,
+                columns, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        MapData mapData;
+
+        while(!cursor.isAfterLast()) {
+            mapData = cursorToMapData(cursor);
+            mapDataList.add(mapData);
+            Log.d(TAG, "ID: " + mapData.getId() + ", Inhalt: " + mapData.toString());
+            cursor.moveToNext();
+        }
+
+        cursor.close();
+
+        return mapDataList;
+    }
+
 }

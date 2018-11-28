@@ -11,7 +11,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String DB_NAME = "GoForIT.db";
     public static final int DB_VERSION = 1;
 
-    public static final String TABLE_STEPS = "steptable";
+    public static final String MAP_DATA_TABLE = "MapDataTable";
 
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_Altitude = "altitude";
@@ -20,7 +20,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String COLUMN_Height = "heigth";
 
     public static final String SQL_CREATE =
-            "CREATE TABLE " + TABLE_STEPS +
+            "CREATE TABLE " + MAP_DATA_TABLE +
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_Altitude + " REAL NOT NULL, " +
                     COLUMN_Latitude + " REAL NOT NULL, " +
