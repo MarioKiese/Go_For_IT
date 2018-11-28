@@ -27,7 +27,7 @@ import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.logic.StepCounterListener;
-import de.goforittechnologies.go_for_it.storage.DataSource;
+import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -103,20 +103,20 @@ public class MainActivity extends AppCompatActivity {
 
         //test for DB usage
 
-        DataSource dataSource = new DataSource(this);
+        DataSourceMapData dataSourceMapData = new DataSourceMapData(this);
         Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-        dataSource.open();
+        dataSourceMapData.open();
 
-        dataSource.createMapsData(40.0,50.0,60.0,61.0);
-        dataSource.createMapsData(40.0,50.0,60.0,61.0);
-        dataSource.createMapsData(40.0,50.0,60.0,61.0);
-        dataSource.createMapsData(40.0,50.0,60.0,61.0);
+        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
+        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
+        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
+        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
 
-        dataSource.getAllMapData();
+        dataSourceMapData.getAllMapData();
 
 
         Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
-        dataSource.close();
+        dataSourceMapData.close();
     }
 
     @Override

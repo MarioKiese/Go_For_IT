@@ -5,9 +5,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class DbHelper extends SQLiteOpenHelper {
+public class DbHelperMapData extends SQLiteOpenHelper {
 
-    private static final String TAG = "DbHelper";
+    private static final String TAG = "DbHelperMapData";
     public static final String DB_NAME = "GoForIT.db";
     public static final int DB_VERSION = 1;
 
@@ -28,9 +28,9 @@ public class DbHelper extends SQLiteOpenHelper {
                     COLUMN_Height + " REAL NOT NULL);";
 
 
-    public DbHelper(Context context) {
+    public DbHelperMapData(Context context) {
         super(context,DB_NAME,null,DB_VERSION);
-        Log.d(TAG, "DbHelper hat die Datenbank " + getDatabaseName() + " erzeugt.");
+        Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
     }
 
     @Override
