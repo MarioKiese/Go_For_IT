@@ -103,20 +103,15 @@ public class MainActivity extends AppCompatActivity {
 
         //test for DB usage
 
-        DataSourceMapData dataSourceMapData = new DataSourceMapData(this);
+        /*DataSourceMapData dataSourceMapData = new DataSourceMapData(this, "test");
         Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
         dataSourceMapData.open();
-
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
 
         dataSourceMapData.getAllMapData();
 
 
         Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
-        dataSourceMapData.close();
+        dataSourceMapData.close();*/
     }
 
     @Override
@@ -159,13 +154,17 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
 
-            case R.id.action_location_btn:
+            case 2://R.id.action_location_btn:
 
                 Intent locationIntent = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(locationIntent);
 
                 return true;
+            case R.id.action_location_btn:
+                Intent dashBoardIntent = new Intent(MainActivity.this,DashboardActivity.class);
+                startActivity(dashBoardIntent);
 
+                return true;
             default:
 
                 return false;

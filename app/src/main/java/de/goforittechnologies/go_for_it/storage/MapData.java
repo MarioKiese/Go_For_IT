@@ -60,9 +60,7 @@ public class MapData {
         this.height = height;
     }
 
-
     //
-
     @Override
     public String toString() {
 

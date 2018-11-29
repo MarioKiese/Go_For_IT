@@ -53,6 +53,7 @@
             android:exported="true" />
 
         <activity android:name=".ui.MapsActivity" />
+        <activity android:name=".ui.DashboardActivity"></activity>
     </application>
 
 </manifest>
