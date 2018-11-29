@@ -41,5 +41,9 @@ public class StepData {
     public String toString() {
         return time.toString() + " Steps: " + steps;
     }
+
+    public String createDatabaseName(){
+        return "StepDataTABLE_" + time.getMonth();
+    }
 }
 

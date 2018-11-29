@@ -12,7 +12,6 @@ import java.util.List;
 public class DataSourceMapData {
 
     private static final String TAG = "DataSourceMapData";
-
     private SQLiteDatabase database;
     private DbHelperMapData dbHelperMapData;
     private String[] columns = {
@@ -24,10 +23,10 @@ public class DataSourceMapData {
     };
 
 
-    public DataSourceMapData(Context context) {
+    public DataSourceMapData(Context context, String mapDataTableName) {
 
         Log.d(TAG, "DataSourceMapData erzeugt DbHelperMapData");
-        dbHelperMapData = new DbHelperMapData(context);
+        dbHelperMapData = new DbHelperMapData(context, mapDataTableName);
 
     }
 
@@ -49,9 +48,9 @@ public class DataSourceMapData {
         values.put(DbHelperMapData.COLUMN_Latitude, lat);
         values.put(DbHelperMapData.COLUMN_Height, hei);
 
-        long insertId = database.insert(DbHelperMapData.MAP_DATA_TABLE, null, values);
+        long insertId = database.insert(dbHelperMapData.mapDataTableName, null, values);
 
-        Cursor cursor = database.query(DbHelperMapData.MAP_DATA_TABLE,
+        Cursor cursor = database.query(dbHelperMapData.mapDataTableName,
                 columns, DbHelperMapData.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
@@ -85,7 +84,7 @@ public class DataSourceMapData {
     public List<MapData> getAllMapData() {
         List<MapData> mapDataList = new ArrayList<>();
 
-        Cursor cursor = database.query(DbHelperMapData.MAP_DATA_TABLE,
+        Cursor cursor = database.query(dbHelperMapData.mapDataTableName,
                 columns, null, null, null, null, null);
 
         cursor.moveToFirst();

@@ -11,23 +11,35 @@ public class DbHelperStepData extends SQLiteOpenHelper {
     public static final String DB_NAME = "GoForIT.db";
     public static final int DB_VERSION = 1;
 
-    public String stepDataTable = "StepDataTableDefault";
+    public String stepDataTableName = "StepDataTableDefault";
 
     public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_Altitude = "altitude";
-    public static final String COLUMN_Longitude = "longitude";
-    public static final String COLUMN_Latitude = "latitude";
-    public static final String COLUMN_Height = "heigth";
+    public static final String COLUMN_STEPS = "steps";
+    public static final String COLUMN_TIMESTAMP = "timestamp";
 
-    public DbHelperStepData(Context context, String stepDataTabel) {
+
+    public String SQL_CREATE =
+            "CREATE TABLE " + stepDataTableName +
+                    "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_STEPS + " REAL NOT NULL," +
+                    COLUMN_TIMESTAMP+ "STRING NOT NULL)";
+
+
+    public DbHelperStepData(Context context, String stepDataTable) {
         super(context,DB_NAME,null,DB_VERSION);
-        this.stepDataTable = stepDataTabel;
+        this.stepDataTableName = stepDataTable;
         Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-
+        try {
+            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
+            sqLiteDatabase.execSQL(SQL_CREATE);
+        }
+        catch (Exception ex) {
+            Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());
+        }
     }
 
     @Override
