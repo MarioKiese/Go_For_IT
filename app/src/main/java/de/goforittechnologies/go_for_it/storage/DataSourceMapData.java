@@ -41,7 +41,7 @@ public class DataSourceMapData {
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public MapData createMapsData(double lon, double alt, double lat, double hei) {
+    public MapData createMapData(double lon, double alt, double lat, double hei) {
         ContentValues values = new ContentValues();
         values.put(DbHelperMapData.COLUMN_Longitude, lon);
         values.put(DbHelperMapData.COLUMN_Altitude, alt);

@@ -12,6 +12,18 @@ public class TimeStamp {
         this.month = month;
     }
 
+    public TimeStamp(String tablename, String tableentry){
+        String [] containsmonth = tablename.split("_");
+        this.month = Integer.getInteger(containsmonth[1]);
+
+        String [] containsdayhour = tableentry.split(":");
+
+        this.day = Integer.getInteger(containsdayhour[0]);
+        this.hour = Integer.getInteger(containsdayhour[1]);
+
+
+    }
+
     //Getter
     public int getHour() { return hour; }
 
@@ -43,6 +55,4 @@ public class TimeStamp {
     public String toString() {
         return day + "." + month + ":" + hour;
     }
-
-
 }

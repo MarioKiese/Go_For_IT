@@ -45,5 +45,9 @@ public class StepData {
     public String createDatabaseName(){
         return "StepDataTABLE_" + time.getMonth();
     }
+
+    public String createTimestampEnrty(){
+        return time.getDay() + ":" + time.getHour();
+    }
 }
 
