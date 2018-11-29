@@ -11,7 +11,7 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     public static final String DB_NAME = "GoForIT.db";
     public static final int DB_VERSION = 1;
 
-    public static final String MAP_DATA_TABLE = "MapDataTable";
+    public String mapDataTable = "MapDataTableDefault";
 
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_Altitude = "altitude";
@@ -19,8 +19,9 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     public static final String COLUMN_Latitude = "latitude";
     public static final String COLUMN_Height = "heigth";
 
-    public static final String SQL_CREATE =
-            "CREATE TABLE " + MAP_DATA_TABLE +
+
+    public String SQL_CREATE =
+            "CREATE TABLE " + mapDataTable +
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_Altitude + " REAL NOT NULL, " +
                     COLUMN_Latitude + " REAL NOT NULL, " +
@@ -28,8 +29,9 @@ public class DbHelperMapData extends SQLiteOpenHelper {
                     COLUMN_Height + " REAL NOT NULL);";
 
 
-    public DbHelperMapData(Context context) {
+    public DbHelperMapData(Context context, String mapDataTable) {
         super(context,DB_NAME,null,DB_VERSION);
+        this.mapDataTable = mapDataTable;
         Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
     }
 
