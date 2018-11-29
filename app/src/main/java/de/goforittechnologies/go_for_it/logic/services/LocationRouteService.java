@@ -13,10 +13,12 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -31,6 +33,8 @@ public class LocationRouteService extends Service implements LocationListener {
 
     private LocationManager mLocationManager;
     private ArrayList<LocationParcel> mRoute = new ArrayList<>();
+    private long mBaseTime;
+    private IBinder mBinder = new LocationBinder();
 
     public LocationRouteService() {
     }
@@ -38,7 +42,11 @@ public class LocationRouteService extends Service implements LocationListener {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+
+        Log.i(TAG, "onBind: connected");
+
+        return mBinder;
+
     }
 
     @Override
@@ -46,9 +54,16 @@ public class LocationRouteService extends Service implements LocationListener {
         super.onCreate();
 
         Log.i(TAG, "onCreate: Start");
-        
+
+        // Set base time for chronometer
+        mBaseTime = SystemClock.elapsedRealtime();
+        Log.i(TAG, "onCreate: Base time: " + mBaseTime);
+
+        // Create notification for foreground service
         createNotification();
 
+        // Configure location manager
+        mRoute.clear();
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (mLocationManager != null) {
 
@@ -56,13 +71,13 @@ public class LocationRouteService extends Service implements LocationListener {
 
             }
 
-            HandlerThread handlerThread = new HandlerThread("MyHandlerThread");
+            HandlerThread handlerThread = new HandlerThread("LocationHandlerThread");
             handlerThread.start();
             // Now get the Looper from the HandlerThread
-            // NOTE: This call will block until the HandlerThread gets control and initializes its Looper
             Looper looper = handlerThread.getLooper();
             // Request location updates to be called back on the HandlerThread
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this, looper);
+            //TODO Prove functionality and necessity for users use
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             LocationParcel locationParcel = new LocationParcel(lastKnownLocation);
             mRoute.add(locationParcel);
@@ -70,9 +85,8 @@ public class LocationRouteService extends Service implements LocationListener {
 
         }
 
-        mRoute.clear();
-
     }
+
 
     @Override
     public void onDestroy() {
@@ -95,21 +109,25 @@ public class LocationRouteService extends Service implements LocationListener {
 
     }
 
+
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
 
     }
+
 
     @Override
     public void onProviderEnabled(String s) {
 
     }
 
+
     @Override
     public void onProviderDisabled(String s) {
 
     }
 
+    // Communication methods
     private void sendLocationMessageToActivity(ArrayList<LocationParcel> route) {
 
         Intent locationIntent = new Intent("LocationUpdate");
@@ -117,6 +135,12 @@ public class LocationRouteService extends Service implements LocationListener {
         bundle.putParcelableArrayList("Location", route);
         locationIntent.putExtra("Location", bundle);
         LocalBroadcastManager.getInstance(LocationRouteService.this).sendBroadcast(locationIntent);
+
+    }
+
+    public long getmBaseTime() {
+
+        return mBaseTime;
 
     }
 
@@ -148,6 +172,16 @@ public class LocationRouteService extends Service implements LocationListener {
         }
 
         startForeground(12345678, notification);
+
+    }
+
+    public class LocationBinder extends Binder {
+
+        public LocationRouteService getService() {
+
+            return LocationRouteService.this;
+
+        }
 
     }
 

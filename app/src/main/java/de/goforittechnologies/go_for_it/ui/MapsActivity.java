@@ -1,16 +1,18 @@
 package de.goforittechnologies.go_for_it.ui;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -27,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
-import de.goforittechnologies.go_for_it.logic.services.LocationRouteService;
 import de.goforittechnologies.go_for_it.logic.services.LocationParcel;
+import de.goforittechnologies.go_for_it.logic.services.LocationRouteService;
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -42,7 +44,11 @@ public class MapsActivity extends AppCompatActivity {
 
     // Service
     private Intent locationRouteIntent;
-    private BroadcastReceiver mBroadcastReceiver;
+    private BroadcastReceiver mLocationBroadcastReceiver;
+    private BroadcastReceiver mChronometerBroadcastReceiver;
+    private LocationRouteService mLocationRouteService;
+    private ServiceConnection mServiceConnection;
+    private boolean mIsServiceBound;
 
     // Shared preferences
     private SharedPreferences pref;
@@ -66,6 +72,7 @@ public class MapsActivity extends AppCompatActivity {
 
         Log.i(TAG, "Thread id: " + Thread.currentThread().getId());
 
+
         // Check permission for location and storage
         if (Build.VERSION.SDK_INT >= 23) {
 
@@ -81,12 +88,12 @@ public class MapsActivity extends AppCompatActivity {
         mapView.setMultiTouchControls(true);
         mapView.getController().setZoom(16.0);
 
-        // Set broadcast receiver
-        mBroadcastReceiver = new BroadcastReceiver() {
+        // Set location broadcast receiver
+        mLocationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
 
-                Log.i(TAG, "onReceive: Got data!");
+                Log.i(TAG, "onReceive: Location receiver got data");
 
                 Bundle bundle = intent.getBundleExtra("Location");
                 ArrayList<LocationParcel> data = bundle.getParcelableArrayList("Location");
@@ -104,10 +111,11 @@ public class MapsActivity extends AppCompatActivity {
                 }
 
             }
+
         };
 
         // Set broadcast manager
-        LocalBroadcastManager.getInstance(MapsActivity.this).registerReceiver(mBroadcastReceiver, new IntentFilter("LocationUpdate"));
+        LocalBroadcastManager.getInstance(MapsActivity.this).registerReceiver(mLocationBroadcastReceiver, new IntentFilter("LocationUpdate"));
 
         // Set shared preferences
         pref = getApplicationContext().getSharedPreferences("MapsPref", MODE_PRIVATE);
@@ -131,22 +139,36 @@ public class MapsActivity extends AppCompatActivity {
 
         }
 
+        // Create location intent
+        locationRouteIntent = new Intent(MapsActivity.this, LocationRouteService.class);
+        mIsServiceBound = false;
+
+        // Manage service binding
+        if (pref.getBoolean("service_started", false)) {
+
+            bindService();
+
+            if (mIsServiceBound) {
+
+                chronometer.setBase(mLocationRouteService.getmBaseTime());
+                chronometer.start();
+
+            }
+
+        }
+
         // OnClickListener
         btnStartLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                locationRouteIntent = new Intent(MapsActivity.this, LocationRouteService.class);
                 startService(locationRouteIntent);
-
-                chronometer.setBase(SystemClock.elapsedRealtime());
-                chronometer.start();
+                editor.putBoolean("service_started", true);
+                editor.apply();
+                bindService();
 
                 btnStartLocation.setEnabled(false);
                 btnStopLocation.setEnabled(true);
-
-                editor.putBoolean("service_started", true);
-                editor.apply();
 
             }
         });
@@ -155,6 +177,7 @@ public class MapsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                unbindService();
                 stopService(new Intent(MapsActivity.this, LocationRouteService.class));
 
                 chronometer.stop();
@@ -171,6 +194,14 @@ public class MapsActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+
+        Log.i(TAG, "onStart: Start");
+
+        super.onStart();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 
@@ -179,7 +210,10 @@ public class MapsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 
-        LocalBroadcastManager.getInstance(MapsActivity.this).unregisterReceiver(mBroadcastReceiver);
+        LocalBroadcastManager.getInstance(MapsActivity.this).unregisterReceiver(mLocationBroadcastReceiver);
+
+        unbindService();
+
 
         super.onDestroy();
     }
@@ -248,6 +282,61 @@ public class MapsActivity extends AppCompatActivity {
         }
 
         return destList;
+
+    }
+
+    private void bindService() {
+
+        if (mServiceConnection == null) {
+
+            mServiceConnection = new ServiceConnection() {
+
+
+                @Override
+                public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+
+                    LocationRouteService.LocationBinder locationBinder = (LocationRouteService.LocationBinder) iBinder;
+                    mLocationRouteService = locationBinder.getService();
+
+                    // Only if service is started, get Base time from service
+                    if (pref.getBoolean("service_started", false)) {
+
+                        chronometer.setBase(mLocationRouteService.getmBaseTime());
+                        chronometer.start();
+
+                    }
+
+                    mIsServiceBound = true;
+
+                    Log.i(TAG, "bindService: connected");
+
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName componentName) {
+
+                    mIsServiceBound = false;
+
+                    Log.i(TAG, "unbindService: disconnected");
+
+                }
+
+            };
+
+        }
+
+        bindService(locationRouteIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    private void unbindService() {
+
+        if (mIsServiceBound) {
+
+            unbindService(mServiceConnection);
+            mIsServiceBound = false;
+
+        }
 
     }
 

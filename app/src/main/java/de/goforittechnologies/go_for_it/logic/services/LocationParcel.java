@@ -13,7 +13,6 @@ public class LocationParcel implements Parcelable {
 
     }
 
-
     protected LocationParcel(Parcel in) {
 
         location = Location.CREATOR.createFromParcel(in);
@@ -45,7 +44,4 @@ public class LocationParcel implements Parcelable {
         return location;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
-    }
 }
