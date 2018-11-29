@@ -10,6 +10,7 @@ import com.github.mikephil.charting.data.BarEntry;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import de.goforittechnologies.go_for_it.R;
 
@@ -22,9 +23,20 @@ public class DashboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dashboard);
         barChart= (BarChart) findViewById(R.id.barChart);
 
-        
+        //Creating Random testdata for displaying
+        List<double[]> inputList = new ArrayList<>();
+        double[] day = new double[24];
+        Random r = new Random();
 
-
+        for (int i = 0; i <30; i++){
+            for (int j = 0; j <24; j++){
+                day[j] =  r.nextInt(9000-100) + 100;
+            }
+            inputList.add(day);
+            day = new double[24];
+        }
+        List<BarEntry> entries = buildDayAddedBarChart(inputList,0,30);
+        invalitadeBarCHart(entries);
 
     }
     private List<BarEntry> buildDayAddedBarChart(List<double[]> inputList, int minDay, int maxDay){
@@ -47,9 +59,7 @@ public class DashboardActivity extends AppCompatActivity {
 
 
     }
-
     private void invalitadeBarCHart(List<BarEntry> inputList){
-
         BarDataSet set = new BarDataSet(inputList, "BarDataSet");
         BarData data = new BarData(set);
         data.setBarWidth(0.9f); // set custom bar width
