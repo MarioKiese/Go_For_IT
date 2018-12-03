@@ -9,50 +9,50 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataSource {
+public class DataSourceMapData {
 
-    private static final String TAG = "DataSource";
+    private static final String TAG = "DataSourceMapData";
 
     private SQLiteDatabase database;
-    private DbHelper dbHelper;
+    private DbHelperMapData dbHelperMapData;
     private String[] columns = {
-            DbHelper.COLUMN_ID,
-            DbHelper.COLUMN_Longitude,
-            DbHelper.COLUMN_Altitude,
-            DbHelper.COLUMN_Latitude,
-            DbHelper.COLUMN_Height
+            DbHelperMapData.COLUMN_ID,
+            DbHelperMapData.COLUMN_Longitude,
+            DbHelperMapData.COLUMN_Altitude,
+            DbHelperMapData.COLUMN_Latitude,
+            DbHelperMapData.COLUMN_Height
     };
 
 
-    public DataSource(Context context, String tableName) {
+    public DataSourceMapData(Context context, String mapDataTableName) {
 
-        Log.d(TAG, "DataSource erzeugt DbHelper");
-        dbHelper = new DbHelper(context, tableName);
+        Log.d(TAG, "DataSourceMapData erzeugt DbHelperMapData");
+        dbHelperMapData = new DbHelperMapData(context, mapDataTableName);
 
     }
 
     public void open() {
         Log.d(TAG, "Eine Referenz auf die Datenbank wird jetzt angefragt.");
-        database = dbHelper.getWritableDatabase();
+        database = dbHelperMapData.getWritableDatabase();
         Log.d(TAG, "Datenbank-Referenz erhalten. Pfad zur Datenbank: " + database.getPath());
     }
 
     public void close() {
-        dbHelper.close();
+        dbHelperMapData.close();
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
     public MapData createMapsData(double lon, double alt, double lat, double hei) {
         ContentValues values = new ContentValues();
-        values.put(DbHelper.COLUMN_Longitude, lon);
-        values.put(DbHelper.COLUMN_Altitude, alt);
-        values.put(DbHelper.COLUMN_Latitude, lat);
-        values.put(DbHelper.COLUMN_Height, hei);
+        values.put(DbHelperMapData.COLUMN_Longitude, lon);
+        values.put(DbHelperMapData.COLUMN_Altitude, alt);
+        values.put(DbHelperMapData.COLUMN_Latitude, lat);
+        values.put(DbHelperMapData.COLUMN_Height, hei);
 
-        long insertId = database.insert(dbHelper.mapDataTable, null, values);
+        long insertId = database.insert(dbHelperMapData.mapDataTable, null, values);
 
-        Cursor cursor = database.query(dbHelper.mapDataTable,
-                columns, DbHelper.COLUMN_ID + "=" + insertId,
+        Cursor cursor = database.query(dbHelperMapData.mapDataTable,
+                columns, DbHelperMapData.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
         cursor.moveToFirst();
@@ -64,11 +64,11 @@ public class DataSource {
 
 
     private MapData cursorToMapData(Cursor cursor) {
-        int idIndex = cursor.getColumnIndex(DbHelper.COLUMN_ID);
-        int idLongitude = cursor.getColumnIndex(DbHelper.COLUMN_Longitude);
-        int idLatitude = cursor.getColumnIndex(DbHelper.COLUMN_Latitude);
-        int idAltitude = cursor.getColumnIndex(DbHelper.COLUMN_Altitude);
-        int idHeight = cursor.getColumnIndex(DbHelper.COLUMN_Height);
+        int idIndex = cursor.getColumnIndex(DbHelperMapData.COLUMN_ID);
+        int idLongitude = cursor.getColumnIndex(DbHelperMapData.COLUMN_Longitude);
+        int idLatitude = cursor.getColumnIndex(DbHelperMapData.COLUMN_Latitude);
+        int idAltitude = cursor.getColumnIndex(DbHelperMapData.COLUMN_Altitude);
+        int idHeight = cursor.getColumnIndex(DbHelperMapData.COLUMN_Height);
 
         double longitude = cursor.getDouble(idLongitude);
         double latitude = cursor.getDouble(idLatitude);
@@ -85,7 +85,7 @@ public class DataSource {
     public List<MapData> getAllMapData() {
         List<MapData> mapDataList = new ArrayList<>();
 
-        Cursor cursor = database.query(dbHelper.mapDataTable,
+        Cursor cursor = database.query(dbHelperMapData.mapDataTable,
                 columns, null, null, null, null, null);
 
         cursor.moveToFirst();

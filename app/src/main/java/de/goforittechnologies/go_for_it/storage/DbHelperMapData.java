@@ -5,10 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class DbHelper extends SQLiteOpenHelper {
+public class DbHelperMapData extends SQLiteOpenHelper {
 
-    private static final String TAG = "DbHelper";
-    public static final String DB_NAME = "GoForIT.db";
+    private static final String TAG = "DbHelperMapData";
+    public static final String DB_NAME = "GoForIT_maps.db";
     public static final int DB_VERSION = 1;
 
     public String mapDataTable = "TableDefaultName";
@@ -28,12 +28,12 @@ public class DbHelper extends SQLiteOpenHelper {
                     COLUMN_Height + " REAL NOT NULL);";
 
 
-    public DbHelper(Context context, String tableName) {
+    public DbHelperMapData(Context context, String tableName) {
         super(context,DB_NAME,null,DB_VERSION);
 
         mapDataTable = tableName;
 
-        Log.d(TAG, "DbHelper hat die Datenbank " + getDatabaseName() + " erzeugt.");
+        Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
     }
 
     @Override
