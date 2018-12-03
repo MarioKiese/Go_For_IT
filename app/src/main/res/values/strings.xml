@@ -22,4 +22,8 @@
     <string name="tvMax">MAX</string>
     <string name="tvActive">Active</string>
     <string name="tvMinutes" >Minutes</string>
+
+    <!-- MapsActivity -->
+    <string name="action_route_text">Routes</string>
+
 </resources>

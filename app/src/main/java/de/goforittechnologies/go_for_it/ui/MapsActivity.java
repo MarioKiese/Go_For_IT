@@ -16,7 +16,10 @@ import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -41,6 +44,7 @@ public class MapsActivity extends AppCompatActivity {
     private Button btnStartLocation;
     private Button btnStopLocation;
     private Chronometer chronometer;
+    private Toolbar tbMaps;
 
     // Service
     private Intent locationRouteIntent;
@@ -81,6 +85,11 @@ public class MapsActivity extends AppCompatActivity {
             }
 
         }
+
+        // Set toolbar
+        tbMaps = findViewById(R.id.tbMaps);
+        setSupportActionBar(tbMaps);
+        getSupportActionBar().setTitle("Maps");
 
         // Configure map
         mapView = findViewById(R.id.mvMap);
@@ -190,6 +199,35 @@ public class MapsActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.maps_menu, menu);
+
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_routes_btn:
+
+
+
+                return true;
+
+
+            default:
+
+                return false;
+
+        }
 
     }
 

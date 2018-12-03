@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         //test for DB usage
 
-        DataSource dataSource = new DataSource(this);
+        DataSource dataSource = new DataSource(this, "Route1");
         Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
         dataSource.open();
 

@@ -24,10 +24,10 @@ public class DataSource {
     };
 
 
-    public DataSource(Context context) {
+    public DataSource(Context context, String tableName) {
 
         Log.d(TAG, "DataSource erzeugt DbHelper");
-        dbHelper = new DbHelper(context);
+        dbHelper = new DbHelper(context, tableName);
 
     }
 
@@ -49,9 +49,9 @@ public class DataSource {
         values.put(DbHelper.COLUMN_Latitude, lat);
         values.put(DbHelper.COLUMN_Height, hei);
 
-        long insertId = database.insert(DbHelper.MAP_DATA_TABLE, null, values);
+        long insertId = database.insert(dbHelper.mapDataTable, null, values);
 
-        Cursor cursor = database.query(DbHelper.MAP_DATA_TABLE,
+        Cursor cursor = database.query(dbHelper.mapDataTable,
                 columns, DbHelper.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
@@ -85,7 +85,7 @@ public class DataSource {
     public List<MapData> getAllMapData() {
         List<MapData> mapDataList = new ArrayList<>();
 
-        Cursor cursor = database.query(DbHelper.MAP_DATA_TABLE,
+        Cursor cursor = database.query(dbHelper.mapDataTable,
                 columns, null, null, null, null, null);
 
         cursor.moveToFirst();
