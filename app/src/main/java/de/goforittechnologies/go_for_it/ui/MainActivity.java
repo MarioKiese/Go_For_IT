@@ -154,13 +154,13 @@ public class MainActivity extends AppCompatActivity {
 
                 return true;
 
-            case 2://R.id.action_location_btn:
+            case R.id.action_location_btn:
 
                 Intent locationIntent = new Intent(MainActivity.this, MapsActivity.class);
                 startActivity(locationIntent);
 
                 return true;
-            case R.id.action_location_btn:
+            case R.id.action_dashboard_btn:
                 Intent dashBoardIntent = new Intent(MainActivity.this,DashboardActivity.class);
                 startActivity(dashBoardIntent);
 

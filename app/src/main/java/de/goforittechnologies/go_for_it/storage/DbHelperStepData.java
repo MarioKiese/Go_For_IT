@@ -18,17 +18,18 @@ public class DbHelperStepData extends SQLiteOpenHelper {
     public static final String COLUMN_TIMESTAMP = "timestamp";
 
 
-    public String SQL_CREATE =
-            "CREATE TABLE " + stepDataTableName +
-                    "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_STEPS + " REAL NOT NULL," +
-                    COLUMN_TIMESTAMP+ "STRING NOT NULL)";
+    public String SQL_CREATE = "";
 
 
     public DbHelperStepData(Context context, String stepDataTable) {
         super(context,DB_NAME,null,DB_VERSION);
         this.stepDataTableName = stepDataTable;
         Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
+
+        SQL_CREATE = "CREATE TABLE " + stepDataTableName +
+                        "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_STEPS + " REAL NOT NULL," +
+                        COLUMN_TIMESTAMP+ "STRING NOT NULL)";
     }
 
     @Override

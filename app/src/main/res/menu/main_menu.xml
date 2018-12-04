@@ -16,5 +16,9 @@
     <item
         android:id="@+id/action_location_btn"
         android:title="@string/action_location_text" />
+    <item
+        android:id="@+id/action_dashboard_btn"
+        android:icon="@mipmap/ic_action_dashboard"
+        android:title="@string/action_dashboard_text" />
 
 </menu>

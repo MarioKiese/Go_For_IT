@@ -22,4 +22,5 @@
     <string name="tvMax">MAX</string>
     <string name="tvActive">Active</string>
     <string name="tvMinutes">Minutes</string>
+    <string name="action_dashboard_text">Dashboard</string>
 </resources>
