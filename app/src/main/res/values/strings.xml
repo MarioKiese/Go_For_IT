@@ -25,5 +25,8 @@
 
     <!-- MapsActivity -->
     <string name="action_route_text">Routes</string>
+    <string name="tvDistanceText">Distance</string>
+    <string name="tvCaloriesText">Calories</string>
+    <string name="tvTimeText">Time</string>
 
 </resources>

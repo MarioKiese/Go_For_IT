@@ -23,11 +23,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.TextView;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Polyline;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,13 +45,17 @@ public class MapsActivity extends AppCompatActivity {
     private MapView mapView;
     private Button btnStartLocation;
     private Button btnStopLocation;
+    private TextView tvDistanceText;
+    private TextView tvDistanceValue;
+    private TextView tvCaloriesText;
+    private TextView tvCaloriesValue;
+    private TextView tvTimeText;
     private Chronometer chronometer;
     private Toolbar tbMaps;
 
     // Service
     private Intent locationRouteIntent;
     private BroadcastReceiver mLocationBroadcastReceiver;
-    private BroadcastReceiver mChronometerBroadcastReceiver;
     private LocationRouteService mLocationRouteService;
     private ServiceConnection mServiceConnection;
     private boolean mIsServiceBound;
@@ -97,6 +103,16 @@ public class MapsActivity extends AppCompatActivity {
         mapView.setMultiTouchControls(true);
         mapView.getController().setZoom(16.0);
 
+        // Set widgets
+        btnStartLocation = findViewById(R.id.btn_start_location);
+        btnStopLocation = findViewById(R.id.btn_stop_location);
+        tvDistanceText = findViewById(R.id.tvDistance);
+        tvDistanceValue = findViewById(R.id.tvDistanceValue);
+        tvCaloriesText = findViewById(R.id.tvCalories);
+        tvCaloriesValue = findViewById(R.id.tvCaloriesValue);
+        tvTimeText = findViewById(R.id.tvTime);
+        chronometer = findViewById(R.id.chronometer);
+
         // Set location broadcast receiver
         mLocationBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -114,6 +130,7 @@ public class MapsActivity extends AppCompatActivity {
                     if (route != null) {
 
                         showRoute(route);
+                        showDistance(route);
 
                     }
 
@@ -129,11 +146,6 @@ public class MapsActivity extends AppCompatActivity {
         // Set shared preferences
         pref = getApplicationContext().getSharedPreferences("MapsPref", MODE_PRIVATE);
         editor = pref.edit();
-
-        // Set widgets
-        btnStartLocation = findViewById(R.id.btn_start_location);
-        btnStopLocation = findViewById(R.id.btn_stop_location);
-        chronometer = findViewById(R.id.chronometer);
 
         // Configure widgets
         if (pref.getBoolean("service_started", false)) {
@@ -256,72 +268,8 @@ public class MapsActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void showRoute(List<Location> route) {
 
-        List<GeoPoint> geoPoints = new ArrayList<>();
-        Polyline polyline = new Polyline();
-        polyline.setGeodesic(true);
-        polyline.setColor(Color.BLUE);
-        polyline.setWidth(5);
-        polyline.setWidth(20f);
-
-
-        if (!route.isEmpty()) {
-
-            mapView.getController().setCenter(new GeoPoint(route.get(route.size()-1)));
-            mapView.getOverlayManager().clear();
-
-            if (route.size() > 1) {
-
-                for (int i=0; i<route.size(); i++) {
-
-                    GeoPoint point = new GeoPoint(route.get(i));
-                    geoPoints.add(point);
-
-                }
-
-                polyline.setPoints(geoPoints);
-                mapView.getOverlayManager().add(polyline);
-
-            }
-
-        }
-
-    }
-
-    public boolean hasPermissions(Context context, String[] permissions) {
-
-        if (context != null && permissions != null) {
-
-            for (String permission : permissions) {
-
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-
-                    return false;
-
-                }
-
-            }
-
-        }
-
-        return true;
-
-    }
-
-    private List<Location> convertToLocationList(List<LocationParcel> sourceList) {
-
-        List<Location> destList = new ArrayList<>();
-
-        for (LocationParcel item : sourceList) {
-
-            destList.add(item.getLocation());
-
-        }
-
-        return destList;
-
-    }
+    // Methods
 
     private void bindService() {
 
@@ -375,6 +323,111 @@ public class MapsActivity extends AppCompatActivity {
             mIsServiceBound = false;
 
         }
+
+    }
+
+    public boolean hasPermissions(Context context, String[] permissions) {
+
+        if (context != null && permissions != null) {
+
+            for (String permission : permissions) {
+
+                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+
+                    return false;
+
+                }
+
+            }
+
+        }
+
+        return true;
+
+    }
+
+    private void showRoute(List<Location> route) {
+
+        List<GeoPoint> geoPoints = new ArrayList<>();
+        Polyline polyline = new Polyline();
+        polyline.setGeodesic(true);
+        polyline.setColor(Color.BLUE);
+        polyline.setWidth(5);
+        polyline.setWidth(20f);
+
+
+        if (!route.isEmpty()) {
+
+            mapView.getController().setCenter(new GeoPoint(route.get(route.size()-1)));
+            mapView.getOverlayManager().clear();
+
+            if (route.size() > 1) {
+
+                for (int i=0; i<route.size(); i++) {
+
+                    GeoPoint point = new GeoPoint(route.get(i));
+                    geoPoints.add(point);
+
+                }
+
+                polyline.setPoints(geoPoints);
+                mapView.getOverlayManager().add(polyline);
+
+            }
+
+        }
+
+    }
+
+    private List<Location> convertToLocationList(List<LocationParcel> sourceList) {
+
+        List<Location> destList = new ArrayList<>();
+
+        for (LocationParcel item : sourceList) {
+
+            destList.add(item.getLocation());
+
+        }
+
+        return destList;
+
+    }
+
+    private double getDistance(List<Location> route) {
+
+        double kilometers = 0.0;
+
+        for (int i=0; i<route.size()-1; i++) {
+
+            kilometers += route.get(i).distanceTo(route.get(i+1));
+
+        }
+
+        return kilometers;
+
+    }
+
+    private void showDistance(List<Location> route) {
+
+        DecimalFormat df2 = new DecimalFormat(".##");
+
+        String value = String.valueOf(df2.format(getDistance(route)));
+
+        tvDistanceValue.setText(value);
+
+    }
+
+    private double getCalories() {
+
+        double calories = 0.0;
+
+        return calories;
+
+    }
+
+    private void showCalories() {
+
+
 
     }
 

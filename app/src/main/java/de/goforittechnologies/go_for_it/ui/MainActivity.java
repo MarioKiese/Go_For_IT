@@ -107,10 +107,10 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
         dataSourceMapData.open();
 
-        /*dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
         dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
         dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);*/
+        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
+        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
 
         dataSourceMapData.getAllMapData();
 

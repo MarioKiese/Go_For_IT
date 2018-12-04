@@ -19,21 +19,24 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     public static final String COLUMN_Latitude = "latitude";
     public static final String COLUMN_Height = "heigth";
 
-    public final String SQL_CREATE =
-            "CREATE TABLE " + mapDataTable +
-                    "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_Altitude + " REAL NOT NULL, " +
-                    COLUMN_Latitude + " REAL NOT NULL, " +
-                    COLUMN_Longitude + " REAL NOT NULL, " +
-                    COLUMN_Height + " REAL NOT NULL);";
+    public String SQL_CREATE = "";
+
 
 
     public DbHelperMapData(Context context, String tableName) {
-        super(context,DB_NAME,null,DB_VERSION);
+        super(context, DB_NAME,null, DB_VERSION);
 
         mapDataTable = tableName;
 
+        SQL_CREATE =    "CREATE TABLE " + mapDataTable +
+                        "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_Altitude + " REAL NOT NULL, " +
+                        COLUMN_Latitude + " REAL NOT NULL, " +
+                        COLUMN_Longitude + " REAL NOT NULL, " +
+                        COLUMN_Height + " REAL NOT NULL);";
+
         Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
+        Log.d(TAG, "DbHelperMapData hat den Tabellennamen " + mapDataTable + " übernommen");
     }
 
     @Override
