@@ -441,39 +441,40 @@ public class MapsActivity extends AppCompatActivity {
 
     private void writeInDatabases() {
 
-        String routeName = "Test1";
+        if (mRoute.size() > 1) {
 
-        // Test writing in Map database
-        DataSourceMapData dataSourceMapData = new DataSourceMapData(this, "routeName");
-        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-        dataSourceMapData.open();
+            String routeName = "Test1";
 
-        for (Location locationPoint : mRoute) {
+            // Test writing in Map database
+            DataSourceMapData dataSourceMapData = new DataSourceMapData(this, routeName);
+            Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+            dataSourceMapData.open();
 
-            dataSourceMapData.createMapsData(locationPoint.getLongitude(), locationPoint.getLatitude(), locationPoint.getAltitude(), 100.0);
+            for (Location locationPoint : mRoute) {
+
+                dataSourceMapData.createMapsData(locationPoint.getLongitude(), locationPoint.getLatitude(), locationPoint.getAltitude(), 100.0);
+
+            }
+
+            dataSourceMapData.getAllMapData();
+
+            Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+            dataSourceMapData.close();
+
+
+            // Test writing in Route database
+            DataSourceRouteData dataSourceRouteData = new DataSourceRouteData(this, "Routes");
+            Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+            dataSourceRouteData.open();
+
+            dataSourceRouteData.createRouteData(routeName, chronometer.getText().toString(), 300.0, mDistance);
+
+            dataSourceRouteData.getAllRouteData();
+
+            Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+            dataSourceRouteData.close();
 
         }
-
-        dataSourceMapData.getAllMapData();
-
-        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
-        dataSourceMapData.close();
-
-
-        // Test writing in Route database
-        DataSourceRouteData dataSourceRouteData = new DataSourceRouteData(this, "Routes");
-        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-        dataSourceRouteData.open();
-
-        dataSourceRouteData.createRouteData(routeName, chronometer.getText().toString(), 300.0, mDistance);
-
-        dataSourceRouteData.getAllRouteData();
-
-        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
-        dataSourceRouteData.close();
-
-
-
 
     }
 
