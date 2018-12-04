@@ -19,19 +19,20 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     public static final String COLUMN_CALORIES = "calories";
     public static final String COLUMN_KILOMETERS = "kilometers";
 
-    public final String SQL_CREATE =
-            "CREATE TABLE " + routeDataTable +
-                    "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_ROUTE + " TEXT NOT NULL, " +
-                    COLUMN_TIME + " TEXT NOT NULL, " +
-                    COLUMN_CALORIES + " REAL NOT NULL, " +
-                    COLUMN_KILOMETERS + " REAL NOT NULL);";
+    public String SQL_CREATE ="";
 
 
     public DbHelperRouteData(Context context, String tableName) {
         super(context,DB_NAME,null,DB_VERSION);
 
         routeDataTable = tableName;
+
+        SQL_CREATE =    "CREATE TABLE " + routeDataTable +
+                        "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        COLUMN_ROUTE + " TEXT NOT NULL, " +
+                        COLUMN_TIME + " TEXT NOT NULL, " +
+                        COLUMN_CALORIES + " REAL NOT NULL, " +
+                        COLUMN_KILOMETERS + " REAL NOT NULL);";
 
         Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
     }

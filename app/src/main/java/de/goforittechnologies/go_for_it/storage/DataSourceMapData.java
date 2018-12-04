@@ -42,11 +42,11 @@ public class DataSourceMapData {
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public MapData createMapsData(double lon, double alt, double lat, double hei) {
+    public MapData createMapsData(double lon,  double lat, double alt, double hei) {
         ContentValues values = new ContentValues();
         values.put(DbHelperMapData.COLUMN_Longitude, lon);
-        values.put(DbHelperMapData.COLUMN_Altitude, alt);
         values.put(DbHelperMapData.COLUMN_Latitude, lat);
+        values.put(DbHelperMapData.COLUMN_Altitude, alt);
         values.put(DbHelperMapData.COLUMN_Height, hei);
 
         long insertId = database.insert(dbHelperMapData.mapDataTable, null, values);

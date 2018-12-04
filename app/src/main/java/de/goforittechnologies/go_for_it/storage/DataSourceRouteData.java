@@ -42,7 +42,7 @@ public class DataSourceRouteData {
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public RouteData createMapsData(String route, String time, double calories, double kilometers) {
+    public RouteData createRouteData(String route, String time, double calories, double kilometers) {
         ContentValues values = new ContentValues();
         values.put(DbHelperRouteData.COLUMN_ROUTE, route);
         values.put(DbHelperRouteData.COLUMN_TIME, time);

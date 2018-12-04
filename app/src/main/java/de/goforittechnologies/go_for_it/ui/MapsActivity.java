@@ -36,6 +36,8 @@ import java.util.List;
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.logic.services.LocationParcel;
 import de.goforittechnologies.go_for_it.logic.services.LocationRouteService;
+import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
+import de.goforittechnologies.go_for_it.storage.DataSourceRouteData;
 
 public class MapsActivity extends AppCompatActivity {
 
@@ -59,6 +61,10 @@ public class MapsActivity extends AppCompatActivity {
     private LocationRouteService mLocationRouteService;
     private ServiceConnection mServiceConnection;
     private boolean mIsServiceBound;
+
+    List<Location> mRoute;
+    private double mDistance;
+    private double mCalories;
 
     // Shared preferences
     private SharedPreferences pref;
@@ -125,12 +131,12 @@ public class MapsActivity extends AppCompatActivity {
 
                 if (data != null) {
 
-                    List<Location> route = convertToLocationList(data);
+                     mRoute = convertToLocationList(data);
 
-                    if (route != null) {
+                    if (mRoute != null) {
 
-                        showRoute(route);
-                        showDistance(route);
+                        showRoute(mRoute);
+                        showDistance(mRoute);
 
                     }
 
@@ -203,6 +209,8 @@ public class MapsActivity extends AppCompatActivity {
 
                 chronometer.stop();
 
+                writeInDatabases();
+
                 btnStartLocation.setEnabled(true);
                 btnStopLocation.setEnabled(false);
 
@@ -230,7 +238,8 @@ public class MapsActivity extends AppCompatActivity {
 
             case R.id.action_routes_btn:
 
-
+                Intent routesIntent = new Intent(MapsActivity.this, RoutesActivity.class);
+                startActivity(routesIntent);
 
                 return true;
 
@@ -410,9 +419,8 @@ public class MapsActivity extends AppCompatActivity {
     private void showDistance(List<Location> route) {
 
         DecimalFormat df2 = new DecimalFormat(".##");
-
-        String value = String.valueOf(df2.format(getDistance(route)));
-
+        mDistance = getDistance(route);
+        String value = String.valueOf(df2.format(mDistance));
         tvDistanceValue.setText(value);
 
     }
@@ -420,12 +428,50 @@ public class MapsActivity extends AppCompatActivity {
     private double getCalories() {
 
         double calories = 0.0;
-
+        mCalories = calories;
         return calories;
 
     }
 
     private void showCalories() {
+
+
+
+    }
+
+    private void writeInDatabases() {
+
+        String routeName = "Test1";
+
+        // Test writing in Map database
+        DataSourceMapData dataSourceMapData = new DataSourceMapData(this, "routeName");
+        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+        dataSourceMapData.open();
+
+        for (Location locationPoint : mRoute) {
+
+            dataSourceMapData.createMapsData(locationPoint.getLongitude(), locationPoint.getLatitude(), locationPoint.getAltitude(), 100.0);
+
+        }
+
+        dataSourceMapData.getAllMapData();
+
+        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+        dataSourceMapData.close();
+
+
+        // Test writing in Route database
+        DataSourceRouteData dataSourceRouteData = new DataSourceRouteData(this, "Routes");
+        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+        dataSourceRouteData.open();
+
+        dataSourceRouteData.createRouteData(routeName, chronometer.getText().toString(), 300.0, mDistance);
+
+        dataSourceRouteData.getAllRouteData();
+
+        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+        dataSourceRouteData.close();
+
 
 
 

@@ -101,22 +101,6 @@ public class MainActivity extends AppCompatActivity {
         stepCounterHandler = new StepCounterHandler();
         stepCounterListener = new StepCounterListener(stepCounterHandler);
 
-        //test for DB usage
-
-        DataSourceMapData dataSourceMapData = new DataSourceMapData(this, "Route1");
-        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-        dataSourceMapData.open();
-
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
-        dataSourceMapData.createMapsData(40.0,50.0,60.0,61.0);
-
-        dataSourceMapData.getAllMapData();
-
-
-        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
-        dataSourceMapData.close();
     }
 
     @Override
