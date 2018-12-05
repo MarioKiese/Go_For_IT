@@ -10,6 +10,7 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperRouteData";
     public static final String DB_NAME = "GoForIT_routes.db";
     public static final int DB_VERSION = 1;
+    private int mMode;
 
     public String routeDataTable = "TableDefaultName";
 
@@ -22,10 +23,11 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     public String SQL_CREATE ="";
 
 
-    public DbHelperRouteData(Context context, String tableName) {
+    public DbHelperRouteData(Context context, String tableName, int mode) {
         super(context,DB_NAME,null,DB_VERSION);
 
         routeDataTable = tableName;
+        mMode = mode;
 
         SQL_CREATE =    "CREATE TABLE " + routeDataTable +
                         "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -40,8 +42,14 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         try {
-            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
-            sqLiteDatabase.execSQL(SQL_CREATE);
+
+            if (mMode == 1) {
+
+                Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
+                sqLiteDatabase.execSQL(SQL_CREATE);
+
+            }
+
         }
         catch (Exception ex) {
             Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());

@@ -24,10 +24,10 @@ public class DataSourceRouteData {
     };
 
 
-    public DataSourceRouteData(Context context, String routeDataTableName) {
+    public DataSourceRouteData(Context context, String routeDataTableName, int mode) {
 
         Log.d(TAG, "DataSourceMapData erzeugt DbHelperMapData");
-        dbHelperRouteData = new DbHelperRouteData(context, routeDataTableName);
+        dbHelperRouteData = new DbHelperRouteData(context, routeDataTableName, mode);
 
     }
 
@@ -52,7 +52,7 @@ public class DataSourceRouteData {
         long insertId = database.insert(dbHelperRouteData.routeDataTable, null, values);
 
         Cursor cursor = database.query(dbHelperRouteData.routeDataTable,
-                columns, DbHelperMapData.COLUMN_ID + "=" + insertId,
+                columns, DbHelperRouteData.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
         cursor.moveToFirst();

@@ -10,6 +10,7 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperMapData";
     public static final String DB_NAME = "GoForIT_maps.db";
     public static final int DB_VERSION = 1;
+    private int mMode;
 
     public String mapDataTable = "TableDefaultName";
 
@@ -23,10 +24,11 @@ public class DbHelperMapData extends SQLiteOpenHelper {
 
 
 
-    public DbHelperMapData(Context context, String tableName) {
+    public DbHelperMapData(Context context, String tableName, int mode) {
         super(context, DB_NAME,null, DB_VERSION);
 
         mapDataTable = tableName;
+        mMode = mode;
 
         SQL_CREATE =    "CREATE TABLE " + mapDataTable +
                         "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -42,8 +44,13 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         try {
-            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
-            sqLiteDatabase.execSQL(SQL_CREATE);
+
+            if (mMode == 1) {
+
+                Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
+                sqLiteDatabase.execSQL(SQL_CREATE);
+
+            }
         }
         catch (Exception ex) {
             Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());

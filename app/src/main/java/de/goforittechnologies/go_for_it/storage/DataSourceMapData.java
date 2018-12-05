@@ -24,10 +24,10 @@ public class DataSourceMapData {
     };
 
 
-    public DataSourceMapData(Context context, String mapDataTableName) {
+    public DataSourceMapData(Context context, String mapDataTableName, int mode) {
 
         Log.d(TAG, "DataSourceMapData erzeugt DbHelperMapData");
-        dbHelperMapData = new DbHelperMapData(context, mapDataTableName);
+        dbHelperMapData = new DbHelperMapData(context, mapDataTableName, mode);
 
     }
 

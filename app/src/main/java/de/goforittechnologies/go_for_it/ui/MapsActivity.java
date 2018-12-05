@@ -443,10 +443,13 @@ public class MapsActivity extends AppCompatActivity {
 
         if (mRoute.size() > 1) {
 
+
+            // TODO remove mockup tablename for Routes (routename = "Test1")
+
             String routeName = "Test1";
 
             // Test writing in Map database
-            DataSourceMapData dataSourceMapData = new DataSourceMapData(this, routeName);
+            DataSourceMapData dataSourceMapData = new DataSourceMapData(this, routeName, 1);
             Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
             dataSourceMapData.open();
 
@@ -463,7 +466,7 @@ public class MapsActivity extends AppCompatActivity {
 
 
             // Test writing in Route database
-            DataSourceRouteData dataSourceRouteData = new DataSourceRouteData(this, "Routes");
+            DataSourceRouteData dataSourceRouteData = new DataSourceRouteData(this, "Routes", 1);
             Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
             dataSourceRouteData.open();
 
