@@ -53,7 +53,7 @@
             android:exported="true" />
 
         <activity android:name=".ui.MapsActivity" />
-        <activity android:name=".ui.RoutesActivity"></activity>
+        <activity android:name=".ui.RoutesActivity" />
     </application>
 
 </manifest>

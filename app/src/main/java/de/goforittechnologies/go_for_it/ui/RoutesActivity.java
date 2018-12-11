@@ -1,8 +1,12 @@
 package de.goforittechnologies.go_for_it.ui;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -28,6 +32,43 @@ public class RoutesActivity extends AppCompatActivity {
         lvRoutes = findViewById(R.id.lvRoutes);
 
         showAllListEntries();
+
+        lvRoutes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(RoutesActivity.this);
+                dialogBuilder.setTitle("Delete?")
+                        .setMessage("Are you sure you want to delete " + adapterView.getItemAtPosition(position).toString()+"?")
+                        .setCancelable(true)
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                dialog.cancel();
+
+                            }
+
+                        })
+                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+
+
+                            }
+                        });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+
+                alertDialog.show();
+
+                return true;
+
+            }
+        });
 
     }
 
