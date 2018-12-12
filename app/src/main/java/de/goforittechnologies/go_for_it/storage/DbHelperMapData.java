@@ -43,6 +43,8 @@ public class DbHelperMapData extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+
+        Log.d(TAG, "onCreate: Methode wird vor try-catch aufgerufen");
         try {
 
             if (mMode == 1) {
@@ -60,5 +62,7 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
+        Log.d(TAG, "onUpgrade: Wird aufgerufen!");
+        
     }
 }

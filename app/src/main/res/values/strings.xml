@@ -23,7 +23,7 @@
     <string name="tvActive">Active</string>
     <string name="tvMinutes">Minutes</string>
 
-    <!-- MapsActivity -->
+    <!-- MapActivity -->
     <string name="action_route_text">Routes</string>
     <string name="tvDistanceText">Distance</string>
     <string name="tvCaloriesText">Calories</string>

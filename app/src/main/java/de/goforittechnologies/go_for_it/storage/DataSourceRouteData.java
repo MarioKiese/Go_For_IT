@@ -103,4 +103,14 @@ public class DataSourceRouteData {
         return routeDataList;
     }
 
+    public void deleteShoppingMemo(RouteData routeData) {
+        long id = routeData.getId();
+
+        database.delete("Routes",
+                dbHelperRouteData.COLUMN_ID + "=" + id,
+                null);
+
+        Log.d(TAG, "Eintrag gelöscht! ID: " + id + " Inhalt: " + routeData.toString());
+    }
+
 }

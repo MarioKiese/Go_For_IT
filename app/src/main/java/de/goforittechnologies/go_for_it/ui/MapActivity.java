@@ -3,6 +3,7 @@ package de.goforittechnologies.go_for_it.ui;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -15,14 +16,17 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import org.osmdroid.util.GeoPoint;
@@ -39,9 +43,9 @@ import de.goforittechnologies.go_for_it.logic.services.LocationRouteService;
 import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
 import de.goforittechnologies.go_for_it.storage.DataSourceRouteData;
 
-public class MapsActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity {
 
-    private static final String TAG = "MapsActivity";
+    private static final String TAG = "MapActivity";
 
     // Widgets
     private MapView mapView;
@@ -127,11 +131,13 @@ public class MapsActivity extends AppCompatActivity {
                 Log.i(TAG, "onReceive: Location receiver got data");
 
                 Bundle bundle = intent.getBundleExtra("Location");
-                ArrayList<LocationParcel> data = bundle.getParcelableArrayList("Location");
+                //ArrayList<LocationParcel> data = bundle.getParcelableArrayList("Location");
+                ArrayList<Location> data = bundle.getParcelableArrayList("Location");
 
                 if (data != null) {
 
-                     mRoute = convertToLocationList(data);
+                     //mRoute = convertToLocationList(data);
+                    mRoute = data;
 
                     if (mRoute != null) {
 
@@ -147,7 +153,7 @@ public class MapsActivity extends AppCompatActivity {
         };
 
         // Set broadcast manager
-        LocalBroadcastManager.getInstance(MapsActivity.this).registerReceiver(mLocationBroadcastReceiver, new IntentFilter("LocationUpdate"));
+        LocalBroadcastManager.getInstance(MapActivity.this).registerReceiver(mLocationBroadcastReceiver, new IntentFilter("LocationUpdate"));
 
         // Set shared preferences
         pref = getApplicationContext().getSharedPreferences("MapsPref", MODE_PRIVATE);
@@ -167,7 +173,7 @@ public class MapsActivity extends AppCompatActivity {
         }
 
         // Create location intent
-        locationRouteIntent = new Intent(MapsActivity.this, LocationRouteService.class);
+        locationRouteIntent = new Intent(MapActivity.this, LocationRouteService.class);
         mIsServiceBound = false;
 
         // Manage service binding
@@ -205,11 +211,40 @@ public class MapsActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 unbindService();
-                stopService(new Intent(MapsActivity.this, LocationRouteService.class));
+                stopService(new Intent(MapActivity.this, LocationRouteService.class));
 
                 chronometer.stop();
 
-                writeInDatabases();
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MapActivity.this);
+                dialogBuilder.setTitle("Save route?");
+
+                // Set up the input
+                final EditText input = new EditText(MapActivity.this);
+
+                // Specify the type of input expected
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                dialogBuilder.setView(input);
+
+                // Set up the buttons
+                dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                       String routeName = input.getText().toString();
+
+                        writeInDatabases(routeName);
+
+                    }
+                });
+                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
 
                 btnStartLocation.setEnabled(true);
                 btnStopLocation.setEnabled(false);
@@ -238,7 +273,7 @@ public class MapsActivity extends AppCompatActivity {
 
             case R.id.action_routes_btn:
 
-                Intent routesIntent = new Intent(MapsActivity.this, RoutesActivity.class);
+                Intent routesIntent = new Intent(MapActivity.this, RoutesListActivity.class);
                 startActivity(routesIntent);
 
                 return true;
@@ -269,7 +304,7 @@ public class MapsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 
-        LocalBroadcastManager.getInstance(MapsActivity.this).unregisterReceiver(mLocationBroadcastReceiver);
+        LocalBroadcastManager.getInstance(MapActivity.this).unregisterReceiver(mLocationBroadcastReceiver);
 
         unbindService();
 
@@ -439,17 +474,12 @@ public class MapsActivity extends AppCompatActivity {
 
     }
 
-    private void writeInDatabases() {
+    private void writeInDatabases(String routeName) {
 
         if (mRoute.size() > 1) {
 
-
-            // TODO remove mockup tablename for Routes (routename = "Test1")
-
-            String routeName = "Test1";
-
             // Test writing in Map database
-            DataSourceMapData dataSourceMapData = new DataSourceMapData(this, routeName, 1);
+            DataSourceMapData dataSourceMapData = new DataSourceMapData(MapActivity.this, routeName, 1);
             Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
             dataSourceMapData.open();
 

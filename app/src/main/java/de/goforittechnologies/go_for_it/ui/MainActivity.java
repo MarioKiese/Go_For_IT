@@ -27,7 +27,6 @@ import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.logic.StepCounterListener;
-import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -145,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
             case R.id.action_location_btn:
 
-                Intent locationIntent = new Intent(MainActivity.this, MapsActivity.class);
+                Intent locationIntent = new Intent(MainActivity.this, MapActivity.class);
                 startActivity(locationIntent);
 
                 return true;
