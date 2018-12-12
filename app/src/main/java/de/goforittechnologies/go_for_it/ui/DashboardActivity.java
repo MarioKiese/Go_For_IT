@@ -3,9 +3,11 @@ package de.goforittechnologies.go_for_it.ui;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 
@@ -23,23 +25,35 @@ import java.util.Locale;
 import java.util.Random;
 
 import de.goforittechnologies.go_for_it.R;
+import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
-public class DashboardActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class DashboardActivity extends AppCompatActivity
+        implements AdapterView.OnItemSelectedListener,
+        SeekBar.OnSeekBarChangeListener {
 
     private BarChart barChart;
     private List<double[]> inputList;
     private Toolbar tbDashboard;
+    private SeekBar seekBar;
+    String selectedPeriod;
+    private static final String TAG = "DashboardActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+
         barChart=  findViewById(R.id.barChart);
+
         Spinner dropdown = findViewById(R.id.spinner1);
         dropdown.setOnItemSelectedListener(this);
 
+        seekBar = findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(this);
+
         tbDashboard= findViewById(R.id.tbDashboard);
         setSupportActionBar(tbDashboard);
-
         getSupportActionBar().setTitle("Dashboard");
         //get the spinner from the xml.
 
@@ -51,8 +65,15 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         //set the spinners adapter to the previously created one.
         dropdown.setAdapter(adapter);
 
-        //Creating Random testdata for displaying
+
+        DataSourceStepData dataSourceStepData = new DataSourceStepData(this,"StepDataTABLE_12",0);
         inputList = new ArrayList<>();
+        dataSourceStepData.open();
+        inputList = dataSourceStepData.getAllStepData();
+        dataSourceStepData.close();
+        Log.d(TAG, "onCreate: Size of InputList:" + inputList.size());
+        //Creating Random testdata for displaying
+        /*inputList = new ArrayList<>();
         double[] day = new double[24];
         Random r = new Random();
 
@@ -66,7 +87,7 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
         //List<BarEntry> entries = buildMonthBarChart(inputList,0,30);
         //List<BarEntry> entries = buildWeekBarChart(inputList,11);
         List<BarEntry> entries =  buildDayBarChart(inputList,12);
-        invalitadeBarCHart(entries);
+        invalitadeBarCHart(entries);*/
 
     }
     private List<BarEntry> buildMonthBarChart(List<double[]> inputList, int minDay, int maxDay){
@@ -79,12 +100,15 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
             maxDay = inputList.size();
         }
         int i = minDay;
+
         while(i < maxDay){
             for (int j = 0; j<24;j++){
-                value =+ inputList.get(i)[j];
-                entries.add(new BarEntry((float)i,(float)value));
+                value += inputList.get(i)[j];
             }
+            entries.add(new BarEntry((float)i,(float)value));
+            Log.d(TAG, "buildMonthBarChart: Steps of Day:" + value);
             i++;
+            value = 0;
         }
         return entries;
     }
@@ -144,29 +168,46 @@ public class DashboardActivity extends AppCompatActivity implements AdapterView.
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-       String slectedPeriod = adapterView.getItemAtPosition(i).toString();
-        List<BarEntry> entries;
-       switch (slectedPeriod) {
-           case "Tage":
-               entries =  buildMonthBarChart(inputList,1,30);
-               invalitadeBarCHart(entries);
-               break;
-
-           case "Wochen":
-               entries = buildWeekBarChart(inputList,11);
-               invalitadeBarCHart(entries);
-               break;
-           case "Stunden":
-                entries = buildDayBarChart(inputList,12);
-               invalitadeBarCHart(entries);
-               break;
-
-
-        }
+        selectedPeriod = adapterView.getItemAtPosition(i).toString();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        List<BarEntry> entries;
+        //TODO: Adding switching to different Month by Name of Table
+        switch (selectedPeriod) {
+            case "Tage":
+                seekBar.setMax(2);
+                entries =  buildMonthBarChart(inputList,1,28);
+                invalitadeBarCHart(entries);
+                break;
+
+            case "Wochen":
+                seekBar.setMax(2);
+                entries = buildWeekBarChart(inputList,12);
+                invalitadeBarCHart(entries);
+                break;
+            case "Stunden":
+                seekBar.setMax(28);
+                entries = buildDayBarChart(inputList,12); //TODO: eigentlich i
+                invalitadeBarCHart(entries);
+                break;
+
+        }
+    }
+    
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
 }

@@ -1,13 +1,16 @@
 package de.goforittechnologies.go_for_it.ui;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,42 +27,34 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.logic.StepCounterListener;
+import de.goforittechnologies.go_for_it.logic.services.StepCounterService;
 import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
+import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     // Widgets
     TextView tvSensorValue;
     private Toolbar tbMain;
-    PieChart pieChart;
+    private PieChart pieChart;
+    public static int count = 0;
 
+    //Service
+    private BroadcastReceiver mStepsBroadcastReceiver;
+
+    //Sensor
     SensorManager sensorManager;
     Sensor sensor;
-    private StepCounterHandler stepCounterHandler;
+    private static int counter = 0;
 
     // Firebase
     private FirebaseAuth mAuth;
 
     StepCounterListener stepCounterListener;
-
-    /*private BroadcastReceiver receiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Bundle bundle = intent.getExtras();
-            if (bundle != null) {
-                int steps;
-                steps = bundle.getInt("steps");
-
-                    tvSensorValue.setText(String.valueOf(steps));
-
-            }
-        }
-    };*/
-
 
 
     @Override
@@ -74,17 +69,16 @@ public class MainActivity extends AppCompatActivity {
         tbMain = findViewById(R.id.tbMain);
         setSupportActionBar(tbMain);
 
+        Intent stepIntent = new Intent(MainActivity.this, StepCounterService.class);
+        startService(stepIntent);
+
         getSupportActionBar().setTitle("Go For IT");
 
         //tvSensorValue = findViewById(R.id.tvSensorValue);
         pieChart = findViewById(R.id.pieChart);
-
-
         List<PieEntry> entries = new ArrayList<>();
-
         entries.add(new PieEntry(70.0f));
         entries.add(new PieEntry(30.0f));
-
         PieDataSet set = new PieDataSet(entries, "Label");
         set.setColors(new int[] { Color.WHITE, Color.BLACK });
         PieData data = new PieData(set);
@@ -94,24 +88,41 @@ public class MainActivity extends AppCompatActivity {
         pieChart.setDrawHoleEnabled(true);
         pieChart.invalidate(); // refresh
 
-
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
-        stepCounterHandler = new StepCounterHandler();
-        stepCounterListener = new StepCounterListener(stepCounterHandler);
+        DataSourceStepData dataSourceStepData = new DataSourceStepData(this,"StepDataTABLE_12",1);
+        dataSourceStepData.open();
 
-        //test for DB usage
+        //dataSourceStepData.createStepData(25555 + 100,"1:1");
+        /*if (count == 0)
+        {
+            Random r = new Random();
+            for (int i = 1; i<31; i++){
+                for (int j = 0; j < 24; j++){
+                    String timestamp = i +":" + j;
+                    dataSourceStepData.createStepData(r.nextInt(3000-30) + 30,timestamp);
+                }
 
-        /*DataSourceMapData dataSourceMapData = new DataSourceMapData(this, "test");
-        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-        dataSourceMapData.open();
+            }
+            count = 1;
+        }
+        */
 
-        dataSourceMapData.getAllMapData();
+        // Set steps broadcast receiver
+        mStepsBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "onReceive: Step receiver got data");
+                double steps = intent.getDoubleExtra("Steps", 0);
+                pieChart.setCenterText(String.valueOf(steps) + " Steps");
+                pieChart.invalidate();
+            }
+        };
 
-
-        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
-        dataSourceMapData.close();*/
+        //set broadcast manager
+        LocalBroadcastManager.getInstance(MainActivity.this)
+                .registerReceiver(mStepsBroadcastReceiver,new IntentFilter("StepsUpdate"));
     }
 
     @Override
@@ -205,15 +216,5 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private class StepCounterHandler extends Handler {
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            pieChart.setCenterText(String.valueOf(msg.what) + " Steps");
-            pieChart.invalidate();
-
-        }
-    }
 
 }

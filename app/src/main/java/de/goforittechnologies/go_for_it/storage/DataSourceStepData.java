@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DataSourceStepData {
 
-    private static final String TAG = "DataSourceMapData";
+    private static final String TAG = "DataSourceStepData";
     private SQLiteDatabase database;
     private DbHelperStepData dbHelperStepData;
 
@@ -22,10 +22,10 @@ public class DataSourceStepData {
     };
 
 
-    public DataSourceStepData(Context context, String stepDataTableName) {
+    public DataSourceStepData(Context context, String stepDataTableName, int mode) {
 
         Log.d(TAG, "DataSourceMapData erzeugt DbHelperMapData");
-        dbHelperStepData = new DbHelperStepData(context, stepDataTableName);
+        dbHelperStepData = new DbHelperStepData(context, stepDataTableName, mode);
 
     }
 
@@ -63,18 +63,14 @@ public class DataSourceStepData {
         int idIndex = cursor.getColumnIndex(DbHelperStepData.COLUMN_ID);
         int idSteps = cursor.getColumnIndex(DbHelperStepData.COLUMN_STEPS);
         int idTimestamp = cursor.getColumnIndex(DbHelperStepData.COLUMN_TIMESTAMP);
-
         double steps = cursor.getDouble(idSteps);
         String timedayhour= cursor.getString(idTimestamp);
-
 
         //Dont know if necessary for database usage
         int id = (int)cursor.getLong(idIndex);
 
-
-
         TimeStamp time = new TimeStamp(dbHelperStepData.stepDataTableName,timedayhour);
-        StepData stepData= new StepData(steps, time);
+        StepData stepData= new StepData(id, steps, time);
         return stepData;
     }
 
@@ -84,12 +80,11 @@ public class DataSourceStepData {
         List<double[]> stepDataList = new ArrayList<>();
         StepData stepData;
 
-
+        Log.d(TAG, "getAllStepData: "+ columns[0] + columns[1] + columns[2]);
         Cursor cursor = database.query(dbHelperStepData.stepDataTableName,
                 columns, null, null, null, null, null);
 
         cursor.moveToFirst();
-
 
         while(!cursor.isAfterLast()) {
             stepData = cursorToStepData(cursor);
@@ -97,26 +92,26 @@ public class DataSourceStepData {
             Log.d(TAG, "ID: " + stepData.getId() + ", Inhalt: " + stepData.toString());
             cursor.moveToNext();
         }
-
         cursor.close();
-
 
         double[] day = new double[24];
         int i = 0;
-        int j = 0;
         int currentDay = 0;
 
         while (i < entireStepDataList.size()){
             currentDay = entireStepDataList.get(i).getTime().getDay();
-            j = 0;
-            while (entireStepDataList.get(i).getTime().getDay() == currentDay)
-            {
-                day[j] = entireStepDataList.get(i).getSteps();
-                j++;
-                i++;
+
+            if (entireStepDataList.get(i).getTime().getDay() == currentDay){
+
+                for (int j = 0; j <24; j++){
+                    if (i+j < entireStepDataList.size() ){
+                        day[j] = entireStepDataList.get(i+j).getSteps();
+                    }
+                }
+                i = i + 24;
+                stepDataList.add(day);
+                day = new double[24];
             }
-            stepDataList.add(day);
-            day = new double[24];
         }
         return stepDataList;
     }

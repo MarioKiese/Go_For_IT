@@ -1,9 +1,12 @@
 package de.goforittechnologies.go_for_it.storage;
 
+import android.util.Log;
+
 public class TimeStamp {
     private int hour = 0;
     private int month = 0;
     private int day = 0;
+    private static final String TAG = "TimeStamp";
 
     //Constuctor
     public TimeStamp(int month, int day, int hour){
@@ -14,12 +17,11 @@ public class TimeStamp {
 
     public TimeStamp(String tablename, String tableentry){
         String [] containsmonth = tablename.split("_");
-        this.month = Integer.getInteger(containsmonth[1]);
-
+        this.month = Integer.valueOf(containsmonth[1]);
         String [] containsdayhour = tableentry.split(":");
 
-        this.day = Integer.getInteger(containsdayhour[0]);
-        this.hour = Integer.getInteger(containsdayhour[1]);
+        this.day = Integer.valueOf(containsdayhour[0]);
+        this.hour = Integer.valueOf(containsdayhour[1]);
 
 
     }

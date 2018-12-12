@@ -16,30 +16,35 @@ public class DbHelperStepData extends SQLiteOpenHelper {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_STEPS = "steps";
     public static final String COLUMN_TIMESTAMP = "timestamp";
-
+    private int mode;
 
     public String SQL_CREATE = "";
 
-
-    public DbHelperStepData(Context context, String stepDataTable) {
+    public DbHelperStepData(Context context, String stepDataTable, int mode) {
         super(context,DB_NAME,null,DB_VERSION);
+        this.mode = mode;
         this.stepDataTableName = stepDataTable;
         Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
 
-        SQL_CREATE = "CREATE TABLE " + stepDataTableName +
-                        "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        COLUMN_STEPS + " REAL NOT NULL," +
-                        COLUMN_TIMESTAMP+ "STRING NOT NULL)";
+            SQL_CREATE = "CREATE TABLE " + stepDataTableName +
+                    "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_STEPS + " REAL NOT NULL," +
+                    COLUMN_TIMESTAMP + " STRING NOT NULL)";
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        try {
-            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
-            sqLiteDatabase.execSQL(SQL_CREATE);
+        if (mode ==1){
+            try {
+                Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
+                sqLiteDatabase.execSQL(SQL_CREATE);
+            }
+            catch (Exception ex) {
+                Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());
+            }
         }
-        catch (Exception ex) {
-            Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());
+        else{
+            Log.d(TAG, "Müll Müll Müll" + SQL_CREATE + " angelegt.");
         }
     }
 
