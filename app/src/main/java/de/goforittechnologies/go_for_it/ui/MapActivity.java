@@ -24,10 +24,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -38,10 +40,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
-import de.goforittechnologies.go_for_it.logic.services.LocationParcel;
 import de.goforittechnologies.go_for_it.logic.services.LocationRouteService;
 import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
 import de.goforittechnologies.go_for_it.storage.DataSourceRouteData;
+import de.goforittechnologies.go_for_it.storage.RouteData;
 
 public class MapActivity extends AppCompatActivity {
 
@@ -66,6 +68,7 @@ public class MapActivity extends AppCompatActivity {
     private ServiceConnection mServiceConnection;
     private boolean mIsServiceBound;
 
+    // Route information
     List<Location> mRoute;
     private double mDistance;
     private double mCalories;
@@ -74,6 +77,9 @@ public class MapActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
+    // Database
+    DataSourceMapData dataSourceMapData;
+    DataSourceRouteData dataSourceRouteData;
 
     // Permissions
     private static final int PERMISSION_ALL = 1;
@@ -101,6 +107,9 @@ public class MapActivity extends AppCompatActivity {
             }
 
         }
+
+        // Initialize database
+        initializeDatabase();
 
         // Set toolbar
         tbMaps = findViewById(R.id.tbMaps);
@@ -131,12 +140,10 @@ public class MapActivity extends AppCompatActivity {
                 Log.i(TAG, "onReceive: Location receiver got data");
 
                 Bundle bundle = intent.getBundleExtra("Location");
-                //ArrayList<LocationParcel> data = bundle.getParcelableArrayList("Location");
                 ArrayList<Location> data = bundle.getParcelableArrayList("Location");
 
                 if (data != null) {
 
-                     //mRoute = convertToLocationList(data);
                     mRoute = data;
 
                     if (mRoute != null) {
@@ -226,16 +233,25 @@ public class MapActivity extends AppCompatActivity {
                 dialogBuilder.setView(input);
 
                 // Set up the buttons
-                dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                dialogBuilder.setPositiveButton("OK", null);
+                /*dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                        String routeName = input.getText().toString();
 
-                        writeInDatabases(routeName);
+                       if (routeName.isEmpty()) {
+                           Toast.makeText(MapActivity.this, "Please enter a name", Toast.LENGTH_LONG).show();
+                       } else {
+
+                           writeInDatabases(routeName);
+                           dialog.dismiss();
+
+                       }
+
 
                     }
-                });
+                });*/
                 dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -244,6 +260,36 @@ public class MapActivity extends AppCompatActivity {
                 });
 
                 AlertDialog alertDialog = dialogBuilder.create();
+
+                // Implementation of a View.OnClickListener to control if dialog can be dismissed (not given with DialogInterface.OnClickListener
+                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                    @Override
+                    public void onShow(DialogInterface dialogInterface) {
+
+                        Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
+                        positiveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                String routeName = input.getText().toString();
+
+                                if (validateRouteName(routeName) ) {
+                                    routeName = formatRouteName(routeName);
+                                    if (checkIfRouteNameExists(routeName)) {
+                                        Toast.makeText(MapActivity.this, "Route name already exists! Please enter another name!", Toast.LENGTH_LONG).show();
+                                    } else {
+                                        writeInDatabases(routeName);
+                                        alertDialog.dismiss();
+                                    }
+
+                                } else {
+                                    Toast.makeText(MapActivity.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+
+                    }
+                });
+
                 alertDialog.show();
 
                 btnStartLocation.setEnabled(true);
@@ -304,10 +350,16 @@ public class MapActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 
+        // Unregister broadcast
         LocalBroadcastManager.getInstance(MapActivity.this).unregisterReceiver(mLocationBroadcastReceiver);
-
         unbindService();
 
+        // Close databases
+        dataSourceMapData.close();
+        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+
+        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+        dataSourceRouteData.close();
 
         super.onDestroy();
     }
@@ -423,20 +475,6 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
-    private List<Location> convertToLocationList(List<LocationParcel> sourceList) {
-
-        List<Location> destList = new ArrayList<>();
-
-        for (LocationParcel item : sourceList) {
-
-            destList.add(item.getLocation());
-
-        }
-
-        return destList;
-
-    }
-
     private double getDistance(List<Location> route) {
 
         double kilometers = 0.0;
@@ -456,7 +494,15 @@ public class MapActivity extends AppCompatActivity {
         DecimalFormat df2 = new DecimalFormat(".##");
         mDistance = getDistance(route);
         String value = String.valueOf(df2.format(mDistance));
-        tvDistanceValue.setText(value);
+        if (mDistance == 0.0) {
+
+            tvDistanceValue.setText("-");
+
+        } else {
+
+            tvDistanceValue.setText(value);
+
+        }
 
     }
 
@@ -474,40 +520,107 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    private void initializeDatabase() {
+
+        // Test writing in Map database
+        dataSourceMapData = new DataSourceMapData(MapActivity.this);
+        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+        dataSourceMapData.open();
+
+        // Test writing in Route database
+        dataSourceRouteData = new DataSourceRouteData(this);
+        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+        dataSourceRouteData.open();
+
+        dataSourceRouteData.createTable();
+
+    }
+
     private void writeInDatabases(String routeName) {
 
         if (mRoute.size() > 1) {
 
             // Test writing in Map database
-            DataSourceMapData dataSourceMapData = new DataSourceMapData(MapActivity.this, routeName, 1);
+            /*dataSourceMapData = new DataSourceMapData(MapActivity.this, routeName, 1);
             Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-            dataSourceMapData.open();
+            dataSourceMapData.open();*/
+            dataSourceMapData.createTable(routeName);
 
             for (Location locationPoint : mRoute) {
 
-                dataSourceMapData.createMapsData(locationPoint.getLongitude(), locationPoint.getLatitude(), locationPoint.getAltitude(), 100.0);
+                dataSourceMapData.createMapsData(routeName, locationPoint.getLongitude(), locationPoint.getLatitude(), locationPoint.getAltitude(), 100.0);
 
             }
 
-            dataSourceMapData.getAllMapData();
-
-            Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
-            dataSourceMapData.close();
+            dataSourceMapData.getAllMapData(routeName);
 
 
             // Test writing in Route database
-            DataSourceRouteData dataSourceRouteData = new DataSourceRouteData(this, "Routes", 1);
+            /*dataSourceRouteData = new DataSourceRouteData(this, "Routes", 1);
             Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-            dataSourceRouteData.open();
+            dataSourceRouteData.open();*/
 
             dataSourceRouteData.createRouteData(routeName, chronometer.getText().toString(), 300.0, mDistance);
 
             dataSourceRouteData.getAllRouteData();
 
-            Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
-            dataSourceRouteData.close();
+        }
+
+    }
+
+    private boolean validateRouteName(String routeName) {
+
+
+
+        if (routeName.isEmpty()) {
+            return false;
+        } else if (consistsOfBlanks(routeName)) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    private boolean consistsOfBlanks(String routeName) {
+
+        char[] charArray = routeName.toCharArray();
+        int countBlanks = 0;
+
+        for (char charItem : charArray) {
+
+            if (charItem == ' ') {
+                countBlanks++;
+            }
 
         }
+
+        if (countBlanks == charArray.length) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    private String formatRouteName(String routeName) {
+        routeName = routeName.trim();
+        routeName = routeName.replaceAll("[^a-zA-Z0-9]", "");
+        return routeName;
+    }
+
+    private boolean checkIfRouteNameExists(String routeName) {
+
+        List<RouteData> routeDataList = dataSourceRouteData.getAllRouteData();
+        ArrayList<String> routeNames = new ArrayList<>();
+
+        for (RouteData routeData : routeDataList) {
+
+            routeNames.add(routeData.getRoute());
+
+        }
+
+        return routeNames.contains(routeName);
 
     }
 

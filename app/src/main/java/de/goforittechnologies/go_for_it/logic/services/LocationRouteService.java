@@ -32,8 +32,7 @@ public class LocationRouteService extends Service implements LocationListener {
     private static final String TAG = "LocationRouteService";
 
     private LocationManager mLocationManager;
-    private ArrayList<LocationParcel> mRoute = new ArrayList<>();
-    private ArrayList<Location> testRoute = new ArrayList<>();
+    private ArrayList<Location> mRoute = new ArrayList<>();
     private long mBaseTime;
     private IBinder mBinder = new LocationBinder();
 
@@ -64,8 +63,7 @@ public class LocationRouteService extends Service implements LocationListener {
         createNotification();
 
         // Configure location manager
-        //mRoute.clear();
-        testRoute.clear();
+        mRoute.clear();
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (mLocationManager != null) {
 
@@ -80,15 +78,9 @@ public class LocationRouteService extends Service implements LocationListener {
             // Request location updates to be called back on the HandlerThread
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this, looper);
             //TODO Prove functionality and necessity for users use
-           /* Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            LocationParcel locationParcel = new LocationParcel(lastKnownLocation);
-            mRoute.add(locationParcel);
-            sendLocationMessageToActivity(mRoute);*/
-
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-
-            testRoute.add(lastKnownLocation);
-            sendLocationMessageToActivity(testRoute);
+            mRoute.add(lastKnownLocation);
+            sendLocationMessageToActivity(mRoute);
 
         }
 
@@ -109,11 +101,8 @@ public class LocationRouteService extends Service implements LocationListener {
     public void onLocationChanged(Location location) {
 
         Log.i(TAG, "Thread id: " + Thread.currentThread().getId());
-        //LocationParcel locationParcel = new LocationParcel(location);
-        testRoute.add(location);
-        sendLocationMessageToActivity(testRoute);
-        /*mRoute.add(locationParcel);
-        sendLocationMessageToActivity(mRoute);*/
+        mRoute.add(location);
+        sendLocationMessageToActivity(mRoute);
 
     }
 
@@ -136,15 +125,6 @@ public class LocationRouteService extends Service implements LocationListener {
     }
 
     // Communication methods
-    /*private void sendLocationMessageToActivity(ArrayList<LocationParcel> route) {
-
-        Intent locationIntent = new Intent("LocationUpdate");
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("Location", route);
-        locationIntent.putExtra("Location", bundle);
-        LocalBroadcastManager.getInstance(LocationRouteService.this).sendBroadcast(locationIntent);
-
-    }*/
 
     // TODO Clear all LocationParcel implementations
     private void sendLocationMessageToActivity(ArrayList<Location> route) {

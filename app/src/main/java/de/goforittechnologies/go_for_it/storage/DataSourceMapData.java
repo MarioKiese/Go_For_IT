@@ -23,11 +23,10 @@ public class DataSourceMapData {
             DbHelperMapData.COLUMN_Height
     };
 
-
-    public DataSourceMapData(Context context, String mapDataTableName, int mode) {
+    public DataSourceMapData(Context context) {
 
         Log.d(TAG, "DataSourceMapData erzeugt DbHelperMapData");
-        dbHelperMapData = new DbHelperMapData(context, mapDataTableName, mode);
+        dbHelperMapData = new DbHelperMapData(context);
 
     }
 
@@ -42,16 +41,22 @@ public class DataSourceMapData {
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public MapData createMapsData(double lon,  double lat, double alt, double hei) {
+    public void createTable(String tableName) {
+
+        dbHelperMapData.createTable(tableName);
+
+    }
+
+    public MapData createMapsData(String tableName, double lon,  double lat, double alt, double hei) {
         ContentValues values = new ContentValues();
         values.put(DbHelperMapData.COLUMN_Longitude, lon);
         values.put(DbHelperMapData.COLUMN_Latitude, lat);
         values.put(DbHelperMapData.COLUMN_Altitude, alt);
         values.put(DbHelperMapData.COLUMN_Height, hei);
 
-        long insertId = database.insert(dbHelperMapData.mapDataTable, null, values);
+        long insertId = database.insert(tableName, null, values);
 
-        Cursor cursor = database.query(dbHelperMapData.mapDataTable,
+        Cursor cursor = database.query(tableName,
                 columns, DbHelperMapData.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
@@ -82,10 +87,10 @@ public class DataSourceMapData {
         return mapData;
     }
 
-    public List<MapData> getAllMapData() {
+    public List<MapData> getAllMapData(String tableName) {
         List<MapData> mapDataList = new ArrayList<>();
 
-        Cursor cursor = database.query(dbHelperMapData.mapDataTable,
+        Cursor cursor = database.query(tableName,
                 columns, null, null, null, null, null);
 
         cursor.moveToFirst();
@@ -101,6 +106,12 @@ public class DataSourceMapData {
         cursor.close();
 
         return mapDataList;
+    }
+
+    public void deleteTable(String tableName) {
+
+        dbHelperMapData.dropTable(tableName);
+
     }
 
 }

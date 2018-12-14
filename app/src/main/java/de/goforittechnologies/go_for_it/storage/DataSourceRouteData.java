@@ -15,6 +15,7 @@ public class DataSourceRouteData {
 
     private SQLiteDatabase database;
     private DbHelperRouteData dbHelperRouteData;
+    private static final String TABLE_NAME = "Routes";
     private String[] columns = {
             DbHelperRouteData.COLUMN_ID,
             DbHelperRouteData.COLUMN_ROUTE,
@@ -23,11 +24,10 @@ public class DataSourceRouteData {
             DbHelperRouteData.COLUMN_KILOMETERS
     };
 
-
-    public DataSourceRouteData(Context context, String routeDataTableName, int mode) {
+    public DataSourceRouteData(Context context) {
 
         Log.d(TAG, "DataSourceMapData erzeugt DbHelperMapData");
-        dbHelperRouteData = new DbHelperRouteData(context, routeDataTableName, mode);
+        dbHelperRouteData = new DbHelperRouteData(context);
 
     }
 
@@ -42,6 +42,12 @@ public class DataSourceRouteData {
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
+    public void createTable() {
+
+        dbHelperRouteData.createTable(TABLE_NAME);
+
+    }
+
     public RouteData createRouteData(String route, String time, double calories, double kilometers) {
         ContentValues values = new ContentValues();
         values.put(DbHelperRouteData.COLUMN_ROUTE, route);
@@ -49,9 +55,9 @@ public class DataSourceRouteData {
         values.put(DbHelperRouteData.COLUMN_CALORIES, calories);
         values.put(DbHelperRouteData.COLUMN_KILOMETERS, kilometers);
 
-        long insertId = database.insert(dbHelperRouteData.routeDataTable, null, values);
+        long insertId = database.insert(TABLE_NAME, null, values);
 
-        Cursor cursor = database.query(dbHelperRouteData.routeDataTable,
+        Cursor cursor = database.query(TABLE_NAME,
                 columns, DbHelperRouteData.COLUMN_ID + "=" + insertId,
                 null, null, null, null);
 
@@ -85,7 +91,7 @@ public class DataSourceRouteData {
     public List<RouteData> getAllRouteData() {
         List<RouteData> routeDataList = new ArrayList<>();
 
-        Cursor cursor = database.query(dbHelperRouteData.routeDataTable,
+        Cursor cursor = database.query(TABLE_NAME,
                 columns, null, null, null, null, null);
 
         cursor.moveToFirst();
@@ -103,10 +109,10 @@ public class DataSourceRouteData {
         return routeDataList;
     }
 
-    public void deleteShoppingMemo(RouteData routeData) {
+    public void deleteRouteData(RouteData routeData) {
         long id = routeData.getId();
 
-        database.delete("Routes",
+        database.delete(TABLE_NAME,
                 dbHelperRouteData.COLUMN_ID + "=" + id,
                 null);
 
