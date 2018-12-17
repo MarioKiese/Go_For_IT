@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -28,6 +27,7 @@ public class RoutesListActivity extends AppCompatActivity {
 
     // Widgets
     private ListView lvRoutes;
+    private RoutesAdapter mRouteDataAdapter;
 
     // Database
     DataSourceMapData dataSourceMapData;
@@ -37,7 +37,7 @@ public class RoutesListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_routes);
+        setContentView(R.layout.activity_routes_list);
 
         lvRoutes = findViewById(R.id.lvRoutes);
 
@@ -105,9 +105,9 @@ public class RoutesListActivity extends AppCompatActivity {
 
         // Close databases
         dataSourceMapData.close();
-        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+        Log.d(TAG, "onCreate: Die Datenquelle " + dataSourceMapData.getClass().getName() + " wird geschlossen!");
 
-        Log.d(TAG, "onCreate: Die Datenquelle wird geschlossen!");
+        Log.d(TAG, "onCreate: Die Datenquelle " + dataSourceRouteData.getClass().getName() + " wird geschlossen!");
         dataSourceRouteData.close();
 
         super.onDestroy();
@@ -117,12 +117,12 @@ public class RoutesListActivity extends AppCompatActivity {
 
         // Test writing in Map database
         dataSourceMapData = new DataSourceMapData(RoutesListActivity.this);
-        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+        Log.d(TAG, "onCreate: Die Datenquelle " + dataSourceMapData.getClass().getName() + " wird geöffnet!");
         dataSourceMapData.open();
 
         // Test writing in Route database
         dataSourceRouteData = new DataSourceRouteData(RoutesListActivity.this);
-        Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
+        Log.d(TAG, "onCreate: Die Datenquelle " + dataSourceRouteData.getClass().getName() + " wird geöffnet!");
         dataSourceRouteData.open();
 
     }
@@ -130,9 +130,8 @@ public class RoutesListActivity extends AppCompatActivity {
     private void showAllListEntries() {
 
         List<RouteData> routeDataList = dataSourceRouteData.getAllRouteData();
-
-        ArrayAdapter<RouteData> routeDataArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_multiple_choice, routeDataList);
-        lvRoutes.setAdapter(routeDataArrayAdapter);
+        mRouteDataAdapter = new RoutesAdapter(RoutesListActivity.this, routeDataList);
+        lvRoutes.setAdapter(mRouteDataAdapter);
 
     }
 

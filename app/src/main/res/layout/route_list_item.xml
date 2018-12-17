@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:background="@color/whiteTransparent50">
+
+    <TextView
+        android:id="@+id/tvRouteName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/roboto"
+        android:text="Default"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRouteSteps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/roboto"
+                android:text="@string/route_list_steps" />
+
+            <TextView
+                android:id="@+id/tvRouteStepsValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="TextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRouteTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/roboto"
+                android:text="@string/route_list_time" />
+
+            <TextView
+                android:id="@+id/tvRouteTimeValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="TextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRouteDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/roboto"
+                android:text="@string/route_list_distance" />
+
+            <TextView
+                android:id="@+id/tvRouteDistanceValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="TextView" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0px"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRouteCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/roboto"
+                android:text="@string/route_list_calories" />
+
+            <TextView
+                android:id="@+id/tvRouteCaloriesValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
+                android:text="TextView" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

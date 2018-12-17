@@ -29,4 +29,13 @@
     <string name="tvCaloriesText">Calories</string>
     <string name="tvTimeText">Time</string>
 
+    <!-- RoutesListActivity -->
+    <string name="all_routes">Your Routes</string>
+
+    <!-- Route list element -->
+    <string name="route_list_steps">Steps</string>
+    <string name="route_list_time">Time</string>
+    <string name="route_list_distance">Distance</string>
+    <string name="route_list_calories">Calories</string>
+
 </resources>

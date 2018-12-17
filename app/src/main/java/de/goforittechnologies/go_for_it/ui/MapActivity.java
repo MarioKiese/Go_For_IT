@@ -234,24 +234,7 @@ public class MapActivity extends AppCompatActivity {
 
                 // Set up the buttons
                 dialogBuilder.setPositiveButton("OK", null);
-                /*dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
 
-                       String routeName = input.getText().toString();
-
-                       if (routeName.isEmpty()) {
-                           Toast.makeText(MapActivity.this, "Please enter a name", Toast.LENGTH_LONG).show();
-                       } else {
-
-                           writeInDatabases(routeName);
-                           dialog.dismiss();
-
-                       }
-
-
-                    }
-                });*/
                 dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -491,9 +474,10 @@ public class MapActivity extends AppCompatActivity {
 
     private void showDistance(List<Location> route) {
 
-        DecimalFormat df2 = new DecimalFormat(".##");
         mDistance = getDistance(route);
-        String value = String.valueOf(df2.format(mDistance));
+        mDistance = Math.round(mDistance*100);
+        mDistance = mDistance/100;
+        String value = String.valueOf(mDistance);
         if (mDistance == 0.0) {
 
             tvDistanceValue.setText("-");
@@ -531,7 +515,6 @@ public class MapActivity extends AppCompatActivity {
         dataSourceRouteData = new DataSourceRouteData(this);
         Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
         dataSourceRouteData.open();
-
         dataSourceRouteData.createTable();
 
     }
@@ -540,37 +523,24 @@ public class MapActivity extends AppCompatActivity {
 
         if (mRoute.size() > 1) {
 
-            // Test writing in Map database
-            /*dataSourceMapData = new DataSourceMapData(MapActivity.this, routeName, 1);
-            Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-            dataSourceMapData.open();*/
+            // Map data
             dataSourceMapData.createTable(routeName);
 
             for (Location locationPoint : mRoute) {
 
                 dataSourceMapData.createMapsData(routeName, locationPoint.getLongitude(), locationPoint.getLatitude(), locationPoint.getAltitude(), 100.0);
-
             }
 
             dataSourceMapData.getAllMapData(routeName);
 
-
-            // Test writing in Route database
-            /*dataSourceRouteData = new DataSourceRouteData(this, "Routes", 1);
-            Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
-            dataSourceRouteData.open();*/
-
+            // Route data
             dataSourceRouteData.createRouteData(routeName, chronometer.getText().toString(), 300.0, mDistance);
-
             dataSourceRouteData.getAllRouteData();
-
         }
 
     }
 
     private boolean validateRouteName(String routeName) {
-
-
 
         if (routeName.isEmpty()) {
             return false;
