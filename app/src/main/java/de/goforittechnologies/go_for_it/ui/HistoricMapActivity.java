@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
-import de.goforittechnologies.go_for_it.logic.services.LocationParcel;
 
 public class HistoricMapActivity extends AppCompatActivity {
 
@@ -51,20 +50,6 @@ public class HistoricMapActivity extends AppCompatActivity {
 
     }
 
-    private List<Location> convertToLocationList(List<LocationParcel> sourceList) {
-
-        List<Location> destList = new ArrayList<>();
-
-        for (LocationParcel item : sourceList) {
-
-            destList.add(item.getLocation());
-
-        }
-
-        return destList;
-
-    }
-
     private void showRoute(List<Location> route) {
 
         List<GeoPoint> geoPoints = new ArrayList<>();
@@ -73,7 +58,6 @@ public class HistoricMapActivity extends AppCompatActivity {
         polyline.setColor(Color.BLUE);
         polyline.setWidth(5);
         polyline.setWidth(20f);
-
 
         if (!route.isEmpty()) {
 
@@ -86,18 +70,11 @@ public class HistoricMapActivity extends AppCompatActivity {
 
                     GeoPoint point = new GeoPoint(route.get(i));
                     geoPoints.add(point);
-
                 }
 
                 polyline.setPoints(geoPoints);
                 mapView.getOverlayManager().add(polyline);
-
             }
-
         }
-
     }
-
-
-
 }

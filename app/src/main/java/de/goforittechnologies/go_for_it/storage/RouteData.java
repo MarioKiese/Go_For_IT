@@ -3,15 +3,16 @@ package de.goforittechnologies.go_for_it.storage;
 public class RouteData {
 
     private String route;
-    private double steps;
+    private int steps;
     private String time;
     private double calories;
     private double kilometers;
     private int id;
 
     // Constructor
-    public RouteData(String route, String time, double calories, double kilometers, int id) {
+    public RouteData(String route, int steps, String time, double calories, double kilometers, int id) {
         this.route = route;
+        this.steps = steps;
         this.time = time;
         this.calories = calories;
         this.kilometers = kilometers;
@@ -32,7 +33,7 @@ public class RouteData {
         return route;
     }
 
-    public double getSteps() {
+    public int getSteps() {
         return steps;
     }
 
@@ -59,7 +60,7 @@ public class RouteData {
         this.route = route;
     }
 
-    public void setSteps(double steps) {
+    public void setSteps(int steps) {
         this.steps = steps;
     }
 
@@ -82,7 +83,6 @@ public class RouteData {
 
     @Override
     public String toString() {
-
 
         return  "Route: " + route + ", " +
                 "Steps: " + steps + ", " +

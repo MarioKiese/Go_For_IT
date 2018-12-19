@@ -17,6 +17,7 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     // Columns
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_ROUTE = "route";
+    public static final String COLUMN_STEPS = "steps";
     public static final String COLUMN_TIME = "time";
     public static final String COLUMN_CALORIES = "calories";
     public static final String COLUMN_KILOMETERS = "kilometers";
@@ -24,7 +25,7 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     public DbHelperRouteData(@Nullable Context context) {
         super(context,DB_NAME,null,DB_VERSION);
 
-        Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
+        Log.d(TAG, "DbHelperRouteData hat die Datenbank " + getDatabaseName() + " erzeugt.");
     }
 
     @Override
@@ -44,6 +45,7 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
         String SQL_CREATE = "CREATE TABLE IF NOT EXISTS " + tableName +
                 "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_ROUTE + " TEXT NOT NULL, " +
+                COLUMN_STEPS + " INTEGER NOT NULL, " +
                 COLUMN_TIME + " TEXT NOT NULL, " +
                 COLUMN_CALORIES + " REAL NOT NULL, " +
                 COLUMN_KILOMETERS + " REAL NOT NULL);";

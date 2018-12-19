@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -24,7 +25,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
@@ -34,8 +34,9 @@ import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +74,7 @@ public class MapActivity extends AppCompatActivity {
 
     // Route information
     List<Location> mRoute;
+    private int mSteps;
     private double mDistance;
     private double mCalories;
 
@@ -121,9 +123,7 @@ public class MapActivity extends AppCompatActivity {
 
         // Configure map
         mapView = findViewById(R.id.mvMap);
-        mapView.setBuiltInZoomControls(true);
-        mapView.setMultiTouchControls(true);
-        mapView.getController().setZoom(16.0);
+        initializeMap();
 
         // Set widgets
         btnStartLocation = findViewById(R.id.btn_start_location);
@@ -163,8 +163,8 @@ public class MapActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 Log.i(TAG, "onReceive: Steps receiver got data");
 
-                int steps = intent.getIntExtra("Steps", 0);
-                tvStepsValue.setText(String.valueOf(steps));
+                mSteps = intent.getIntExtra("Steps", 0);
+                tvStepsValue.setText(String.valueOf(mSteps));
             }
         };
 
@@ -181,12 +181,10 @@ public class MapActivity extends AppCompatActivity {
 
             btnStartLocation.setEnabled(false);
             btnStopLocation.setEnabled(true);
-
         } else {
 
             btnStartLocation.setEnabled(true);
             btnStopLocation.setEnabled(false);
-
         }
 
         // Create location intent
@@ -202,15 +200,26 @@ public class MapActivity extends AppCompatActivity {
 
                 chronometer.setBase(mLocationRouteService.getmBaseTime());
                 chronometer.start();
-
             }
-
         }
 
         // OnClickListener
         btnStartLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (mRoute != null) {
+                    mRoute.clear();
+                }
+                mSteps = 0;
+                mDistance = 0.0;
+                mCalories = 0.0;
+                /*tvStepsValue.setText(String.valueOf(mSteps));
+                tvDistanceValue.setText(String.valueOf(mDistance));
+                tvCaloriesValue.setText(String.valueOf(mCalories));*/
+                tvStepsValue.setText("-");
+                tvDistanceValue.setText("-");
+                tvCaloriesValue.setText("-");
 
                 startService(locationRouteIntent);
                 editor.putBoolean("service_started", true);
@@ -219,7 +228,6 @@ public class MapActivity extends AppCompatActivity {
 
                 btnStartLocation.setEnabled(false);
                 btnStopLocation.setEnabled(true);
-
             }
         });
 
@@ -437,6 +445,24 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    private void initializeMap() {
+
+        mapView.setBuiltInZoomControls(true);
+        mapView.setMultiTouchControls(true);
+        mapView.getController().setZoom(16.0);
+
+        GpsMyLocationProvider provider = new GpsMyLocationProvider(MapActivity.this);
+        provider.addLocationSource(LocationManager.NETWORK_PROVIDER);
+        MyLocationNewOverlay myLocationNewOverlay = new MyLocationNewOverlay(provider, mapView);
+        myLocationNewOverlay.enableMyLocation();
+        GeoPoint currentLocation = myLocationNewOverlay.getMyLocation();
+        if (currentLocation == null) {
+            Toast.makeText(MapActivity.this, "Position is null", Toast.LENGTH_LONG).show();
+        }
+        mapView.getOverlays().add(myLocationNewOverlay);
+        mapView.getController().setCenter(currentLocation);
+    }
+
     private void showRoute(List<Location> route) {
 
         List<GeoPoint> geoPoints = new ArrayList<>();
@@ -445,7 +471,6 @@ public class MapActivity extends AppCompatActivity {
         polyline.setColor(Color.BLUE);
         polyline.setWidth(5);
         polyline.setWidth(20f);
-
 
         if (!route.isEmpty()) {
 
@@ -458,16 +483,12 @@ public class MapActivity extends AppCompatActivity {
 
                     GeoPoint point = new GeoPoint(route.get(i));
                     geoPoints.add(point);
-
                 }
 
                 polyline.setPoints(geoPoints);
                 mapView.getOverlayManager().add(polyline);
-
             }
-
         }
-
     }
 
     private double getDistance(List<Location> route) {
@@ -477,11 +498,9 @@ public class MapActivity extends AppCompatActivity {
         for (int i=0; i<route.size()-1; i++) {
 
             kilometers += route.get(i).distanceTo(route.get(i+1));
-
         }
 
         return kilometers;
-
     }
 
     private void showDistance(List<Location> route) {
@@ -493,13 +512,10 @@ public class MapActivity extends AppCompatActivity {
         if (mDistance == 0.0) {
 
             tvDistanceValue.setText("-");
-
         } else {
 
             tvDistanceValue.setText(value);
-
         }
-
     }
 
     private double getCalories() {
@@ -507,11 +523,9 @@ public class MapActivity extends AppCompatActivity {
         double calories = 0.0;
         mCalories = calories;
         return calories;
-
     }
 
     private void showCalories() {
-
 
 
     }
@@ -528,7 +542,6 @@ public class MapActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: Die Datenquelle wird geöffnet!");
         dataSourceRouteData.open();
         dataSourceRouteData.createTable();
-
     }
 
     private void writeInDatabases(String routeName) {
@@ -546,10 +559,9 @@ public class MapActivity extends AppCompatActivity {
             dataSourceMapData.getAllMapData(routeName);
 
             // Route data
-            dataSourceRouteData.createRouteData(routeName, chronometer.getText().toString(), 300.0, mDistance);
+            dataSourceRouteData.createRouteData(routeName, mSteps, chronometer.getText().toString(), 300.0, mDistance);
             dataSourceRouteData.getAllRouteData();
         }
-
     }
 
     private boolean validateRouteName(String routeName) {
@@ -561,7 +573,6 @@ public class MapActivity extends AppCompatActivity {
         } else {
             return true;
         }
-
     }
 
     private boolean consistsOfBlanks(String routeName) {
@@ -574,7 +585,6 @@ public class MapActivity extends AppCompatActivity {
             if (charItem == ' ') {
                 countBlanks++;
             }
-
         }
 
         if (countBlanks == charArray.length) {
@@ -582,7 +592,6 @@ public class MapActivity extends AppCompatActivity {
         } else {
             return false;
         }
-
     }
 
     private String formatRouteName(String routeName) {
@@ -599,12 +608,9 @@ public class MapActivity extends AppCompatActivity {
         for (RouteData routeData : routeDataList) {
 
             routeNames.add(routeData.getRoute());
-
         }
 
         return routeNames.contains(routeName);
-
     }
 
 }
-

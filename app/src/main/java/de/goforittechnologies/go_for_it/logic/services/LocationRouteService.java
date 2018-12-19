@@ -87,7 +87,8 @@ public class LocationRouteService extends Service implements LocationListener, S
             // Now get the Looper from the HandlerThread
             Looper looper = handlerThread.getLooper();
             // Request location updates to be called back on the HandlerThread
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this, looper);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, LocationRouteService.this, looper);
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, LocationRouteService.this, looper);
             //TODO Prove functionality and necessity for users use
             Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             mRoute.add(lastKnownLocation);
@@ -106,15 +107,13 @@ public class LocationRouteService extends Service implements LocationListener, S
     @Override
     public void onDestroy() {
 
-        mLocationManager.removeUpdates(this);
-
+        mLocationManager.removeUpdates(LocationRouteService.this);
+        mSensorManager.unregisterListener(LocationRouteService.this);
         super.onDestroy();
 
     }
 
-
     // Location
-
     @Override
     public void onLocationChanged(Location location) {
 

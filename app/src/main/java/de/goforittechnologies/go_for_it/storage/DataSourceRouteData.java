@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DataSourceRouteData {
 
-    private static final String TAG = "DataSourceMapData";
+    private static final String TAG = "DataSourceRouteData";
 
     private SQLiteDatabase database;
     private DbHelperRouteData dbHelperRouteData;
@@ -19,6 +19,7 @@ public class DataSourceRouteData {
     private String[] columns = {
             DbHelperRouteData.COLUMN_ID,
             DbHelperRouteData.COLUMN_ROUTE,
+            DbHelperRouteData.COLUMN_STEPS,
             DbHelperRouteData.COLUMN_TIME,
             DbHelperRouteData.COLUMN_CALORIES,
             DbHelperRouteData.COLUMN_KILOMETERS
@@ -48,9 +49,10 @@ public class DataSourceRouteData {
 
     }
 
-    public RouteData createRouteData(String route, String time, double calories, double kilometers) {
+    public RouteData createRouteData(String route, int steps, String time, double calories, double kilometers) {
         ContentValues values = new ContentValues();
         values.put(DbHelperRouteData.COLUMN_ROUTE, route);
+        values.put(DbHelperRouteData.COLUMN_STEPS, steps);
         values.put(DbHelperRouteData.COLUMN_TIME, time);
         values.put(DbHelperRouteData.COLUMN_CALORIES, calories);
         values.put(DbHelperRouteData.COLUMN_KILOMETERS, kilometers);
@@ -72,18 +74,20 @@ public class DataSourceRouteData {
     private RouteData cursorToRouteData(Cursor cursor) {
         int idIndex = cursor.getColumnIndex(DbHelperRouteData.COLUMN_ID);
         int idRoute = cursor.getColumnIndex(DbHelperRouteData.COLUMN_ROUTE);
+        int idSteps = cursor.getColumnIndex(DbHelperRouteData.COLUMN_STEPS);
         int idTime = cursor.getColumnIndex(DbHelperRouteData.COLUMN_TIME);
         int idCalories = cursor.getColumnIndex(DbHelperRouteData.COLUMN_CALORIES);
         int idKilometers = cursor.getColumnIndex(DbHelperRouteData.COLUMN_KILOMETERS);
 
         String route = cursor.getString(idRoute);
+        int steps = cursor.getInt(idSteps);
         String time = cursor.getString(idTime);
         double calories = cursor.getDouble(idCalories);
         double kilometers = cursor.getDouble(idKilometers);
         //Don't know if necessary for database usage
         int id = (int)cursor.getLong(idIndex);
 
-        RouteData routeData = new RouteData(route, time, calories, kilometers, id);
+        RouteData routeData = new RouteData(route, steps, time, calories, kilometers, id);
 
         return routeData;
     }
