@@ -72,6 +72,7 @@ public class DashboardActivity extends AppCompatActivity
         inputList = dataSourceStepData.getAllStepData();
         dataSourceStepData.close();
         Log.d(TAG, "onCreate: Size of InputList:" + inputList.size());
+
         //Creating Random testdata for displaying
         /*inputList = new ArrayList<>();
         double[] day = new double[24];
@@ -115,14 +116,22 @@ public class DashboardActivity extends AppCompatActivity
     private List<BarEntry> buildDayBarChart(List<double[]> inputList, int day){
         List<BarEntry> entries = new ArrayList<>();
         double value = 0;
-        for (int i = 0; i< 24;i++){
-            entries.add(new BarEntry((float)i,(float)inputList.get(day)[i]));
+        for (int i = 1; i< 24;i++){
+            try{
+                entries.add(new BarEntry((float)i,(float)inputList.get(day)[i]));
+            }
+            catch (Exception ex){
+                throw ex;
+            }
+
         }
         return entries;
     }
+
+
     private List<BarEntry> buildWeekBarChart(List<double[]> inputList, int month){
         List<BarEntry> entries = new ArrayList<>();
-        //TODO: Adding Dayoffset for correct weekdays from monday to sunday
+        //TODO: Adding Day offset for correct weekdays from monday to sunday
         int weekdayFromMonthFirst = getWeekDayFromDate(1, month);
         int i = 0;
         int m = 1;
@@ -140,7 +149,6 @@ public class DashboardActivity extends AppCompatActivity
             entries.add(new BarEntry((float) m,(float) value));
             m++;
             i= i +7;
-
         }
 
 
@@ -192,9 +200,10 @@ public class DashboardActivity extends AppCompatActivity
                 entries = buildWeekBarChart(inputList,12);
                 invalitadeBarCHart(entries);
                 break;
+
             case "Stunden":
                 seekBar.setMax(28);
-                entries = buildDayBarChart(inputList,12); //TODO: eigentlich i
+                entries = buildDayBarChart(inputList, i);
                 invalitadeBarCHart(entries);
                 break;
 

@@ -45,11 +45,31 @@ public class DataSourceStepData {
         values.put(DbHelperStepData.COLUMN_STEPS, steps);
         values.put(DbHelperStepData.COLUMN_TIMESTAMP, time);
 
-
         long insertId = database.insert(dbHelperStepData.stepDataTableName, null, values);
 
+
         Cursor cursor = database.query(dbHelperStepData.stepDataTableName,
-                columns, DbHelperMapData.COLUMN_ID + "=" + insertId,
+                columns, DbHelperStepData.COLUMN_ID + "=" + insertId,
+                null, null, null, null);
+
+        cursor.moveToFirst();
+        StepData stepData = cursorToStepData(cursor);
+        cursor.close();
+
+        return stepData;
+    }
+
+    public StepData updateStepData(double steps, String time) {
+        ContentValues values = new ContentValues();
+        values.put(DbHelperStepData.COLUMN_STEPS, steps);
+        values.put(DbHelperStepData.COLUMN_TIMESTAMP, time);
+
+        int rowsAffected = database.update(dbHelperStepData.stepDataTableName, values,
+                DbHelperStepData.COLUMN_TIMESTAMP + "='" + time + "'",null);
+
+        Log.d(TAG, "createStepData: rowsAffected: "+ rowsAffected);
+        Cursor cursor = database.query(dbHelperStepData.stepDataTableName,
+                columns, DbHelperStepData.COLUMN_TIMESTAMP + "='" + time + "'",
                 null, null, null, null);
 
         cursor.moveToFirst();
@@ -64,7 +84,7 @@ public class DataSourceStepData {
         int idSteps = cursor.getColumnIndex(DbHelperStepData.COLUMN_STEPS);
         int idTimestamp = cursor.getColumnIndex(DbHelperStepData.COLUMN_TIMESTAMP);
         double steps = cursor.getDouble(idSteps);
-        String timedayhour= cursor.getString(idTimestamp);
+        String timedayhour = cursor.getString(idTimestamp);
 
         //Dont know if necessary for database usage
         int id = (int)cursor.getLong(idIndex);

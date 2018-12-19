@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar tbMain;
     private PieChart pieChart;
     public static int count = 0;
+    private Boolean firstTime = null;
 
     //Service
     private BroadcastReceiver mStepsBroadcastReceiver;
@@ -91,24 +94,6 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
-        DataSourceStepData dataSourceStepData = new DataSourceStepData(this,"StepDataTABLE_12",1);
-        dataSourceStepData.open();
-
-        //dataSourceStepData.createStepData(25555 + 100,"1:1");
-        /*if (count == 0)
-        {
-            Random r = new Random();
-            for (int i = 1; i<31; i++){
-                for (int j = 0; j < 24; j++){
-                    String timestamp = i +":" + j;
-                    dataSourceStepData.createStepData(r.nextInt(3000-30) + 30,timestamp);
-                }
-
-            }
-            count = 1;
-        }
-        */
-
         // Set steps broadcast receiver
         mStepsBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -123,6 +108,25 @@ public class MainActivity extends AppCompatActivity {
         //set broadcast manager
         LocalBroadcastManager.getInstance(MainActivity.this)
                 .registerReceiver(mStepsBroadcastReceiver,new IntentFilter("StepsUpdate"));
+
+        if (isFirstTime() == true){
+            //Create empty database for two month on first Start
+
+            DataSourceStepData dataSourceStepData = new DataSourceStepData(this,
+                    "StepDataTABLE_12",1);
+
+            dataSourceStepData.open();
+            double[] day = new double[24];
+            for (int i = 1; i <31; i++){
+                for (int j = 1; j <24; j++){
+                    dataSourceStepData.createStepData(0,i+":"+j);
+                    Log.d(TAG, "onCreate: StepDataEmpty:" + i + ":" +j);
+                }
+            }
+
+            dataSourceStepData.close();
+
+        }
     }
 
     @Override
@@ -214,6 +218,21 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signOut();
         sendToLogin();
 
+    }
+
+
+
+    private boolean isFirstTime() {
+        if (firstTime == null) {
+            SharedPreferences mPreferences = this.getSharedPreferences("first_time", Context.MODE_PRIVATE);
+            firstTime = mPreferences.getBoolean("firstTime", true);
+            if (firstTime) {
+                SharedPreferences.Editor editor = mPreferences.edit();
+                editor.putBoolean("firstTime", false);
+                editor.commit();
+            }
+        }
+        return firstTime;
     }
 
 

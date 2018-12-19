@@ -87,7 +87,7 @@ public class StepCounterService extends Service implements SensorEventListener {
         DataSourceStepData dataSourceStepData = new DataSourceStepData(this,dbName,1);
         dataSourceStepData.open();
         String timestamp = day +":" + hour;
-        dataSourceStepData.createStepData(steps,timestamp);
+        dataSourceStepData.updateStepData(steps,timestamp);
         dataSourceStepData.close();
     }
 
