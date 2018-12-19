@@ -68,9 +68,9 @@ public class StepCounterService extends Service implements SensorEventListener {
         if (diffTime >= 10000){
             oldTimeSet = false;
             String dbName = "StepDataTABLE_"+ (calendar.get(Calendar.MONTH)+1);
-            updateDatabase(steps,dbName,calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR));
+            updateDatabase(steps,dbName,calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR_OF_DAY));
             Log.d(TAG, "onSensorChanged: Day " +calendar.get(Calendar.DAY_OF_MONTH));
-            Log.d(TAG, "onSensorChanged: Hour " +calendar.get(Calendar.HOUR));
+            Log.d(TAG, "onSensorChanged: Hour " +calendar.get(Calendar.HOUR_OF_DAY));
             Log.d(TAG, "onSensorChanged: Month " + (calendar.get(Calendar.MONTH)+1));
 
         }

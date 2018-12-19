@@ -120,12 +120,11 @@ public class DataSourceStepData {
 
         while (i < entireStepDataList.size()){
             currentDay = entireStepDataList.get(i).getTime().getDay();
-
             if (entireStepDataList.get(i).getTime().getDay() == currentDay){
-
                 for (int j = 0; j <24; j++){
                     if (i+j < entireStepDataList.size() ){
                         day[j] = entireStepDataList.get(i+j).getSteps();
+                        Log.d(TAG, "getAllStepData: i&j:steps "+ i+ "&"+ j + ":"+ day[j]);
                     }
                 }
                 i = i + 24;

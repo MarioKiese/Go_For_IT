@@ -1,5 +1,6 @@
 package de.goforittechnologies.go_for_it.ui;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,20 +10,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.TimeZone;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
@@ -34,23 +33,42 @@ public class DashboardActivity extends AppCompatActivity
     private BarChart barChart;
     private List<double[]> inputList;
     private Toolbar tbDashboard;
-    private SeekBar seekBar;
+    private SeekBar seekBarDay;
+    private TextView tvSeekbarDayCategory;
+    private TextView tvSeekbarDayValue;
+    private SeekBar seekBarMonth;
+    private TextView tvSeekbarMonthCategory;
+    private TextView tvSeekbarMonthValue;
+    private int monthForHourUse;
+
     String selectedPeriod;
+    private Calendar calendar;
     private static final String TAG = "DashboardActivity";
+    DataSourceStepData dataSourceStepData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-
+        dataSourceStepData = null;
+        calendar = Calendar.getInstance(TimeZone.getDefault());
 
         barChart=  findViewById(R.id.barChart);
 
-        Spinner dropdown = findViewById(R.id.spinner1);
-        dropdown.setOnItemSelectedListener(this);
+        Spinner dropdownPeriod = findViewById(R.id.spinnerPeriod);
+        dropdownPeriod.setOnItemSelectedListener(this);
 
-        seekBar = findViewById(R.id.seekBar);
-        seekBar.setOnSeekBarChangeListener(this);
+        seekBarDay = findViewById(R.id.seekBarDay);
+        seekBarDay.setOnSeekBarChangeListener(this);
+
+        seekBarMonth = findViewById(R.id.seekBarMonth);
+        seekBarMonth.setOnSeekBarChangeListener(this);
+
+        tvSeekbarDayCategory = findViewById(R.id.tvSeekbarDayCategory);
+        tvSeekbarDayValue = findViewById(R.id.tvSeekbarDayValue);
+
+        tvSeekbarMonthCategory = findViewById(R.id.tvSeekbarMonthCategory);
+        tvSeekbarMonthValue = findViewById(R.id.tvSeekbarMonthValue);
 
         tbDashboard= findViewById(R.id.tbDashboard);
         setSupportActionBar(tbDashboard);
@@ -63,96 +81,82 @@ public class DashboardActivity extends AppCompatActivity
         //There are multiple variations of this, but this is the basic variant.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         //set the spinners adapter to the previously created one.
-        dropdown.setAdapter(adapter);
+        dropdownPeriod.setAdapter(adapter);
 
-
-        DataSourceStepData dataSourceStepData = new DataSourceStepData(this,"StepDataTABLE_12",0);
         inputList = new ArrayList<>();
-        dataSourceStepData.open();
-        inputList = dataSourceStepData.getAllStepData();
-        dataSourceStepData.close();
+
+        try {
+            dataSourceStepData.open();
+            inputList = dataSourceStepData.getAllStepData();
+            dataSourceStepData.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Log.d(TAG, "onCreate: Size of InputList:" + inputList.size());
 
-        //Creating Random testdata for displaying
-        /*inputList = new ArrayList<>();
-        double[] day = new double[24];
-        Random r = new Random();
-
-        for (int i = 0; i <30; i++){
-            for (int j = 0; j <24; j++){
-                day[j] =  r.nextInt(9000-100) + 100;
-            }
-            inputList.add(day);
-            day = new double[24];
-        }
-        //List<BarEntry> entries = buildMonthBarChart(inputList,0,30);
-        //List<BarEntry> entries = buildWeekBarChart(inputList,11);
-        List<BarEntry> entries =  buildDayBarChart(inputList,12);
-        invalitadeBarCHart(entries);*/
+        monthForHourUse = 0;
 
     }
-    private List<BarEntry> buildMonthBarChart(List<double[]> inputList, int minDay, int maxDay){
+    private List<BarEntry> buildMonthBarChart(int month){
         List<BarEntry> entries = new ArrayList<>();
-        double value = 0;
-        if (minDay < 0){
-            minDay = 0;
-        }
-        if (maxDay >= inputList.size() ){
-            maxDay = inputList.size();
-        }
-        int i = minDay;
-
-        while(i < maxDay){
-            for (int j = 0; j<24;j++){
-                value += inputList.get(i)[j];
-            }
-            entries.add(new BarEntry((float)i,(float)value));
-            Log.d(TAG, "buildMonthBarChart: Steps of Day:" + value);
-            i++;
-            value = 0;
-        }
-        return entries;
-    }
-    private List<BarEntry> buildDayBarChart(List<double[]> inputList, int day){
-        List<BarEntry> entries = new ArrayList<>();
-        double value = 0;
-        for (int i = 1; i< 24;i++){
-            try{
-                entries.add(new BarEntry((float)i,(float)inputList.get(day)[i]));
-            }
-            catch (Exception ex){
-                throw ex;
-            }
-
-        }
-        return entries;
-    }
-
-
-    private List<BarEntry> buildWeekBarChart(List<double[]> inputList, int month){
-        List<BarEntry> entries = new ArrayList<>();
-        //TODO: Adding Day offset for correct weekdays from monday to sunday
-        int weekdayFromMonthFirst = getWeekDayFromDate(1, month);
+        inputList = selectData(month);
         int i = 0;
-        int m = 1;
         double value = 0;
-        while ( i < inputList.size()){
 
-            for (int k = 0; k<7;k++)
-            {
-                if (i+k < inputList.size()){
-                    for (int j = 0; j<24;j++){
-                        value =+ inputList.get(i+k)[j];
-                    }
+        Log.d(TAG, "onCreate: Size of InputList:" + inputList.size());
+
+        while (i < inputList.size()){
+            for (int j = 0; j < 24; j++){
+                try {
+                    value += inputList.get(i)[j];
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-            entries.add(new BarEntry((float) m,(float) value));
-            m++;
-            i= i +7;
+            entries.add(new BarEntry((float)i +1,(float)value));
+            value = 0;
+            i++;
         }
 
+        return entries;
+    }
+
+    private List<double[]> selectData(int month){
+
+        List<double[]> list = new ArrayList<>();
+        try {
+            dataSourceStepData = new DataSourceStepData(this,"StepDataTABLE_"+ (month),0);
+            dataSourceStepData.open();
+            list = dataSourceStepData.getAllStepData();
+            dataSourceStepData.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,"Es gibt keine Tabelle für den ausgewählten Monat",Toast.LENGTH_SHORT).show();
+        }
+        return list;
+    }
+
+    private List<BarEntry> buildDayBarChart(int day, int month){
+
+        List<BarEntry> entries = new ArrayList<>();
+        double value = 0;
+
+        inputList = selectData(month);
+
+        for (int i = 0; i< 24;i++){
+            try{
+                entries.add(new BarEntry((float)(i),(float)inputList.get(day)[i]));
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return entries;
+    }
 
 
+    private List<BarEntry> buildWeekBarChart(int month){
+        List<BarEntry> entries = new ArrayList<>();
         return entries;
     }
 
@@ -165,18 +169,35 @@ public class DashboardActivity extends AppCompatActivity
         barChart.invalidate(); // refresh
     }
 
-    private int getWeekDayFromDate(int day, int month){
-        Date currentTime = Calendar.getInstance().getTime();
-        int year = currentTime.getYear();
-        Calendar.getInstance().set(year,month,day);
-        int firstDayofWeek = Calendar.getInstance(Locale.GERMANY).getFirstDayOfWeek();
-        int timeDiff = day - firstDayofWeek +1;
-        return timeDiff;
-    }
-
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
         selectedPeriod = adapterView.getItemAtPosition(i).toString();
+        switch (selectedPeriod){
+            case "Tage":
+                seekBarDay.setMax(11);
+                tvSeekbarDayCategory.setText("Monat:");
+                seekBarMonth.setAlpha(0);
+                tvSeekbarMonthCategory.setAlpha(0);
+                tvSeekbarMonthValue.setAlpha(0);
+                break;
+            case "Wochen":
+                seekBarDay.setMax(11);
+                tvSeekbarDayCategory.setText("Monat:");
+                seekBarMonth.setAlpha(0);
+                tvSeekbarMonthCategory.setAlpha(0);
+                tvSeekbarMonthValue.setAlpha(0);
+                break;
+            case "Stunden":
+                seekBarDay.setMax(30);
+                seekBarMonth.setMax(11);
+                tvSeekbarDayCategory.setText("Tag:");
+                tvSeekbarMonthCategory.setText("Monat:");
+                seekBarMonth.setAlpha(1);
+                tvSeekbarMonthCategory.setAlpha(1);
+                tvSeekbarMonthValue.setAlpha(1);
+                break;
+        }
     }
 
     @Override
@@ -187,23 +208,29 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         List<BarEntry> entries;
-        //TODO: Adding switching to different Month by Name of Table
+
+
+        switch (seekBar.getId()){
+            case R.id.seekBarDay:
+                tvSeekbarDayValue.setText(Integer.toString(i+ 1));
+                break;
+            case R.id.seekBarMonth:
+                tvSeekbarMonthValue.setText(Integer.toString(i + 1));
+                monthForHourUse = (i + 1);
+                break;
+
+        }
         switch (selectedPeriod) {
             case "Tage":
-                seekBar.setMax(2);
-                entries =  buildMonthBarChart(inputList,1,28);
+                entries =  buildMonthBarChart(i+1);
                 invalitadeBarCHart(entries);
                 break;
-
             case "Wochen":
-                seekBar.setMax(2);
-                entries = buildWeekBarChart(inputList,12);
+                entries = buildWeekBarChart(i+1);
                 invalitadeBarCHart(entries);
                 break;
-
             case "Stunden":
-                seekBar.setMax(28);
-                entries = buildDayBarChart(inputList, i);
+                entries = buildDayBarChart(i, monthForHourUse);
                 invalitadeBarCHart(entries);
                 break;
 

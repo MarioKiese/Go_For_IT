@@ -44,7 +44,7 @@ public class DbHelperStepData extends SQLiteOpenHelper {
             }
         }
         else{
-            Log.d(TAG, "Müll Müll Müll" + SQL_CREATE + " angelegt.");
+            Log.d(TAG,  SQL_CREATE + " angelegt.");
         }
     }
 

@@ -28,8 +28,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.TimeZone;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.logic.StepCounterListener;
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private PieChart pieChart;
     public static int count = 0;
     private Boolean firstTime = null;
-
+    private Calendar calendar;
     //Service
     private BroadcastReceiver mStepsBroadcastReceiver;
 
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Log.d(TAG, "onCreate: Start");
+        calendar = Calendar.getInstance(TimeZone.getDefault());
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -113,12 +116,12 @@ public class MainActivity extends AppCompatActivity {
             //Create empty database for two month on first Start
 
             DataSourceStepData dataSourceStepData = new DataSourceStepData(this,
-                    "StepDataTABLE_12",1);
+                    "StepDataTABLE_"+ (calendar.get(Calendar.MONTH)+1),1);
 
             dataSourceStepData.open();
             double[] day = new double[24];
-            for (int i = 1; i <31; i++){
-                for (int j = 1; j <24; j++){
+            for (int i = 1; i <=31; i++){
+                for (int j = 0; j <24; j++){
                     dataSourceStepData.createStepData(0,i+":"+j);
                     Log.d(TAG, "onCreate: StepDataEmpty:" + i + ":" +j);
                 }
