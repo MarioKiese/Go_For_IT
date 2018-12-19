@@ -53,6 +53,8 @@ public class MapActivity extends AppCompatActivity {
     private MapView mapView;
     private Button btnStartLocation;
     private Button btnStopLocation;
+    private TextView tvSteps;
+    private TextView tvStepsValue;
     private TextView tvDistanceText;
     private TextView tvDistanceValue;
     private TextView tvCaloriesText;
@@ -64,6 +66,7 @@ public class MapActivity extends AppCompatActivity {
     // Service
     private Intent locationRouteIntent;
     private BroadcastReceiver mLocationBroadcastReceiver;
+    private BroadcastReceiver mStepsBroadcastReceiver;
     private LocationRouteService mLocationRouteService;
     private ServiceConnection mServiceConnection;
     private boolean mIsServiceBound;
@@ -125,6 +128,8 @@ public class MapActivity extends AppCompatActivity {
         // Set widgets
         btnStartLocation = findViewById(R.id.btn_start_location);
         btnStopLocation = findViewById(R.id.btn_stop_location);
+        tvSteps = findViewById(R.id.tvSteps);
+        tvStepsValue = findViewById(R.id.tvStepsValue);
         tvDistanceText = findViewById(R.id.tvDistance);
         tvDistanceValue = findViewById(R.id.tvDistanceValue);
         tvCaloriesText = findViewById(R.id.tvCalories);
@@ -143,24 +148,29 @@ public class MapActivity extends AppCompatActivity {
                 ArrayList<Location> data = bundle.getParcelableArrayList("Location");
 
                 if (data != null) {
-
                     mRoute = data;
-
                     if (mRoute != null) {
-
                         showRoute(mRoute);
                         showDistance(mRoute);
-
                     }
-
                 }
-
             }
+        };
 
+        // Set steps broadcast receiver
+        mStepsBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.i(TAG, "onReceive: Steps receiver got data");
+
+                int steps = intent.getIntExtra("Steps", 0);
+                tvStepsValue.setText(String.valueOf(steps));
+            }
         };
 
         // Set broadcast manager
         LocalBroadcastManager.getInstance(MapActivity.this).registerReceiver(mLocationBroadcastReceiver, new IntentFilter("LocationUpdate"));
+        LocalBroadcastManager.getInstance(MapActivity.this).registerReceiver(mStepsBroadcastReceiver, new IntentFilter("StepsUpdate"));
 
         // Set shared preferences
         pref = getApplicationContext().getSharedPreferences("MapsPref", MODE_PRIVATE);
@@ -335,6 +345,8 @@ public class MapActivity extends AppCompatActivity {
 
         // Unregister broadcast
         LocalBroadcastManager.getInstance(MapActivity.this).unregisterReceiver(mLocationBroadcastReceiver);
+        LocalBroadcastManager.getInstance(MapActivity.this).unregisterReceiver(mStepsBroadcastReceiver);
+
         unbindService();
 
         // Close databases

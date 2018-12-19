@@ -10,6 +10,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -27,13 +31,20 @@ import android.util.Log;
 import java.util.ArrayList;
 
 
-public class LocationRouteService extends Service implements LocationListener {
+public class LocationRouteService extends Service implements LocationListener, SensorEventListener {
 
     private static final String TAG = "LocationRouteService";
 
+    // Location management
     private LocationManager mLocationManager;
     private ArrayList<Location> mRoute = new ArrayList<>();
     private long mBaseTime;
+
+    // Step management
+    private int mSteps;
+    private SensorManager mSensorManager;
+    private Sensor mStepSensor;
+
     private IBinder mBinder = new LocationBinder();
 
     public LocationRouteService() {
@@ -84,8 +95,13 @@ public class LocationRouteService extends Service implements LocationListener {
 
         }
 
-    }
+        // Configure Steps manager
+        mSteps = 0;
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        mSensorManager.registerListener(LocationRouteService.this, mStepSensor, SensorManager.SENSOR_DELAY_UI);
 
+    }
 
     @Override
     public void onDestroy() {
@@ -96,6 +112,8 @@ public class LocationRouteService extends Service implements LocationListener {
 
     }
 
+
+    // Location
 
     @Override
     public void onLocationChanged(Location location) {
@@ -125,8 +143,6 @@ public class LocationRouteService extends Service implements LocationListener {
     }
 
     // Communication methods
-
-    // TODO Clear all LocationParcel implementations
     private void sendLocationMessageToActivity(ArrayList<Location> route) {
 
         Intent locationIntent = new Intent("LocationUpdate");
@@ -174,6 +190,19 @@ public class LocationRouteService extends Service implements LocationListener {
 
     }
 
+    // StepCounter
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        mSteps++;
+        sendStepMessageToActivity(mSteps);
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
+
     public class LocationBinder extends Binder {
 
         public LocationRouteService getService() {
@@ -181,6 +210,14 @@ public class LocationRouteService extends Service implements LocationListener {
             return LocationRouteService.this;
 
         }
+
+    }
+
+    private void sendStepMessageToActivity(int steps) {
+
+        Intent stepIntent = new Intent("StepsUpdate");
+        stepIntent.putExtra("Steps", steps);
+        LocalBroadcastManager.getInstance(LocationRouteService.this).sendBroadcast(stepIntent);
 
     }
 

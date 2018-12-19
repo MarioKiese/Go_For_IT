@@ -75,8 +75,7 @@
         android:layout_marginEnd="8dp"
         android:text="@string/tvDistanceText"
         app:layout_constraintEnd_toStartOf="@+id/tvCalories"
-        app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSteps"
         app:layout_constraintTop_toBottomOf="@+id/mvMap" />
 
     <TextView
@@ -84,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="104dp"
+        android:layout_marginEnd="52dp"
         android:text="@string/tvCaloriesText"
         app:layout_constraintEnd_toStartOf="@+id/tvTime"
         app:layout_constraintTop_toBottomOf="@+id/mvMap" />
@@ -108,8 +107,7 @@
         android:layout_marginEnd="8dp"
         android:text="Dummy"
         app:layout_constraintEnd_toStartOf="@+id/tvCaloriesValue"
-        app:layout_constraintHorizontal_bias="0.125"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvStepsValue"
         app:layout_constraintTop_toBottomOf="@+id/tvDistance" />
 
     <TextView
@@ -117,11 +115,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:layout_marginEnd="96dp"
+        android:layout_marginEnd="44dp"
         android:layout_marginBottom="8dp"
         android:text="Dummy"
         app:layout_constraintBottom_toTopOf="@+id/btn_stop_location"
         app:layout_constraintEnd_toStartOf="@+id/chronometer"
         app:layout_constraintTop_toBottomOf="@+id/tvCalories"
         app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tvSteps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/route_list_steps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mvMap" />
+
+    <TextView
+        android:id="@+id/tvStepsValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:text="Dummy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvSteps" />
 </android.support.constraint.ConstraintLayout>
