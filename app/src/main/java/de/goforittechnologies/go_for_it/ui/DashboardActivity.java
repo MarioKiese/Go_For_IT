@@ -40,6 +40,7 @@ public class DashboardActivity extends AppCompatActivity
     private TextView tvSeekbarMonthCategory;
     private TextView tvSeekbarMonthValue;
     private int monthForHourUse;
+    private Toast noTableToast = null;
 
     String selectedPeriod;
     private Calendar calendar;
@@ -131,7 +132,11 @@ public class DashboardActivity extends AppCompatActivity
             dataSourceStepData.close();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this,"Es gibt keine Tabelle für den ausgewählten Monat",Toast.LENGTH_SHORT).show();
+            if (noTableToast!= null){
+                noTableToast.cancel();
+            }
+            noTableToast = Toast.makeText(this,"Es gibt keine Tabelle für den ausgewählten Monat",Toast.LENGTH_SHORT);
+            noTableToast.show();
         }
         return list;
     }
@@ -154,9 +159,26 @@ public class DashboardActivity extends AppCompatActivity
         return entries;
     }
 
-
     private List<BarEntry> buildWeekBarChart(int month){
         List<BarEntry> entries = new ArrayList<>();
+        double value = 0;
+        inputList = selectData(month);
+        int i = 0;
+
+        while (i < inputList.size() ){
+
+            for (int j = 0; j < 7; j++){
+                if ( i+j < inputList.size()){
+                    for (int k = 0; k <24; k++){
+                        value = inputList.get(i+j)[k];
+                    }
+                }
+            }
+            entries.add(new BarEntry((float)(i%7+1),(float)value));
+            value = 0;
+            i = i+7;
+        }
+
         return entries;
     }
 
@@ -236,7 +258,7 @@ public class DashboardActivity extends AppCompatActivity
 
         }
     }
-    
+
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
 
