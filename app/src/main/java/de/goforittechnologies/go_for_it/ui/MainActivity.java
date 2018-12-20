@@ -113,21 +113,23 @@ public class MainActivity extends AppCompatActivity {
                 .registerReceiver(mStepsBroadcastReceiver,new IntentFilter("StepsUpdate"));
 
         if (isFirstTime() == true){
-            //Create empty database for two month on first Start
+            //Create empty database for one yeah on first Start
+            for (int m = 11; m <=12; m++ ){
+                DataSourceStepData dataSourceStepData = new DataSourceStepData(this,
+                        "StepDataTABLE_"+ m,1);
 
-            DataSourceStepData dataSourceStepData = new DataSourceStepData(this,
-                    "StepDataTABLE_"+ (calendar.get(Calendar.MONTH)+1),1);
-
-            dataSourceStepData.open();
-            double[] day = new double[24];
-            for (int i = 1; i <=31; i++){
-                for (int j = 0; j <24; j++){
-                    dataSourceStepData.createStepData(0,i+":"+j);
-                    Log.d(TAG, "onCreate: StepDataEmpty:" + i + ":" +j);
+                dataSourceStepData.open();
+                for (int i = 1; i <=31; i++){
+                    for (int j = 0; j <24; j++){
+                        dataSourceStepData.createStepData(0,i+":"+j);
+                        //Log.d(TAG, "onCreate: StepDataEmpty:" + i + ":" +j);
+                    }
                 }
+
+                dataSourceStepData.close();
             }
 
-            dataSourceStepData.close();
+
 
         }
     }

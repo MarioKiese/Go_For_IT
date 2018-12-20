@@ -1,6 +1,5 @@
 package de.goforittechnologies.go_for_it.ui;
 
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -97,6 +96,8 @@ public class DashboardActivity extends AppCompatActivity
 
         monthForHourUse = 0;
 
+        //Todo: Information Button for user + making dashboard fancy af
+
     }
     private List<BarEntry> buildMonthBarChart(int month){
         List<BarEntry> entries = new ArrayList<>();
@@ -144,7 +145,6 @@ public class DashboardActivity extends AppCompatActivity
     private List<BarEntry> buildDayBarChart(int day, int month){
 
         List<BarEntry> entries = new ArrayList<>();
-        double value = 0;
 
         inputList = selectData(month);
 
@@ -170,11 +170,11 @@ public class DashboardActivity extends AppCompatActivity
             for (int j = 0; j < 7; j++){
                 if ( i+j < inputList.size()){
                     for (int k = 0; k <24; k++){
-                        value = inputList.get(i+j)[k];
+                        value += inputList.get(i+j)[k];
                     }
                 }
             }
-            entries.add(new BarEntry((float)(i%7+1),(float)value));
+            entries.add(new BarEntry((float)(((int)i/7)+1),(float)value));
             value = 0;
             i = i+7;
         }
@@ -182,7 +182,7 @@ public class DashboardActivity extends AppCompatActivity
         return entries;
     }
 
-    private void invalitadeBarCHart(List<BarEntry> inputList){
+    private void invalitadeBarChart(List<BarEntry> inputList){
         BarDataSet set = new BarDataSet(inputList, "BarDataSet");
         BarData data = new BarData(set);
         data.setBarWidth(0.9f); // set custom bar width
@@ -245,15 +245,15 @@ public class DashboardActivity extends AppCompatActivity
         switch (selectedPeriod) {
             case "Tage":
                 entries =  buildMonthBarChart(i+1);
-                invalitadeBarCHart(entries);
+                invalitadeBarChart(entries);
                 break;
             case "Wochen":
                 entries = buildWeekBarChart(i+1);
-                invalitadeBarCHart(entries);
+                invalitadeBarChart(entries);
                 break;
             case "Stunden":
                 entries = buildDayBarChart(i, monthForHourUse);
-                invalitadeBarCHart(entries);
+                invalitadeBarChart(entries);
                 break;
 
         }

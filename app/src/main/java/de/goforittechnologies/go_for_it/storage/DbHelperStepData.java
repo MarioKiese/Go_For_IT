@@ -30,11 +30,17 @@ public class DbHelperStepData extends SQLiteOpenHelper {
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_STEPS + " REAL NOT NULL," +
                     COLUMN_TIMESTAMP + " STRING NOT NULL)";
+        createTable();
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        if (mode ==1){
+
+    }
+    public void createTable(){
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+
+        if (mode == 1){
             try {
                 Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
                 sqLiteDatabase.execSQL(SQL_CREATE);

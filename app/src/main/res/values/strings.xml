@@ -25,4 +25,6 @@
     <string name="action_dashboard_text">Dashboard</string>
     <string name="tvSeekbarCategory">noch keine Auswahl</string>
     <string name="tvSeekbarValue" />
+    <string name="btn_create_testdata">Testdaten erzeugen</string>
+    <string name="btn_delete_testdata">Testdaten löschen</string>
 </resources>

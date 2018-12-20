@@ -84,10 +84,24 @@ public class StepCounterService extends Service implements SensorEventListener {
 
     private void updateDatabase(double steps, String dbName, int day, int hour){
         //TODO: Check Performance, to many DataSourceStepDataobjects?
-        DataSourceStepData dataSourceStepData = new DataSourceStepData(this,dbName,1);
+
+        DataSourceStepData dataSourceStepData = null;
+        try {
+            dataSourceStepData = new DataSourceStepData(this,dbName,1);
+        } catch (Exception e) {
+            e.printStackTrace();
+            dataSourceStepData = new DataSourceStepData(this,dbName,0);
+        }
+
         dataSourceStepData.open();
         String timestamp = day +":" + hour;
-        dataSourceStepData.updateStepData(steps,timestamp);
+        try {
+            dataSourceStepData.createStepData(steps,timestamp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            dataSourceStepData.updateStepData(steps,timestamp);
+        }
+
         dataSourceStepData.close();
     }
 
