@@ -54,7 +54,7 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
 
             sqLiteDatabase.execSQL(SQL_CREATE);
             Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
-            
+
         } catch (Exception ex) {
 
             Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());

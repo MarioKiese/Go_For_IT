@@ -1,5 +1,6 @@
 package de.goforittechnologies.go_for_it.ui;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -78,6 +79,8 @@ public class MapActivity extends AppCompatActivity {
     private double mDistance;
     private double mCalories;
 
+    LocationManager locationManager;
+
     // Shared preferences
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
@@ -88,11 +91,11 @@ public class MapActivity extends AppCompatActivity {
 
     // Permissions
     private static final int PERMISSION_ALL = 1;
-    private static final String [] PERMISSIONS = {
+    private static final String[] PERMISSIONS = {
 
-        android.Manifest.permission.ACCESS_COARSE_LOCATION,
-        android.Manifest.permission.ACCESS_FINE_LOCATION,
-        android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            android.Manifest.permission.ACCESS_COARSE_LOCATION,
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 
     };
 
@@ -107,7 +110,8 @@ public class MapActivity extends AppCompatActivity {
         // Check permission for location and storage
         if (Build.VERSION.SDK_INT >= 23) {
 
-            if(!hasPermissions(this, PERMISSIONS)){
+            if (!hasPermissions(this, PERMISSIONS)) {
+                // TODO Gibt es ActivityCompat auch in Support library v7
                 ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
             }
 
@@ -273,7 +277,7 @@ public class MapActivity extends AppCompatActivity {
                             public void onClick(View view) {
                                 String routeName = input.getText().toString();
 
-                                if (validateRouteName(routeName) ) {
+                                if (validateRouteName(routeName)) {
                                     routeName = formatRouteName(routeName);
                                     if (checkIfRouteNameExists(routeName)) {
                                         Toast.makeText(MapActivity.this, "Route name already exists! Please enter another name!", Toast.LENGTH_LONG).show();
@@ -451,16 +455,17 @@ public class MapActivity extends AppCompatActivity {
         mapView.setMultiTouchControls(true);
         mapView.getController().setZoom(16.0);
 
-        GpsMyLocationProvider provider = new GpsMyLocationProvider(MapActivity.this);
-        provider.addLocationSource(LocationManager.NETWORK_PROVIDER);
-        MyLocationNewOverlay myLocationNewOverlay = new MyLocationNewOverlay(provider, mapView);
-        myLocationNewOverlay.enableMyLocation();
-        GeoPoint currentLocation = myLocationNewOverlay.getMyLocation();
-        if (currentLocation == null) {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        GeoPoint currentGeoPoint = new GeoPoint(currentLocation);
+        if (currentGeoPoint == null) {
             Toast.makeText(MapActivity.this, "Position is null", Toast.LENGTH_LONG).show();
         }
-        mapView.getOverlays().add(myLocationNewOverlay);
-        mapView.getController().setCenter(currentLocation);
+        mapView.getController().setCenter(currentGeoPoint);
     }
 
     private void showRoute(List<Location> route) {
