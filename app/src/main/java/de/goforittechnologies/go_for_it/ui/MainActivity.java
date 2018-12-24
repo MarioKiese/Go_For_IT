@@ -9,8 +9,6 @@ import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,7 +18,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -30,13 +27,11 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import java.util.TimeZone;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.logic.StepCounterListener;
 import de.goforittechnologies.go_for_it.logic.services.StepCounterService;
-import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,10 +39,11 @@ public class MainActivity extends AppCompatActivity {
     // Widgets
     TextView tvSensorValue;
     private Toolbar tbMain;
-    private PieChart pieChart;
+    private PieChart pieChartSteps;
     public static int count = 0;
     private Boolean firstTime = null;
     private Calendar calendar;
+    private double stepsForCurrentDay;
     //Service
     private BroadcastReceiver mStepsBroadcastReceiver;
 
@@ -78,10 +74,21 @@ public class MainActivity extends AppCompatActivity {
         Intent stepIntent = new Intent(MainActivity.this, StepCounterService.class);
         startService(stepIntent);
 
-        getSupportActionBar().setTitle("Go For IT");
+        //
+        String dbName = "StepDataTABLE_"+ (calendar.get(Calendar.MONTH)+1);
+        DataSourceStepData dataSourceStepData =
+                new DataSourceStepData(this,dbName, 0);
 
-        //tvSensorValue = findViewById(R.id.tvSensorValue);
-        pieChart = findViewById(R.id.pieChart);
+        dataSourceStepData.open();
+        List<double[]> stepList = dataSourceStepData.getAllStepData();
+        dataSourceStepData.close();
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        stepsForCurrentDay = stepList.get(day)[hour];
+
+        getSupportActionBar().setTitle("Go For IT");
+        pieChartSteps = findViewById(R.id.pieChart);
+
         List<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(70.0f));
         entries.add(new PieEntry(30.0f));
@@ -89,10 +96,10 @@ public class MainActivity extends AppCompatActivity {
         set.setColors(new int[] { Color.WHITE, Color.BLACK });
         PieData data = new PieData(set);
 
-        pieChart.setData(data);
-        pieChart.setCenterTextColor(R.color.colorAccent);
-        pieChart.setDrawHoleEnabled(true);
-        pieChart.invalidate(); // refresh
+        pieChartSteps.setData(data);
+        pieChartSteps.setCenterTextColor(R.color.colorAccent);
+        pieChartSteps.setDrawHoleEnabled(true);
+        pieChartSteps.invalidate(); // refresh
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -102,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "onReceive: Step receiver got data");
-                double steps = intent.getDoubleExtra("Steps", 0);
-                pieChart.setCenterText(String.valueOf(steps) + " Steps");
-                pieChart.invalidate();
+                stepsForCurrentDay += intent.getDoubleExtra("Steps", 0);
+                pieChartSteps.setCenterText(String.valueOf(stepsForCurrentDay) + " Steps");
+                pieChartSteps.invalidate();
             }
         };
 
@@ -115,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         if (isFirstTime() == true){
             //Create empty database for one yeah on first Start
             for (int m = 11; m <=12; m++ ){
-                DataSourceStepData dataSourceStepData = new DataSourceStepData(this,
+                 dataSourceStepData = new DataSourceStepData(this,
                         "StepDataTABLE_"+ m,1);
 
                 dataSourceStepData.open();
@@ -125,12 +132,8 @@ public class MainActivity extends AppCompatActivity {
                         //Log.d(TAG, "onCreate: StepDataEmpty:" + i + ":" +j);
                     }
                 }
-
                 dataSourceStepData.close();
             }
-
-
-
         }
     }
 
@@ -140,9 +143,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-
             sendToLogin();
-
 
         }
 

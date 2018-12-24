@@ -49,7 +49,8 @@ public class StepCounterService extends Service implements SensorEventListener {
         steps = 0;
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        sensorManager.registerListener((SensorEventListener) this, sensor, SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener((SensorEventListener) this,
+                sensor, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -111,9 +112,4 @@ public class StepCounterService extends Service implements SensorEventListener {
         LocalBroadcastManager.getInstance(StepCounterService.this).sendBroadcast(stepsIntent);
         Log.d(TAG, "sendStepMessageToActivity: Steps sent");
     }
-
-
-
-
-
 }
