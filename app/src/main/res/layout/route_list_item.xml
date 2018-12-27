@@ -17,6 +17,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/roboto"
         android:text="Default"
+        android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold" />
 
@@ -40,14 +41,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:fontFamily="@font/roboto"
-                android:text="@string/route_list_steps" />
+                android:text="@string/route_list_steps"
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/tvRouteStepsValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
@@ -65,14 +68,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:fontFamily="@font/roboto"
-                android:text="@string/route_list_time" />
+                android:text="@string/route_list_time"
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/tvRouteTimeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
@@ -90,14 +95,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:fontFamily="@font/roboto"
-                android:text="@string/route_list_distance" />
+                android:text="@string/route_list_distance"
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/tvRouteDistanceValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 
@@ -116,14 +123,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:fontFamily="@font/roboto"
-                android:text="@string/route_list_calories" />
+                android:text="@string/route_list_calories"
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/tvRouteCaloriesValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="@android:color/white" />
 
         </LinearLayout>
 

@@ -1,5 +1,6 @@
 package de.goforittechnologies.go_for_it.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -29,7 +31,9 @@ import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.logic.StepCounterListener;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String TAG = "MainActivity";
+
     // Widgets
     TextView tvSensorValue;
     private Toolbar tbMain;
@@ -72,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
         tbMain = findViewById(R.id.tbMain);
         setSupportActionBar(tbMain);
-
         getSupportActionBar().setTitle("Go For IT");
 
         //tvSensorValue = findViewById(R.id.tvSensorValue);
@@ -116,10 +119,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.main_menu, menu);
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
 
         return true;
     }

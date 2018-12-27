@@ -5,11 +5,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,7 +32,6 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -126,49 +125,6 @@ public class SetupActivity extends AppCompatActivity {
 
                         final StorageReference imagePath = storageReference.child("profile_images").child(userID + ".jpg");
 
-                        //Version 1
-
-                    /*imagePath.putFile(mainImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if (task.isSuccessful()) {
-
-                                Uri downloadUri = task.getResult().getUploadSessionUri();
-
-                                Map<String, String> userMap = new HashMap<>();
-                                userMap.put("name", userName);
-                                userMap.put("image", downloadUri.toString());
-
-                                firebaseFirestore.collection("Users").document(userID).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-
-                                        if (task.isSuccessful()) {
-                                            Toast.makeText(SetupActivity.this, "The user settings are updated", Toast.LENGTH_SHORT).show();
-                                            Intent mainIntent = new Intent(SetupActivity.this, MainActivity.class);
-                                            startActivity(mainIntent);
-                                            finish();
-                                        } else {
-                                            String error = task.getException().getMessage();
-                                            Toast.makeText(SetupActivity.this, "Firestore Error : " + error, Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        pbSetup.setVisibility(View.INVISIBLE);
-                                    }
-                                });
-                                Toast.makeText(SetupActivity.this, "The image is uploaded", Toast.LENGTH_LONG).show();
-
-                            } else {
-
-                                String error = task.getException().getMessage();
-                                Toast.makeText(SetupActivity.this, "Error : " + error, Toast.LENGTH_LONG).show();
-                                pbSetup.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    });*/
-
-
-                        // Version 2
                         imagePath.putFile(mainImageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
                             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -185,7 +141,7 @@ public class SetupActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Uri> task) {
                                 if (task.isSuccessful()) {
 
-                                    storeDataInFirestor(task, userName);
+                                    storeDataInFirestore(task, userName);
 
                                 } else {
 
@@ -198,7 +154,7 @@ public class SetupActivity extends AppCompatActivity {
                     }
                 } else {
 
-                    storeDataInFirestor(null, userName);
+                    storeDataInFirestore(null, userName);
                 }
 
             }
@@ -255,7 +211,7 @@ public class SetupActivity extends AppCompatActivity {
         }
     }
 
-    private void storeDataInFirestor(Task<Uri> task, String userName) {
+    private void storeDataInFirestore(Task<Uri> task, String userName) {
 
         Uri downloadUri;
 

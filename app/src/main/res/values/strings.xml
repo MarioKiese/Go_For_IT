@@ -37,5 +37,6 @@
     <string name="route_list_time">Time</string>
     <string name="route_list_distance">Distance</string>
     <string name="route_list_calories">Calories</string>
+    <string name="action_challenge_text">Challenges</string>
 
 </resources>
