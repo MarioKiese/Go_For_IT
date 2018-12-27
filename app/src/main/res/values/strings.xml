@@ -38,5 +38,12 @@
     <string name="route_list_distance">Distance</string>
     <string name="route_list_calories">Calories</string>
     <string name="action_challenge_text">Challenges</string>
+    <string name="tv_requests">Requests</string>
+    <string name="tv_active_challenges">Active Challenges</string>
+    <string name="action_new_challenge_btn">New Challenge</string>
+    <string name="tv_challenge_user">Challenge someone ...</string>
+    <string name="tv_no_request">No Requests for you</string>
+    <string name="tv_no_active_challenges">You have no active Challenges</string>
+    <string name="tv_no_routes">No Routes recorded</string>
 
 </resources>

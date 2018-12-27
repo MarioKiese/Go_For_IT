@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.main_menu, menu);
+
         if(menu instanceof MenuBuilder){
             MenuBuilder m = (MenuBuilder) menu;
             m.setOptionalIconsVisible(true);
@@ -137,24 +138,27 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
 
-            case R.id.action_logout_btn:
+            case R.id.action_location_btn:
 
-                logOut();
+                Intent locationIntent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(locationIntent);
+                return true;
 
+            case R.id.action_challenge_btn:
+
+                Intent challengesOverviewIntent = new Intent(MainActivity.this, ChallengesOverviewActivity.class);
+                startActivity(challengesOverviewIntent);
                 return true;
 
             case R.id.action_settings_btn:
 
                 Intent settingsIntent = new Intent(MainActivity.this, SetupActivity.class);
                 startActivity(settingsIntent);
-
                 return true;
 
-            case R.id.action_location_btn:
+            case R.id.action_logout_btn:
 
-                Intent locationIntent = new Intent(MainActivity.this, MapActivity.class);
-                startActivity(locationIntent);
-
+                logOut();
                 return true;
 
             default:

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class RoutesListActivity extends AppCompatActivity {
     private static final String TAG = "RoutesListActivity";
 
     // Widgets
+    private TextView tvRoutesEmptyListText;
     private ListView lvRoutes;
     private RoutesAdapter mRouteDataAdapter;
 
@@ -39,7 +41,9 @@ public class RoutesListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routes_list);
 
+        tvRoutesEmptyListText = findViewById(R.id.tvRoutesEmptyListText);
         lvRoutes = findViewById(R.id.lvRoutes);
+        lvRoutes.setEmptyView(tvRoutesEmptyListText);
 
         // Initialize database
         initializeDatabase();
