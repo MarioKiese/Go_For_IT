@@ -79,7 +79,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/tvMaxSteps"
                 android:layout_width="wrap_content"
                 android:layout_height="17dp"
                 android:text="9210"
@@ -116,5 +116,31 @@
             android:layout_height="match_parent"
             android:orientation="vertical"></LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvStepGoal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/tvStepGoal" />
+
+    <RatingBar
+        android:id="@+id/rbStepGoal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:numStars="6"
+        android:stepSize=".5" />
+
+    <Button
+        android:id="@+id/btnConfirmStepGoal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/btnConfirmStepGoalText" />
+
+    <TextView
+        android:id="@+id/tvStepGoalValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
 
 </LinearLayout>

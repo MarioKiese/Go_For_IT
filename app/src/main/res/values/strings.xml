@@ -27,4 +27,6 @@
     <string name="tvSeekbarValue" />
     <string name="btn_create_testdata">Testdaten erzeugen</string>
     <string name="btn_delete_testdata">Testdaten löschen</string>
+    <string name="tvStepGoal">Schrittzielauswahl</string>
+    <string name="btnConfirmStepGoalText">Schrittziel bestätigen</string>
 </resources>
