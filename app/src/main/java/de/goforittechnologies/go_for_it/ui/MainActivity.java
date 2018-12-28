@@ -188,6 +188,9 @@ public class MainActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
+        //_________________________________________________//
+        // update pieChart
+        //_________________________________________________//
         // Set steps broadcast receiver
         mStepsBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -198,7 +201,12 @@ public class MainActivity extends AppCompatActivity {
                 pieChartSteps.setCenterText(String.valueOf((int)steps) + " Steps");
                 pieChartSteps.invalidate();
                 entries = new ArrayList<>();
-                entries.add(new PieEntry((float)(stepGoal - steps)));
+                if (stepGoal - steps < 0){
+                    entries.add(new PieEntry(0f));
+                }
+                else{
+                    entries.add(new PieEntry((float)(stepGoal - steps)));
+                }
                 entries.add(new PieEntry((float)steps));
                 set = new PieDataSet(entries, "Label");
                 set.setColors(new int[] { Color.DKGRAY, Color.WHITE });
@@ -209,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                 pieChartSteps.invalidate(); // refresh
             }
         };
+
         //_________________________________________________//
         // set broadcast manager
         //_________________________________________________//
