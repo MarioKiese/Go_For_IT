@@ -39,7 +39,10 @@ import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    // Widgets
+    //___________________________________________________________________________________________//
+    // declaring (&initialising) objects
+    //___________________________________________________________________________________________//
+    // displayed elements
     private TextView tvSensorValue;
     private TextView tvMaxSteps;
     private TextView tvStepGoalValue;
@@ -47,15 +50,22 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar tbMain;
     private PieChart pieChartSteps;
     private Button btnConfirmStepGoal;
-    public static int count = 0;
-    private Boolean firstTime = null;
-    private Calendar calendar;
-    private double stepsForCurrentDay;
-    private int stepGoal = -1;
-    private List<PieEntry> entries = new ArrayList<>();
-    private PieDataSet set;
-    //Service
+   // status variables
+   private double stepsForCurrentDay;
+   private int stepGoal = 0;
+   private Boolean firstTime = null;
+   private List<PieEntry> entries = new ArrayList<>();
+   private PieDataSet set;
+
+   //time sensitive variables
+   private Calendar calendar;
+
+   //shared preferences
+   SharedPreferences mPreferences;
+
+    //Service usage
     private BroadcastReceiver mStepsBroadcastReceiver;
+    StepCounterListener stepCounterListener;
 
     //Sensor
     SensorManager sensorManager;
@@ -65,36 +75,54 @@ public class MainActivity extends AppCompatActivity {
     // Firebase
     private FirebaseAuth mAuth;
 
-    StepCounterListener stepCounterListener;
-    SharedPreferences mPreferences;
 
+
+    //___________________________________________________________________________________________//
+    // onCreate method
+    //___________________________________________________________________________________________//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Log.d(TAG, "onCreate: Start");
-        calendar = Calendar.getInstance(TimeZone.getDefault());
 
-        mAuth = FirebaseAuth.getInstance();
-
-        tbMain = findViewById(R.id.tbMain);
-        setSupportActionBar(tbMain);
-
-        tvMaxSteps = findViewById(R.id.tvMaxSteps);
-        tvStepGoalValue = findViewById(R.id.tvStepGoalValue);
-        btnConfirmStepGoal = findViewById(R.id.btnConfirmStepGoal);
-        rbStepGoal = findViewById(R.id.rbStepGoal);
+        //_________________________________________________//
+        // declaring &initialising
+        //_________________________________________________//
+        mPreferences = MainActivity.this.getSharedPreferences("step_goal",
+                Context.MODE_PRIVATE);
+        DataSourceStepData dataSourceStepData;
         Intent stepIntent = new Intent(MainActivity.this, StepCounterService.class);
         startService(stepIntent);
+        calendar = Calendar.getInstance(TimeZone.getDefault());
+        mAuth = FirebaseAuth.getInstance();
+        //_________________________________________________//
+        // linking views by id
+        //_________________________________________________//
 
-        DataSourceStepData dataSourceStepData;
+        tvMaxSteps          = findViewById(R.id.tvMaxSteps);
+        tvStepGoalValue     = findViewById(R.id.tvStepGoalValue);
+        btnConfirmStepGoal  = findViewById(R.id.btnConfirmStepGoal);
+        rbStepGoal          = findViewById(R.id.rbStepGoal);
+        tbMain              = findViewById(R.id.tbMain);
+        pieChartSteps       = findViewById(R.id.pieChart);
+        //_________________________________________________//
+        // setting data for first activity-overview
+        //_________________________________________________//
+        setSupportActionBar(tbMain);
+        getSupportActionBar().setTitle("Go For IT");
+        stepGoal = mPreferences.getInt("stepgoal", 0);
+        Log.d(TAG, "onClick: stepGoal: "+ stepGoal );
+        tvStepGoalValue.setText("Schrittziel: " + stepGoal + " Schritte");
 
+        //_________________________________________________//
+        // creating table on first use for data storage
+        //_________________________________________________//
         if (isFirstTime() == true){
-            //Create empty database for one yeah on first Start
-            for (int m = 11; m <=12; m++ ){
+            //Create empty database for current month on first Start
+            for (int m = 12; m <=12; m++ ){
                 dataSourceStepData = new DataSourceStepData(this,
                         "StepDataTABLE_"+ m,1);
 
@@ -109,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //
+        //_________________________________________________//
+        // selecting data from current day for displaying
+        //_________________________________________________//
         String dbName = "StepDataTABLE_"+ (calendar.get(Calendar.MONTH)+1);
         dataSourceStepData =
                 new DataSourceStepData(this,dbName, 0);
@@ -132,7 +162,9 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        //set stepgoal (star rating)
+        //_________________________________________________//
+        // set step goal
+        //_________________________________________________//
         rbStepGoal.setMax(6);
         rbStepGoal.invalidate();
         btnConfirmStepGoal.setOnClickListener(new View.OnClickListener() {
@@ -140,30 +172,19 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 float cntStar = rbStepGoal.getRating();
 
-                if (stepGoal == -1) {
-                    mPreferences = MainActivity.this.getSharedPreferences("Step_Goal",
-                            Context.MODE_PRIVATE);
-                    stepGoal = mPreferences.getInt("stepgoal", (int) (cntStar * 2000));
+                    SharedPreferences.Editor editor = mPreferences.edit();
+                    editor.putInt("stepgoal", (int) (cntStar * 2000));
+                    editor.commit();
 
-                    if (stepGoal != -1) {
-                        SharedPreferences.Editor editor = mPreferences.edit();
-                        editor.putInt("stepgoal", (int) (cntStar * 2000));
-                        editor.commit();
-                    }
-                }
-                stepGoal = mPreferences.getInt("stepgoal", 5000);
+                stepGoal = mPreferences.getInt("stepgoal", 0);
+                Log.d(TAG, "onClick: stepGoal: "+ stepGoal );
                 tvStepGoalValue.setText("Schrittziel: " + stepGoal + " Schritte");
-
-
             }
-
         });
 
-
-        getSupportActionBar().setTitle("Go For IT");
-        pieChartSteps = findViewById(R.id.pieChart);
-
-
+        //_________________________________________________//
+        // prepare Sensor Usage
+        //_________________________________________________//
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
@@ -176,26 +197,29 @@ public class MainActivity extends AppCompatActivity {
                         intent.getDoubleExtra("Steps", 0);
                 pieChartSteps.setCenterText(String.valueOf((int)steps) + " Steps");
                 pieChartSteps.invalidate();
-
                 entries = new ArrayList<>();
                 entries.add(new PieEntry((float)(stepGoal - steps)));
                 entries.add(new PieEntry((float)steps));
                 set = new PieDataSet(entries, "Label");
                 set.setColors(new int[] { Color.DKGRAY, Color.WHITE });
                 PieData data = new PieData(set);
-
                 pieChartSteps.setData(data);
                 pieChartSteps.setCenterTextColor(R.color.colorAccent);
                 pieChartSteps.setDrawHoleEnabled(true);
                 pieChartSteps.invalidate(); // refresh
             }
         };
+        //_________________________________________________//
+        // set broadcast manager
+        //_________________________________________________//
 
-        //set broadcast manager
         LocalBroadcastManager.getInstance(MainActivity.this)
                 .registerReceiver(mStepsBroadcastReceiver,new IntentFilter("StepsUpdate"));
 
     }
+    //___________________________________________________________________________________________//
+    // onStart method
+    //___________________________________________________________________________________________//
 
     @Override
     protected void onStart() {
@@ -209,6 +233,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //___________________________________________________________________________________________//
+    // onCreateOptionsMenu method
+    //___________________________________________________________________________________________//
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -216,6 +244,10 @@ public class MainActivity extends AppCompatActivity {
 
         return true;
     }
+
+    //___________________________________________________________________________________________//
+    // onOptionsItemSelected method
+    //___________________________________________________________________________________________//
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -253,6 +285,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //___________________________________________________________________________________________//
+    // onResume method
+    //___________________________________________________________________________________________//
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -263,6 +299,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //___________________________________________________________________________________________//
+    // onResume method
+    //___________________________________________________________________________________________//
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -270,6 +310,10 @@ public class MainActivity extends AppCompatActivity {
 
         sensorManager.unregisterListener(stepCounterListener);
     }
+
+    //___________________________________________________________________________________________//
+    // sendToLogin method
+    //___________________________________________________________________________________________//
 
     private void sendToLogin() {
 
@@ -279,6 +323,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //___________________________________________________________________________________________//
+    // logOut method
+    //___________________________________________________________________________________________//
+
     private void logOut() {
 
         mAuth.signOut();
@@ -286,7 +334,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
+    //___________________________________________________________________________________________//
+    // isFirstTime method
+    //___________________________________________________________________________________________//
 
     private boolean isFirstTime() {
         if (firstTime == null) {
@@ -301,11 +351,14 @@ public class MainActivity extends AppCompatActivity {
         return firstTime;
     }
 
+    //___________________________________________________________________________________________//
+    // getMaxForMonth method
+    //___________________________________________________________________________________________//
+
     private double getMaxForMonth(List<double[]> inputList){
         double max = 0;
         double value = 0;
         int i = 0;
-
         while(i < inputList.size()){
             for (int j = 0; j < 24; j++){
                 try {
