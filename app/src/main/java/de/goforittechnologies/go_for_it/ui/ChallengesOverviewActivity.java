@@ -32,8 +32,6 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         // Initialize widgets
         tbChallenges = findViewById(R.id.tbChallenges);
         setSupportActionBar(tbChallenges);
-        getSupportActionBar().setTitle("Challenges");
-
         tvRequestsListEmptyText = findViewById(R.id.tvRequestsEmtpyListText);
         lvRequests = findViewById(R.id.lvRequests);
         lvRequests.setEmptyView(tvRequestsListEmptyText);

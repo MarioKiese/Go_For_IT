@@ -5,16 +5,18 @@ public class Request {
     private String id;
     private int stepTarget;
     private String sourceUserID;
+    private String targetUserID;
     private String challengeID;
     private String status;
 
     public Request() {
     }
 
-    public Request(String id, int stepTarget, String sourceUserID, String challengeID, String status) {
-        this.id = id;
+    public Request(String id, int stepTarget, String sourceUserID, String targetUserID, String challengeID, String status) {
+        this.id = id; //TODO: Check if necessary and clear all traces
         this.stepTarget = stepTarget;
         this.sourceUserID = sourceUserID;
+        this.targetUserID = targetUserID;
         this.challengeID = challengeID;
         this.status = status;
     }
@@ -41,6 +43,14 @@ public class Request {
 
     public void setSourceUserID(String sourceUserID) {
         this.sourceUserID = sourceUserID;
+    }
+
+    public String getTargetUserID() {
+        return targetUserID;
+    }
+
+    public void setTargetUserID(String targetUserID) {
+        this.targetUserID = targetUserID;
     }
 
     public String getChallengeID() {

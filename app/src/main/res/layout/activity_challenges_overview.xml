@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:theme="@style/MyToolbarStyle"
+        app:title="@string/challenges_overview_toolbar_text"
         app:titleTextColor="@android:color/white" />
 
     <LinearLayout

@@ -76,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
         tbMain = findViewById(R.id.tbMain);
         setSupportActionBar(tbMain);
-        getSupportActionBar().setTitle("Go For IT");
 
         //tvSensorValue = findViewById(R.id.tvSensorValue);
         pieChart = findViewById(R.id.pieChart);

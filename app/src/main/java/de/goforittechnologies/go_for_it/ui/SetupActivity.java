@@ -225,6 +225,7 @@ public class SetupActivity extends AppCompatActivity {
 
 
         Map<String, String> userMap = new HashMap<>();
+        userMap.put("id", userID);
         userMap.put("name", userName);
         userMap.put("image", downloadUri.toString());
 

@@ -68,7 +68,12 @@
             android:name=".ui.HistoricMapActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".ui.ChallengesOverviewActivity" />
-        <activity android:name=".ui.AllUsersActivity"></activity>
+        <activity android:name=".ui.AllUsersActivity" />
+
+        <service
+            android:name=".logic.services.ChallengeStepCounterService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

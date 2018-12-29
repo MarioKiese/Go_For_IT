@@ -120,16 +120,13 @@ public class MapActivity extends AppCompatActivity {
         // Initialize database
         initializeDatabase();
 
-        // Set toolbar
-        tbMaps = findViewById(R.id.tbMaps);
-        setSupportActionBar(tbMaps);
-        getSupportActionBar().setTitle("Maps");
-
         // Configure map
         mapView = findViewById(R.id.mvMap);
         initializeMap();
 
         // Set widgets
+        tbMaps = findViewById(R.id.tbMaps);
+        setSupportActionBar(tbMaps);
         btnStartLocation = findViewById(R.id.btn_start_location);
         btnStopLocation = findViewById(R.id.btn_stop_location);
         tvSteps = findViewById(R.id.tvSteps);
@@ -460,12 +457,20 @@ public class MapActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
+
         Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        GeoPoint currentGeoPoint = new GeoPoint(currentLocation);
-        if (currentGeoPoint == null) {
+
+        if (currentLocation != null) {
+
+            GeoPoint currentGeoPoint = new GeoPoint(currentLocation);
+
+            mapView.getController().setCenter(currentGeoPoint);
+        } else {
+
+            //TODO: ggf. currentLocation mit NETWORK_PROVIDER ermitteln
             Toast.makeText(MapActivity.this, "Position is null", Toast.LENGTH_LONG).show();
         }
-        mapView.getController().setCenter(currentGeoPoint);
+
     }
 
     private void showRoute(List<Location> route) {

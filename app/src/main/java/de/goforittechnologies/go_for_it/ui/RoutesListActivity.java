@@ -7,6 +7,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ public class RoutesListActivity extends AppCompatActivity {
     private TextView tvRoutesEmptyListText;
     private ListView lvRoutes;
     private RoutesAdapter mRouteDataAdapter;
+    private Toolbar tbRoutes;
 
     // Database
     DataSourceMapData dataSourceMapData;
@@ -41,6 +43,9 @@ public class RoutesListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_routes_list);
 
+        // Set widgets
+        tbRoutes = findViewById(R.id.tbRoutes);
+        setSupportActionBar(tbRoutes);
         tvRoutesEmptyListText = findViewById(R.id.tvRoutesEmptyListText);
         lvRoutes = findViewById(R.id.lvRoutes);
         lvRoutes.setEmptyView(tvRoutesEmptyListText);
