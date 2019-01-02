@@ -25,6 +25,23 @@ import java.util.TimeZone;
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
+
+/**
+ * @author  Tom Hammerbacher.
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ * This class creates the dashboard of the "Go_for_IT" android app.
+ * Corresponding layout: res.layout.activity_dashboard.xml
+ *
+ * The user can choose between displaying the selected data in different time periods (week, day,
+ * hour) by klicking on the dropdown spinner in the top.
+ * The BarChart shows the choosen period. Zooming in X- and Y-direction is possible by using two
+ * fingers.
+ * The two seek-bars (sometimes only one is shown) can be used to change the displayed month and day
+ * by swiping over it.
+ */
+
 public class DashboardActivity extends AppCompatActivity
         implements AdapterView.OnItemSelectedListener,
         SeekBar.OnSeekBarChangeListener {

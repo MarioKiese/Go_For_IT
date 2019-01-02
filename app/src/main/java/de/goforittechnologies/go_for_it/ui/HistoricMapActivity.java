@@ -15,6 +15,23 @@ import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
 
+/**
+ * @author  Mario Kiese and Tom Hammerbacher
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ *
+ * This class shows a selected route out of the RoutesListActivity
+ * @see RoutesListActivity
+ *
+ * Corresponding layout: res.layout.activity_historic_map
+ *
+ * The user can navigate through the openstreetmap by swiping and zooming with two fingers
+ * alternative: zooming with two buttons in the bottom (only visible when navigate over map).
+ * @see MapView
+ *
+ */
+
 public class HistoricMapActivity extends AppCompatActivity {
 
     // Widgets

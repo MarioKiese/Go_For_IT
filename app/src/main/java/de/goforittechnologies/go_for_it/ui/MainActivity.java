@@ -39,6 +39,27 @@ import de.goforittechnologies.go_for_it.logic.StepCounterListener;
 import de.goforittechnologies.go_for_it.logic.services.StepCounterService;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
+/**
+ * @author Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ * This class creates the main overview of the "Go_for_IT" android app.
+ * Corresponding layout: res.layout.activity_main.xml
+ *
+ * The user can navigate to the different functions using the button in the top right corner.
+ *
+ * The pie-chart displayes the steps you need to walk to archive the stepgoal.
+ *
+ * The surrounding Infocards display the values of active minutes that day,
+ * the maximal steps on one day of the current month,
+ * the burned calories on that day (based on average weight of 75 kg)
+ * the walked distance on that day (based on average footlength of 65cm).
+ *
+ * The user is able to set the step-goal by seleting stars of the rating-bar (2000 steps per star).
+ * To Confirm the step-goal the user can use the button below the rating-bar
+ */
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -117,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         btnConfirmStepGoal  = findViewById(R.id.btnConfirmStepGoal);
         rbStepGoal          = findViewById(R.id.rbStepGoal);
         tbMain              = findViewById(R.id.tbMain);
-        pieChartSteps       = findViewById(R.id.pieChart);
+
         //_________________________________________________//
         // setting data for first activity-overview
         //_________________________________________________//
@@ -248,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         //_________________________________________________//
 
         LocalBroadcastManager.getInstance(MainActivity.this)
-                .registerReceiver(mStepsBroadcastReceiver,new IntentFilter("StepsUpdate"));
+                .registerReceiver(mStepsBroadcastReceiver,new IntentFilter("GeneralStepsUpdate"));
 
     }
     //___________________________________________________________________________________________//
@@ -256,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
     //___________________________________________________________________________________________//
 
     @Override
-    protected void onStart() {
+    protected void onStart(){
         super.onStart();
 
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -412,7 +433,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if (value > max){
-                    max = value;
+                    max = value;;
                 }
             }
             i++;

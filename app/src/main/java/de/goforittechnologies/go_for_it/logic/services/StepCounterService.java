@@ -107,7 +107,7 @@ public class StepCounterService extends Service implements SensorEventListener {
     }
 
     private void sendStepMessageToActivity(double steps) {
-        Intent stepsIntent = new Intent("StepsUpdate");
+        Intent stepsIntent = new Intent("GeneralStepsUpdate");
         stepsIntent.putExtra("Steps", steps);
         LocalBroadcastManager.getInstance(StepCounterService.this).sendBroadcast(stepsIntent);
         Log.d(TAG, "sendStepMessageToActivity: Steps sent");

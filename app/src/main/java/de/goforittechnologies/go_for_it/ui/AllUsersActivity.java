@@ -40,6 +40,19 @@ import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.Request;
 import de.goforittechnologies.go_for_it.storage.User;
 
+/**
+ * @author  Mario Kiese.
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ * This class shows all firebase users to send them a challenge request
+ * Corresponding layout: res.layout.activity_all_users.xml
+ *
+ * The user can choose an existing app-user with firebase account by klicking on their displayed
+ * user. In the activated dialog, the user is able to type in a step goal both user want to archive.
+ * Using "CANCEL" or "OK" a request can be sent or cancelled.
+ */
+
 public class AllUsersActivity extends AppCompatActivity {
 
     private static final String TAG = "AllUsersActivity";

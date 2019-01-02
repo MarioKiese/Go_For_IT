@@ -35,6 +35,22 @@ import javax.annotation.Nullable;
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.Request;
 
+/**
+ * @author  Mario Kiese.
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ *
+ * This class shows all requested and active challenges
+ * Corresponding layout: res.layout.activity_challenges_overview.xml
+ *
+ * The user can see all requested but not yet accepted challenges under "request".
+ * The user can see all accepted and not yet completed challenges under "active challenges".
+ *
+ * By klicking the menu button in the top right corner, the user is able to create new challenges
+ * @see AllUsersActivity
+ */
+
 public class ChallengesOverviewActivity extends AppCompatActivity {
 
     private static final String TAG = "ChallengesOverviewActy";

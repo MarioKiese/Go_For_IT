@@ -46,7 +46,26 @@ import de.goforittechnologies.go_for_it.logic.services.LocationRouteService;
 import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
 import de.goforittechnologies.go_for_it.storage.DataSourceRouteData;
 import de.goforittechnologies.go_for_it.storage.RouteData;
-
+/**
+ * @author  Mario Kiese and Tom Hammerbacher
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ *
+ * This class is used to log into the firebase account
+ * 
+ *
+ * Corresponding layout: res.layout.activity_login
+ *
+ * The user can type in username and password.
+ *
+ * The user can log himself in by klicking the "login" button.
+ *
+ * The user can create a new firebase account by klicking "create new account" at the bottom.
+ * @see RegisterActivity
+ *
+ *
+ */
 public class MapActivity extends AppCompatActivity {
 
     private static final String TAG = "MapActivity";
