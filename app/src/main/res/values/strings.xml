@@ -25,8 +25,19 @@
     <string name="action_dashboard_text">Dashboard</string>
     <string name="tvSeekbarCategory">noch keine Auswahl</string>
     <string name="tvSeekbarValue" />
-    <string name="btn_create_testdata">Testdaten erzeugen</string>
-    <string name="btn_delete_testdata">Testdaten löschen</string>
-    <string name="tvStepGoal">Schrittzielauswahl</string>
-    <string name="btnConfirmStepGoalText">Schrittziel bestätigen</string>
+    <string name="btn_create_testdata">create testdata</string>
+    <string name="btn_delete_testdata">delete testdata</string>
+    <string name="tvStepGoal">Choose targeted steps per day </string>
+    <string name="btnConfirmStepGoalText">Confirm targeted steps</string>
+    <string name="tvBurned">Burned</string>
+    <string name="tvCalories">Calories</string>
+    <string name="tvTravelled">Travelled</string>
+    <string name="tvDistance">Distance</string>
+    <string name="tvActiveMinutes" />
+    <string name="tvBurnedCalories">0</string>
+    <string name="tvTravelledDistance">0</string>
+    <string name="tvMaxSteps">0</string>
+    <string name="tvInfoBox">Decide between displaying data from month,
+        week or day by klicking on blue bar at the top.
+        Choose month (and day) you want to display.</string>
 </resources>

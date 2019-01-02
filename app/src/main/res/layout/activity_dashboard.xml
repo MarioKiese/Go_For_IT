@@ -27,10 +27,10 @@
 
         <Spinner
             android:id="@+id/spinnerPeriod"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown" />
+            android:background="@color/colorAccentDark"
+            android:backgroundTint="@color/colorAccentDark" />
 
     </LinearLayout>
 
@@ -78,7 +78,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
@@ -96,5 +96,12 @@
             android:text="@string/tvSeekbarValue" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvInfoBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/tvInfoBox" />
 
 </LinearLayout>

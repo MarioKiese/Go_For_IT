@@ -183,10 +183,11 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     private void invalitadeBarChart(List<BarEntry> inputList){
-        BarDataSet set = new BarDataSet(inputList, "BarDataSet");
+        BarDataSet set = new BarDataSet(inputList, "Steps");
         BarData data = new BarData(set);
         data.setBarWidth(0.9f); // set custom bar width
         barChart.setData(data);
+        barChart.getDescription().setEnabled(false);
         barChart.setFitBars(true); // make the x-axis fit exactly all bars
         barChart.invalidate(); // refresh
     }

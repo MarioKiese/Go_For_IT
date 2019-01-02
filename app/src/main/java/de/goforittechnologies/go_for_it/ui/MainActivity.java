@@ -46,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvSensorValue;
     private TextView tvMaxSteps;
     private TextView tvStepGoalValue;
+    private TextView tvBurnedCalories;
+    private TextView tvTravelledDistance;
+    private TextView tvActiveMinutes;
     private RatingBar rbStepGoal;
     private Toolbar tbMain;
     private PieChart pieChartSteps;
@@ -104,6 +107,9 @@ public class MainActivity extends AppCompatActivity {
 
         tvMaxSteps          = findViewById(R.id.tvMaxSteps);
         tvStepGoalValue     = findViewById(R.id.tvStepGoalValue);
+        tvBurnedCalories    = findViewById(R.id.tvBurnedCalories);
+        tvTravelledDistance = findViewById(R.id.tvTravelledDistance);
+        tvActiveMinutes     = findViewById(R.id.tvActiveMinutes);
         btnConfirmStepGoal  = findViewById(R.id.btnConfirmStepGoal);
         rbStepGoal          = findViewById(R.id.rbStepGoal);
         tbMain              = findViewById(R.id.tbMain);
@@ -149,18 +155,28 @@ public class MainActivity extends AppCompatActivity {
             dataSourceStepData.open();
             stepList = dataSourceStepData.getAllStepData();
             dataSourceStepData.close();
-
-            tvMaxSteps.setText(String.valueOf(getMaxForMonth(stepList)));
+            int activeMinutes = 0;
+            tvMaxSteps.setText(String.valueOf((int)getMaxForMonth(stepList)));
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int hour = calendar.get(Calendar.HOUR_OF_DAY);
             for (int i = 0; i <= hour; i++){
                 stepsForCurrentDay += stepList.get(day - 1)[i];
+                //activeminutes = steps/(127.5 (steps/min))
+                // average: 0.65 m = 1 step
+                // average: 5 km/h = 5000m / h = 83,333m /min = 127.5 steps/min
+                activeMinutes += (int)((stepList.get(day - 1)[i])/127.5);
             }
-            pieChartSteps.invalidate();
+
+            tvActiveMinutes.setText(String.valueOf(activeMinutes));
             Log.d(TAG, "onCreate: stepsForcurrentDay: " + stepsForCurrentDay);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        pieChartSteps.setNoDataText("Make Steps to calculate data");
+        pieChartSteps.getDescription().setEnabled(false);
+        pieChartSteps.setDrawHoleEnabled(true);
+        pieChartSteps.invalidate();
 
         //_________________________________________________//
         // set step goal
@@ -189,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         //_________________________________________________//
-        // update pieChart
+        // update pieChart and infocards
         //_________________________________________________//
         // Set steps broadcast receiver
         mStepsBroadcastReceiver = new BroadcastReceiver() {
@@ -199,7 +215,6 @@ public class MainActivity extends AppCompatActivity {
                 double steps = stepsForCurrentDay +
                         intent.getDoubleExtra("Steps", 0);
                 pieChartSteps.setCenterText(String.valueOf((int)steps) + " Steps");
-                pieChartSteps.invalidate();
                 entries = new ArrayList<>();
                 if (stepGoal - steps < 0){
                     entries.add(new PieEntry(0f));
@@ -208,13 +223,19 @@ public class MainActivity extends AppCompatActivity {
                     entries.add(new PieEntry((float)(stepGoal - steps)));
                 }
                 entries.add(new PieEntry((float)steps));
-                set = new PieDataSet(entries, "Label");
+                set = new PieDataSet(entries,"Steps");
                 set.setColors(new int[] { Color.DKGRAY, Color.WHITE });
                 PieData data = new PieData(set);
                 pieChartSteps.setData(data);
                 pieChartSteps.setCenterTextColor(R.color.colorAccent);
                 pieChartSteps.setDrawHoleEnabled(true);
-                pieChartSteps.invalidate(); // refresh
+                pieChartSteps.invalidate();
+                //formula: average steplenght: 0.65m
+                double distance = steps * 0.65;
+                tvTravelledDistance.setText(String.valueOf((int)distance) + " m");
+                //formula: average burned calories per kilometer: weight (70 kilogram) * 0,75
+                tvBurnedCalories.setText(
+                        String.valueOf((int)(70 * 0.75 * distance /1000)) + " kcal");
             }
         };
 
@@ -383,4 +404,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return max;
     }
+
 }
