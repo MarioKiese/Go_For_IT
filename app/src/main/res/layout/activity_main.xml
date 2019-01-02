@@ -15,9 +15,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:theme="@style/MyToolbarStyle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/main_toolbar_text"
         app:titleTextColor="@android:color/white">
 
     </android.support.v7.widget.Toolbar>
@@ -39,6 +37,7 @@
                 android:id="@+id/tvActive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:text="@string/tvActive"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
@@ -48,6 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tvActiveMinutes"
+                android:fontFamily="@font/roboto"
                 android:textColor="@android:color/white" />
 
             <TextView
@@ -86,15 +86,15 @@
                 android:id="@+id/tvMaxSteps"
                 android:layout_width="wrap_content"
                 android:layout_height="17dp"
+                android:fontFamily="@font/roboto"
                 android:text="@string/tvMaxSteps"
-                android:textColor="@android:color/white"
-                app:layout_constraintBottom_toTopOf="@+id/tvMinutes"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:textColor="@android:color/white" />
 
             <TextView
                 android:id="@+id/tvMax"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:text="@string/tvMax"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />

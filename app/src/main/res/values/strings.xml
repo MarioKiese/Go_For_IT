@@ -1,27 +1,68 @@
 <resources>
     <string name="app_name">Go_For_IT</string>
+
+    <!-- LoginActivity -->
     <string name="et_login_mail">Your Email ...</string>
     <string name="et_login_password">Your Password ...</string>
     <string name="btn_login">Login</string>
     <string name="btn_login_register">Create new Account</string>
     <string name="desc_imageview_loginicon_content">Logo Login page</string>
-    <string name="action_search_text">Search</string>
-    <string name="action_setting_text">Account settings</string>
-    <string name="action_logout_text">Logout</string>
-    <string name="action_location_text">Location Service</string>
     <string name="btn_register">Create new Account</string>
+
+    <!-- RegisterActivity -->
     <string name="btn_register_login">Already have an Account?</string>
     <string name="et_confirm_password">Confirm Password ...</string>
     <string name="et_reg_password">Password ...</string>
-    <string name="et_setup_name_hint">Your Name ...</string>
-    <string name="btn_setup">Save Account Settings</string>
+
+    <!-- MainAcitivity -->
+    <string name="action_setting_text">Account settings</string>
+    <string name="action_logout_text">Logout</string>
+    <string name="action_location_text">Location Service</string>
+    <string name="action_challenge_text">Challenges</string>
     <string name="tvToday">Today</string>
     <string name="tvSteps">steps</string>
-    <string name="btn_start_location">Start</string>
-    <string name="btn_stop_location">Stop</string>
     <string name="tvMax">MAX</string>
     <string name="tvActive">Active</string>
     <string name="tvMinutes">Minutes</string>
+
+    <!-- MapActivity -->
+    <string name="action_route_text">Routes</string>
+    <string name="tvDistanceText">Distance</string>
+    <string name="tvCaloriesText">Calories</string>
+    <string name="tvTimeText">Time</string>
+    <string name="btn_start_location">Start</string>
+    <string name="btn_stop_location">Stop</string>
+
+    <!-- RoutesListActivity -->
+    <string name="all_routes">Your Routes</string>
+    <string name="tv_no_routes">No Routes recorded</string>
+
+    <!-- Route list element -->
+    <string name="route_list_steps">Steps</string>
+    <string name="route_list_time">Time</string>
+    <string name="route_list_distance">Distance</string>
+    <string name="route_list_calories">Calories</string>
+
+    <!-- SetupActivity -->
+    <string name="setup_toolbar_text">Account Settings</string>
+    <string name="et_setup_name_hint">Your Name ...</string>
+    <string name="btn_setup">Save Account Settings</string>
+
+    <!-- ChallengesOverviewActivity -->
+    <string name="tv_requests">Requests</string>
+    <string name="tv_active_challenges">Active Challenges</string>
+    <string name="action_new_challenge_btn">New Challenge</string>
+    <string name="tv_no_request">No Requests for you</string>
+    <string name="tv_no_active_challenges">You have no active Challenges</string>
+
+    <!-- AllUsersActivity -->
+    <string name="all_users_toolbar_text">Challenge someone ...</string>
+    <string name="tv_no_users">No Users available</string>
+    <string name="main_toolbar_text">Go For IT</string>
+    <string name="challenges_overview_toolbar_text">Challenges</string>
+    <string name="maps_toolbar_text">Maps</string>
+    <string name="routes_list_toolbar_text">Routes</string>
+
     <string name="action_dashboard_text">Dashboard</string>
     <string name="tvSeekbarCategory">Day</string>
     <string name="tvSeekbarValue" />

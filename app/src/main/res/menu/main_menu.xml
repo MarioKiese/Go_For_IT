@@ -3,22 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_search_btn"
-        android:icon="@drawable/ic_action_search"
-        android:title="@string/action_search_text"
-        app:showAsAction="always" />
-    <item
-        android:id="@+id/action_settings_btn"
-        android:title="@string/action_setting_text" />
-    <item
-        android:id="@+id/action_logout_btn"
-        android:title="@string/action_logout_text" />
-    <item
-        android:id="@+id/action_location_btn"
-        android:title="@string/action_location_text" />
-    <item
         android:id="@+id/action_dashboard_btn"
         android:icon="@mipmap/ic_action_dashboard"
         android:title="@string/action_dashboard_text" />
+    <item
+        android:id="@+id/action_location_btn"
+        android:icon="@drawable/ic_action_location"
+        android:title="@string/action_location_text" />
+    <item
+        android:id="@+id/action_challenge_btn"
+        android:icon="@drawable/ic_action_challenges"
+        android:title="@string/action_challenge_text" />
+    <item
+        android:id="@+id/action_settings_btn"
+        android:icon="@drawable/ic_action_account"
+        android:title="@string/action_setting_text" />
+    <item
+        android:id="@+id/action_logout_btn"
+        android:icon="@drawable/ic_action_logout"
+        android:title="@string/action_logout_text" />
+
 
 </menu>

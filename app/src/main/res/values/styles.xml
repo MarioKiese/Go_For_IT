@@ -11,6 +11,15 @@
 
     <style name="MyToolbarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:colorControlNormal">@android:color/white</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:itemBackground">@color/colorPrimaryLight</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="MapButton" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorButtonNormal">@color/whiteTransparent50</item> <!-- Disable color -->
+        <item name="android:colorAccent">@color/colorAccentDark</item> <!-- Enable color -->
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Colored</item>
     </style>
 
 </resources>

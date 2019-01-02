@@ -1,6 +1,7 @@
 package de.goforittechnologies.go_for_it.ui;
 
 import android.content.BroadcastReceiver;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -11,6 +12,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -38,9 +40,11 @@ import de.goforittechnologies.go_for_it.logic.services.StepCounterService;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
 public class MainActivity extends AppCompatActivity {
+
     private static final String TAG = "MainActivity";
+
     //___________________________________________________________________________________________//
-    // declaring (&initialising) objects
+    // declaring (&initialising) widgets
     //___________________________________________________________________________________________//
     // displayed elements
     private TextView tvSensorValue;
@@ -267,10 +271,16 @@ public class MainActivity extends AppCompatActivity {
     // onCreateOptionsMenu method
     //___________________________________________________________________________________________//
 
+    @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        if(menu instanceof MenuBuilder){
+            MenuBuilder m = (MenuBuilder) menu;
+            m.setOptionalIconsVisible(true);
+        }
 
         return true;
     }
@@ -284,30 +294,35 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
 
-            case R.id.action_logout_btn:
+            case R.id.action_location_btn:
 
-                logOut();
+                Intent locationIntent = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(locationIntent);
+                return true;
 
+            case R.id.action_challenge_btn:
+
+                Intent challengesOverviewIntent = new Intent(MainActivity.this, ChallengesOverviewActivity.class);
+                startActivity(challengesOverviewIntent);
                 return true;
 
             case R.id.action_settings_btn:
 
                 Intent settingsIntent = new Intent(MainActivity.this, SetupActivity.class);
                 startActivity(settingsIntent);
-
                 return true;
 
-            case R.id.action_location_btn:
+            case R.id.action_logout_btn:
 
-                Intent locationIntent = new Intent(MainActivity.this, MapsActivity.class);
-                startActivity(locationIntent);
-
+                logOut();
                 return true;
+
             case R.id.action_dashboard_btn:
+
                 Intent dashBoardIntent = new Intent(MainActivity.this,DashboardActivity.class);
                 startActivity(dashBoardIntent);
-
                 return true;
+
             default:
 
                 return false;
@@ -330,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //___________________________________________________________________________________________//
-    // onResume method
+    // onPause method
     //___________________________________________________________________________________________//
 
     @Override

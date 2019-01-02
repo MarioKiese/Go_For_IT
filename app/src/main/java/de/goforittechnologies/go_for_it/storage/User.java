@@ -1,89 +1,41 @@
 package de.goforittechnologies.go_for_it.storage;
 
-import java.net.URI;
-import java.util.ArrayList;
-
 public class User {
 
-    private String firstName;
-    private String lastName;
-    private String userName;
-    private URI profileImage;
-    private ArrayList<User> friendList;
-    private ArrayList<String> challengeList;
-    private float daySteps;
-    private float maxSteps;
+    private String id;
+    private String name;
+    private String image;
 
-    public String getFirstName() {
-        return firstName;
+    public User() {
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public User(String id, String name, String image) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getId() {
+        return id;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public URI getProfileImage() {
-        return profileImage;
+    public String getImage() {
+        return image;
     }
 
-    public void setProfileImage(URI profileImage) {
-        this.profileImage = profileImage;
+    public void setImage(String image) {
+        this.image = image;
     }
-
-    public ArrayList<User> getFriendList() {
-        return friendList;
-    }
-
-    public void addToFriendList(User friend) {
-        this.friendList.add(friend);
-    }
-
-    public void deleteToFriendList(User friend) {
-        this.friendList.remove(friend);
-    }
-
-    public ArrayList<String> getChallengeList() {
-        return challengeList;
-    }
-
-    public void addChallenge(String challenge) {
-        this.challengeList.add(challenge);
-    }
-
-    public void abortChallenge(String challenge) {
-        this.challengeList.remove(challenge);
-    }
-
-    public float getDaySteps() {
-        return daySteps;
-    }
-
-    public void setDaySteps(float daySteps) {
-        this.daySteps = daySteps;
-    }
-
-    public float getMaxSteps() {
-        return maxSteps;
-    }
-
-    public void setMaxSteps(float maxSteps) {
-        this.maxSteps = maxSteps;
-    }
-
 }
