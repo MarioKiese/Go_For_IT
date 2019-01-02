@@ -9,11 +9,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.Request;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RequestsAdapter extends ArrayAdapter<Request> {
 
@@ -36,8 +39,11 @@ public class RequestsAdapter extends ArrayAdapter<Request> {
 
         Request currentRequest = requestsList.get(position);
 
+        CircleImageView ivSourceUser = listItem.findViewById(R.id.ivSourceUser);
+        Glide.with(mContext).load(currentRequest.getSourceUserImage()).into(ivSourceUser);
+
         TextView tvUserName = listItem.findViewById(R.id.tvUserName);
-        tvUserName.setText(currentRequest.getTargetUserID());
+        tvUserName.setText(currentRequest.getSourceUserName());
 
         TextView tvRequestStepsValue = listItem.findViewById(R.id.tvRequestStepsValue);
         tvRequestStepsValue.setText(String.valueOf(currentRequest.getStepTarget()));

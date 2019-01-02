@@ -5,11 +5,18 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivSourceUser"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="20dp"
+        android:padding="10dp" />
+
     <TextView
         android:id="@+id/tvUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
         android:layout_marginEnd="60dp"
         android:fontFamily="@font/roboto"
         android:text="Dummy"
