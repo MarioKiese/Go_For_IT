@@ -76,7 +76,7 @@ public class DashboardActivity extends AppCompatActivity
         //get the spinner from the xml.
 
         //create a list of items for the spinner.
-        String[] items = new String[]{"Wochen", "Tage", "Stunden"};
+        String[] items = new String[]{"Week", "Day", "Hour"};
         //create an adapter to describe how the items are displayed, adapters are used in several places in android.
         //There are multiple variations of this, but this is the basic variant.
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
@@ -136,7 +136,7 @@ public class DashboardActivity extends AppCompatActivity
             if (noTableToast!= null){
                 noTableToast.cancel();
             }
-            noTableToast = Toast.makeText(this,"Es gibt keine Tabelle für den ausgewählten Monat",Toast.LENGTH_SHORT);
+            noTableToast = Toast.makeText(this,"No existing table for selected month",Toast.LENGTH_SHORT);
             noTableToast.show();
         }
         return list;
@@ -197,25 +197,25 @@ public class DashboardActivity extends AppCompatActivity
 
         selectedPeriod = adapterView.getItemAtPosition(i).toString();
         switch (selectedPeriod){
-            case "Tage":
+            case "Day":
                 seekBarDay.setMax(11);
-                tvSeekbarDayCategory.setText("Monat:");
+                tvSeekbarDayCategory.setText("Month:");
                 seekBarMonth.setAlpha(0);
                 tvSeekbarMonthCategory.setAlpha(0);
                 tvSeekbarMonthValue.setAlpha(0);
                 break;
-            case "Wochen":
+            case "Week":
                 seekBarDay.setMax(11);
-                tvSeekbarDayCategory.setText("Monat:");
+                tvSeekbarDayCategory.setText("Month:");
                 seekBarMonth.setAlpha(0);
                 tvSeekbarMonthCategory.setAlpha(0);
                 tvSeekbarMonthValue.setAlpha(0);
                 break;
-            case "Stunden":
+            case "Hour":
                 seekBarDay.setMax(30);
                 seekBarMonth.setMax(11);
-                tvSeekbarDayCategory.setText("Tag:");
-                tvSeekbarMonthCategory.setText("Monat:");
+                tvSeekbarDayCategory.setText("Day:");
+                tvSeekbarMonthCategory.setText("Month:");
                 seekBarMonth.setAlpha(1);
                 tvSeekbarMonthCategory.setAlpha(1);
                 tvSeekbarMonthValue.setAlpha(1);
@@ -244,15 +244,15 @@ public class DashboardActivity extends AppCompatActivity
 
         }
         switch (selectedPeriod) {
-            case "Tage":
+            case "Day":
                 entries =  buildMonthBarChart(i+1);
                 invalitadeBarChart(entries);
                 break;
-            case "Wochen":
+            case "Week":
                 entries = buildWeekBarChart(i+1);
                 invalitadeBarChart(entries);
                 break;
-            case "Stunden":
+            case "Hour":
                 entries = buildDayBarChart(i, monthForHourUse);
                 invalitadeBarChart(entries);
                 break;

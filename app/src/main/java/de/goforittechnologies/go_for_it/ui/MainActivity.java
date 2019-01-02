@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         //_________________________________________________//
         if (isFirstTime() == true){
             //Create empty database for current month on first Start
-            for (int m = 12; m <=12; m++ ){
+            for (int m = 1; m <=1; m++ ){
                 dataSourceStepData = new DataSourceStepData(this,
                         "StepDataTABLE_"+ m,1);
 

@@ -23,7 +23,7 @@
     <string name="tvActive">Active</string>
     <string name="tvMinutes">Minutes</string>
     <string name="action_dashboard_text">Dashboard</string>
-    <string name="tvSeekbarCategory">noch keine Auswahl</string>
+    <string name="tvSeekbarCategory">Day</string>
     <string name="tvSeekbarValue" />
     <string name="btn_create_testdata">create testdata</string>
     <string name="btn_delete_testdata">delete testdata</string>
