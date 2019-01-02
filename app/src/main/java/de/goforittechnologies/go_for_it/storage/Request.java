@@ -6,17 +6,23 @@ public class Request {
     private int stepTarget;
     private String sourceUserID;
     private String targetUserID;
+    private String sourceUserName;
+    private String targetUserName;
+    private String sourceUserImage;
     private String challengeID;
     private String status;
 
     public Request() {
     }
 
-    public Request(String id, int stepTarget, String sourceUserID, String targetUserID, String challengeID, String status) {
+    public Request(String id, int stepTarget, String sourceUserID, String targetUserID, String sourceUserName, String targetUserName, String sourceUserImage, String challengeID, String status) {
         this.id = id; //TODO: Check if necessary and clear all traces
         this.stepTarget = stepTarget;
         this.sourceUserID = sourceUserID;
         this.targetUserID = targetUserID;
+        this.sourceUserName = sourceUserName;
+        this.targetUserName = targetUserName;
+        this.sourceUserImage = sourceUserImage;
         this.challengeID = challengeID;
         this.status = status;
     }
@@ -51,6 +57,30 @@ public class Request {
 
     public void setTargetUserID(String targetUserID) {
         this.targetUserID = targetUserID;
+    }
+
+    public String getSourceUserName() {
+        return sourceUserName;
+    }
+
+    public void setSourceUserName(String sourceUserName) {
+        this.sourceUserName = sourceUserName;
+    }
+
+    public String getTargetUserName() {
+        return targetUserName;
+    }
+
+    public void setTargetUserName(String targetUserName) {
+        this.targetUserName = targetUserName;
+    }
+
+    public String getSourceUserImage() {
+        return sourceUserImage;
+    }
+
+    public void setSourceUserImage(String sourceUserImage) {
+        this.sourceUserImage = sourceUserImage;
     }
 
     public String getChallengeID() {

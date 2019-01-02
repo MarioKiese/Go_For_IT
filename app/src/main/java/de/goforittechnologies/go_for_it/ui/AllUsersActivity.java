@@ -53,6 +53,8 @@ public class AllUsersActivity extends AppCompatActivity {
     // Member variables
     private List<User> usersList;
     private UsersAdapter usersAdapter;
+    private String sourceUserName;
+    private String sourceUserImage;
 
     // Firebase
     private FirebaseFirestore firebaseFirestore;
@@ -104,6 +106,10 @@ public class AllUsersActivity extends AppCompatActivity {
                                 User user = doc.getDocument().toObject(User.class);
                                 usersList.add(user);
                                 usersAdapter.notifyDataSetChanged();
+                            } else {
+
+                                sourceUserName = (String)doc.getDocument().get("name");
+                                sourceUserImage = (String)doc.getDocument().get("image");
                             }
                         }
                     }
@@ -156,11 +162,12 @@ public class AllUsersActivity extends AppCompatActivity {
                                     User targetUser = ((User)adapterView.getItemAtPosition(position));
                                     String targetUserId = targetUser.getId();
                                     String sourceID = currentUser.getUid();
+                                    String targetUserName = targetUser.getName();
                                     String challengeID = "";
                                     String requestID = "";
                                     String status = "pending";
 
-                                    Request challengeRequest = new Request(requestID, stepTarget, sourceID, targetUserId, challengeID, status);
+                                    Request challengeRequest = new Request(requestID, stepTarget, sourceID, targetUserId, sourceUserName, targetUserName, sourceUserImage, challengeID, status);
                                     
                                     manageRequest(challengeRequest);
 
