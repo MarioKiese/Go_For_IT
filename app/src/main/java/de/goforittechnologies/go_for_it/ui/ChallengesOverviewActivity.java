@@ -1,16 +1,22 @@
 package de.goforittechnologies.go_for_it.ui;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,7 +39,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import de.goforittechnologies.go_for_it.R;
+import de.goforittechnologies.go_for_it.storage.Challenge;
 import de.goforittechnologies.go_for_it.storage.Request;
+import de.goforittechnologies.go_for_it.storage.User;
 
 public class ChallengesOverviewActivity extends AppCompatActivity {
 
@@ -88,8 +96,10 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
                 if (e!=null){
+
                     Log.d(TAG,"Error : " + e.getMessage());
                     pbRequests.setVisibility(View.INVISIBLE);
+                    return;
                 } else {
 
                     for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
@@ -100,9 +110,61 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                             Log.d(TAG, "onEvent: Request ID found: " + requestID);
                             Toast.makeText(ChallengesOverviewActivity.this, "Request ID found: " + requestID, Toast.LENGTH_SHORT).show();
 
+
+
+
+
                             if (requestID != null) {
 
-                                firebaseFirestore.collection("Requests").document(requestID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                firebaseFirestore.collection("Requests").document(requestID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                                        if (e != null) {
+
+                                            Log.d(TAG,"Error : " + e.getMessage());
+                                            return;
+                                        } else {
+
+                                            if (documentSnapshot != null && documentSnapshot.exists()) {
+
+                                                Log.d(TAG, "Current data: " + documentSnapshot.getData());
+                                                Request request = documentSnapshot.toObject(Request.class);
+                                                Log.d(TAG, "onComplete: Firestore data converted to object");
+                                                Log.d(TAG, "onComplete: TargetUserID : " + request.getTargetUserID() + " UserID : " + userID);
+
+                                                if (request.getTargetUserID().equals(userID) && request.getStatus().equals("pending")) {
+
+                                                    Log.d(TAG, "onComplete: Request is compatible with userID");
+
+                                                    requestsList.add(request);
+                                                    requestsAdapter.notifyDataSetChanged();
+                                                }
+                                                else if(request.getTargetUserID().equals(userID) && request.getStatus().equals("accepted")) {
+
+                                                    Log.d(TAG, "onEvent: Remove request from request list");
+
+                                                    for (int i=0; i<requestsList.size(); i++) {
+
+                                                        if (requestsList.get(i).getId().equals(request.getId())) {
+
+                                                            requestsList.remove(i);
+                                                            requestsAdapter.notifyDataSetChanged();
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                Log.d(TAG, "Current data: null");
+                                            }
+                                        }
+                                    }
+                                });
+
+
+
+
+
+                                /*firebaseFirestore.collection("Requests").document(requestID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -112,7 +174,7 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                                             Log.d(TAG, "onComplete: Firestore data converted to object");
                                             Log.d(TAG, "onComplete: TargetUserID : " + request.getTargetUserID() + " UserID : " + userID);
 
-                                            if (request.getTargetUserID().equals(userID)) {
+                                            if (request.getTargetUserID().equals(userID) && request.getStatus().equals("pending")) {
 
                                                 Log.d(TAG, "onComplete: Request is compatible with userID");
 
@@ -124,7 +186,7 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                                             Toast.makeText(ChallengesOverviewActivity.this, "Firestore Retrieve Error : " + error, Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                });
+                                });*/
                             } else {
 
                                 Log.d(TAG, "onEvent: Request ID is null");
@@ -134,6 +196,53 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                     }
                     pbRequests.setVisibility(View.INVISIBLE);
                 }
+            }
+        });
+
+        lvRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ChallengesOverviewActivity.this);
+                dialogBuilder.setTitle("Challenge request!");
+
+                // Set up the buttons
+                dialogBuilder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        Request request = (Request)adapterView.getItemAtPosition(position);
+                        // Source user data
+                        String sourceUserID = request.getSourceUserID();
+                        String sourceUserName = request.getSourceUserName();
+                        String sourceUserImage = request.getSourceUserImage();
+                        User sourceUser = new User(sourceUserID, sourceUserName, sourceUserImage);
+                        // Target user data
+                        String targetUserID = request.getTargetUserID();
+                        String targetUserName = request.getTargetUserName();
+                        String targetUserImage = request.getTargetUserImage();
+                        User targetUser = new User(targetUserID, targetUserName, targetUserImage);
+
+                        String challengeID = "";
+                        String requestID = request.getId();
+                        int stepTarget = request.getStepTarget();
+                        String status = "running";
+
+                        Challenge challenge = new Challenge(challengeID, requestID, stepTarget, sourceUser, targetUser, status);
+
+                        manageChallenge(challenge);
+                    }
+                });
+
+                dialogBuilder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
             }
         });
     }
@@ -167,6 +276,46 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                 return false;
 
         }
+    }
+
+    private void manageChallenge(Challenge challenge) {
+
+        updateRequestStatus(challenge.getRequestID(), "accepted");
+        /*String challengeID = addChallengeInFirestore(challenge);
+        addChallengeToFirebaseUsers(challenge.getUser1().getId(), challenge.getUser2().getId(), challengeID);
+        startChallengeService(challenge.getRequestID());*/
+    }
+
+    private void updateRequestStatus(String requestID, String newStatus) {
+
+        firebaseFirestore.collection("Requests").document(requestID).update("status", newStatus).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+
+                    Toast.makeText(ChallengesOverviewActivity.this, "Request is updated", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Toast.makeText(ChallengesOverviewActivity.this, "Request update failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    private String addChallengeInFirestore(Challenge challenge) {
+
+        String result = "";
+
+        return result;
+    }
+
+    private void addChallengeToFirebaseUsers(String user1ID, String user2ID, String challengeID) {
+
+
+    }
+
+    private void startChallengeService(String requestID) {
+
 
     }
 }

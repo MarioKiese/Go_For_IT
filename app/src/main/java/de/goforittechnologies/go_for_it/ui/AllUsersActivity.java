@@ -161,13 +161,14 @@ public class AllUsersActivity extends AppCompatActivity {
 
                                     User targetUser = ((User)adapterView.getItemAtPosition(position));
                                     String targetUserId = targetUser.getId();
-                                    String sourceID = currentUser.getUid();
+                                    String sourceUserId = currentUser.getUid();
                                     String targetUserName = targetUser.getName();
+                                    String targetUserImage = targetUser.getImage();
                                     String challengeID = "";
                                     String requestID = "";
                                     String status = "pending";
 
-                                    Request challengeRequest = new Request(requestID, stepTarget, sourceID, targetUserId, sourceUserName, targetUserName, sourceUserImage, challengeID, status);
+                                    Request challengeRequest = new Request(requestID, stepTarget, sourceUserId, targetUserId, sourceUserName, targetUserName, sourceUserImage, targetUserImage, challengeID, status);
                                     
                                     manageRequest(challengeRequest);
 
@@ -192,13 +193,8 @@ public class AllUsersActivity extends AppCompatActivity {
     private void manageRequest(Request challengeRequest) {
 
         String requestID = addRequestInFirestore(challengeRequest);
-
         addRequestToFirebaseUsers(challengeRequest.getSourceUserID(), challengeRequest.getTargetUserID(), requestID);
-        
         //startChallengeService(requestID);
-        
-        
-        
     }
 
     private String addRequestInFirestore(Request challengeRequest) {
@@ -207,6 +203,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
         DocumentReference docRef = firebaseFirestore.collection("Requests").document();
         result = docRef.getId();
+        challengeRequest.setId(result);
         docRef.set(challengeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {

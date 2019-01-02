@@ -9,13 +9,14 @@ public class Request {
     private String sourceUserName;
     private String targetUserName;
     private String sourceUserImage;
+    private String targetUserImage;
     private String challengeID;
     private String status;
 
     public Request() {
     }
 
-    public Request(String id, int stepTarget, String sourceUserID, String targetUserID, String sourceUserName, String targetUserName, String sourceUserImage, String challengeID, String status) {
+    public Request(String id, int stepTarget, String sourceUserID, String targetUserID, String sourceUserName, String targetUserName, String sourceUserImage, String targetUserImage, String challengeID, String status) {
         this.id = id; //TODO: Check if necessary and clear all traces
         this.stepTarget = stepTarget;
         this.sourceUserID = sourceUserID;
@@ -23,6 +24,7 @@ public class Request {
         this.sourceUserName = sourceUserName;
         this.targetUserName = targetUserName;
         this.sourceUserImage = sourceUserImage;
+        this.targetUserImage = targetUserImage;
         this.challengeID = challengeID;
         this.status = status;
     }
@@ -81,6 +83,14 @@ public class Request {
 
     public void setSourceUserImage(String sourceUserImage) {
         this.sourceUserImage = sourceUserImage;
+    }
+
+    public String getTargetUserImage() {
+        return targetUserImage;
+    }
+
+    public void setTargetUserImage(String targetUserImage) {
+        this.targetUserImage = targetUserImage;
     }
 
     public String getChallengeID() {

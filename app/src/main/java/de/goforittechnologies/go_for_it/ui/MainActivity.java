@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
         //_________________________________________________//
 
         LocalBroadcastManager.getInstance(MainActivity.this)
-                .registerReceiver(mStepsBroadcastReceiver,new IntentFilter("StepsUpdate"));
+                .registerReceiver(mStepsBroadcastReceiver,new IntentFilter("GeneralStepsUpdate"));
 
     }
     //___________________________________________________________________________________________//
