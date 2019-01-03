@@ -43,7 +43,6 @@ public class LocationRouteService extends Service implements LocationListener, S
     // Step management
     private int mSteps;
     private SensorManager mSensorManager;
-    private Sensor mStepSensor;
 
     private IBinder mBinder = new LocationBinder();
 
@@ -99,7 +98,8 @@ public class LocationRouteService extends Service implements LocationListener, S
         // Configure Steps manager
         mSteps = 0;
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        assert mSensorManager != null;
+        Sensor mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         mSensorManager.registerListener(LocationRouteService.this, mStepSensor, SensorManager.SENSOR_DELAY_UI);
 
     }
@@ -174,6 +174,7 @@ public class LocationRouteService extends Service implements LocationListener, S
             chan.setLightColor(Color.BLUE);
             chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            assert manager != null;
             manager.createNotificationChannel(chan);
 
 

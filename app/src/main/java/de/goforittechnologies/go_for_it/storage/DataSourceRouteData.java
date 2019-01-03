@@ -49,7 +49,7 @@ public class DataSourceRouteData {
 
     }
 
-    public RouteData createRouteData(String route, int steps, String time, double calories, double kilometers) {
+    public void createRouteData(String route, int steps, String time, double calories, double kilometers) {
         ContentValues values = new ContentValues();
         values.put(DbHelperRouteData.COLUMN_ROUTE, route);
         values.put(DbHelperRouteData.COLUMN_STEPS, steps);
@@ -64,10 +64,8 @@ public class DataSourceRouteData {
                 null, null, null, null);
 
         cursor.moveToFirst();
-        RouteData routeData = cursorToRouteData(cursor);
         cursor.close();
 
-        return routeData;
     }
 
 
@@ -87,9 +85,7 @@ public class DataSourceRouteData {
         //Don't know if necessary for database usage
         int id = (int)cursor.getLong(idIndex);
 
-        RouteData routeData = new RouteData(route, steps, time, calories, kilometers, id);
-
-        return routeData;
+        return new RouteData(route, steps, time, calories, kilometers, id);
     }
 
     public List<RouteData> getAllRouteData() {
@@ -117,7 +113,7 @@ public class DataSourceRouteData {
         long id = routeData.getId();
 
         database.delete(TABLE_NAME,
-                dbHelperRouteData.COLUMN_ID + "=" + id,
+                DbHelperRouteData.COLUMN_ID + "=" + id,
                 null);
 
         Log.d(TAG, "Eintrag gelöscht! ID: " + id + " Inhalt: " + routeData.toString());

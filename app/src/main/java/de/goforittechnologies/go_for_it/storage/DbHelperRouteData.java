@@ -19,18 +19,18 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperRouteData";
 
     // Database configuration
-    public static final String DB_NAME = "GoForIT_routes.db";
-    public static final int DB_VERSION = 1;
+    private static final String DB_NAME = "GoForIT_routes.db";
+    private static final int DB_VERSION = 1;
 
     // Columns
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_ROUTE = "route";
-    public static final String COLUMN_STEPS = "steps";
-    public static final String COLUMN_TIME = "time";
-    public static final String COLUMN_CALORIES = "calories";
-    public static final String COLUMN_KILOMETERS = "kilometers";
+    static final String COLUMN_ID = "_id";
+    static final String COLUMN_ROUTE = "route";
+    static final String COLUMN_STEPS = "steps";
+    static final String COLUMN_TIME = "time";
+    static final String COLUMN_CALORIES = "calories";
+    static final String COLUMN_KILOMETERS = "kilometers";
 
-    public DbHelperRouteData(@Nullable Context context) {
+    DbHelperRouteData(@Nullable Context context) {
         super(context,DB_NAME,null,DB_VERSION);
 
         Log.d(TAG, "DbHelperRouteData hat die Datenbank " + getDatabaseName() + " erzeugt.");
@@ -46,7 +46,7 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
 
     }
 
-    public void createTable(String tableName) {
+    void createTable(String tableName) {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 

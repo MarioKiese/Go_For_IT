@@ -48,8 +48,9 @@ public class StepCounterService extends Service implements SensorEventListener {
         Log.d(TAG, "onCreate: Service started");
         steps = 0;
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        assert sensorManager != null;
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        sensorManager.registerListener((SensorEventListener) this,
+        sensorManager.registerListener(this,
                 sensor, SensorManager.SENSOR_DELAY_UI);
     }
 
@@ -60,7 +61,7 @@ public class StepCounterService extends Service implements SensorEventListener {
         Log.d(TAG, "onSensorChanged: Stepscount:"+ steps);
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 
-        if (oldTimeSet == false){
+        if (!oldTimeSet){
             oldTime = System.currentTimeMillis();
             oldTimeSet = true;
         }
@@ -86,7 +87,7 @@ public class StepCounterService extends Service implements SensorEventListener {
     private void updateDatabase(double steps, String dbName, int day, int hour){
         //TODO: Check Performance, to many DataSourceStepDataobjects?
 
-        DataSourceStepData dataSourceStepData = null;
+        DataSourceStepData dataSourceStepData;
         try {
             dataSourceStepData = new DataSourceStepData(this,dbName,1);
         } catch (Exception e) {

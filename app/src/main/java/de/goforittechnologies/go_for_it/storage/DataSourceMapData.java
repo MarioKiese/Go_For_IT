@@ -82,9 +82,7 @@ public class DataSourceMapData {
         //Dont know if necessary for database usage
         int id = (int)cursor.getLong(idIndex);
 
-        MapData mapData = new MapData(longitude,latitude,altitude,height, id);
-
-        return mapData;
+        return new MapData(longitude,latitude,altitude,height, id);
     }
 
     public List<MapData> getAllMapData(String tableName) {

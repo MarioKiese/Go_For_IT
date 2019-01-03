@@ -597,11 +597,7 @@ public class MapActivity extends AppCompatActivity {
 
         if (routeName.isEmpty()) {
             return false;
-        } else if (consistsOfBlanks(routeName)) {
-            return false;
-        } else {
-            return true;
-        }
+        } else return !consistsOfBlanks(routeName);
     }
 
     private boolean consistsOfBlanks(String routeName) {
@@ -616,11 +612,7 @@ public class MapActivity extends AppCompatActivity {
             }
         }
 
-        if (countBlanks == charArray.length) {
-            return true;
-        } else {
-            return false;
-        }
+        return countBlanks == charArray.length;
     }
 
     private String formatRouteName(String routeName) {

@@ -191,7 +191,7 @@ public class DashboardActivity extends AppCompatActivity
                     }
                 }
             }
-            entries.add(new BarEntry((float)(((int)i/7)+1),(float)value));
+            entries.add(new BarEntry((float)((i /7)+1),(float)value));
             value = 0;
             i = i+7;
         }

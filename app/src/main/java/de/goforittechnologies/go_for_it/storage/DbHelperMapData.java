@@ -10,17 +10,17 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     private static final String TAG = "DbHelperMapData";
 
     // Database configuration
-    public static final String DB_NAME = "GoForIT_maps.db";
-    public static final int DB_VERSION = 1;
+    private static final String DB_NAME = "GoForIT_maps.db";
+    private static final int DB_VERSION = 1;
 
     // Columns
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_Altitude = "altitude";
-    public static final String COLUMN_Longitude = "longitude";
-    public static final String COLUMN_Latitude = "latitude";
-    public static final String COLUMN_Height = "heigth";
+    static final String COLUMN_ID = "_id";
+    static final String COLUMN_Altitude = "altitude";
+    static final String COLUMN_Longitude = "longitude";
+    static final String COLUMN_Latitude = "latitude";
+    static final String COLUMN_Height = "heigth";
 
-    public DbHelperMapData(Context context) {
+    DbHelperMapData(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
 
         Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
@@ -38,7 +38,7 @@ public class DbHelperMapData extends SQLiteOpenHelper {
 
     }
 
-    public void createTable(String tableName) {
+    void createTable(String tableName) {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
@@ -63,7 +63,7 @@ public class DbHelperMapData extends SQLiteOpenHelper {
 
     }
 
-    public void dropTable(String tableName) {
+    void dropTable(String tableName) {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 

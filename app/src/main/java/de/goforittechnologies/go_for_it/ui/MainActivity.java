@@ -40,6 +40,8 @@ import de.goforittechnologies.go_for_it.logic.StepCounterListener;
 import de.goforittechnologies.go_for_it.logic.services.StepCounterService;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
+import static android.content.SharedPreferences.*;
+
 /**
  * @author Mario Kiese and Tom Hammerbacher.
  * @version 0.8.
@@ -204,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 float cntStar = rbStepGoal.getRating();
 
-                    SharedPreferences.Editor editor = mPreferences.edit();
+                    Editor editor = mPreferences.edit();
                     editor.putInt("stepgoal", (int) (cntStar * 2000));
                     editor.apply();
 
@@ -430,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
             mPreferences = this.getSharedPreferences("first_time", Context.MODE_PRIVATE);
             firstTime = mPreferences.getBoolean("firstTime", true);
             if (firstTime) {
-                SharedPreferences.Editor editor = mPreferences.edit();
+                Editor editor = mPreferences.edit();
                 editor.putBoolean("firstTime", false);
                 editor.apply();
             }

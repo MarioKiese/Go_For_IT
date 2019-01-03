@@ -40,7 +40,7 @@ public class DataSourceStepData {
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
-    public StepData createStepData(double steps, String time) {
+    public void createStepData(double steps, String time) {
         ContentValues values = new ContentValues();
         values.put(DbHelperStepData.COLUMN_STEPS, steps);
         values.put(DbHelperStepData.COLUMN_TIMESTAMP, time);
@@ -56,7 +56,6 @@ public class DataSourceStepData {
         StepData stepData = cursorToStepData(cursor);
         cursor.close();
 
-        return stepData;
     }
 
     public StepData updateStepData(double steps, String time) {

@@ -10,19 +10,19 @@ import android.util.Log;
 public class DbHelperStepData extends SQLiteOpenHelper {
 
     private static final String TAG = "DbHelperStepData";
-    public static final String DB_NAME = "GoForIT.db";
-    public static final int DB_VERSION = 1;
+    private static final String DB_NAME = "GoForIT.db";
+    private static final int DB_VERSION = 1;
 
-    public String stepDataTableName = "StepDataTableDefault";
+    String stepDataTableName = "StepDataTableDefault";
 
-    public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_STEPS = "steps";
-    public static final String COLUMN_TIMESTAMP = "timestamp";
+    static final String COLUMN_ID = "_id";
+    static final String COLUMN_STEPS = "steps";
+    static final String COLUMN_TIMESTAMP = "timestamp";
     private int mode;
 
-    public String SQL_CREATE = "";
+    private String SQL_CREATE = "";
 
-    public DbHelperStepData(Context context, String stepDataTable, int mode) {
+    DbHelperStepData(Context context, String stepDataTable, int mode) {
         super(context,DB_NAME,null,DB_VERSION);
         this.mode = mode;
         this.stepDataTableName = stepDataTable;
@@ -39,7 +39,7 @@ public class DbHelperStepData extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
     }
-    public void createTable(){
+    private void createTable(){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
         if (mode == 1){
