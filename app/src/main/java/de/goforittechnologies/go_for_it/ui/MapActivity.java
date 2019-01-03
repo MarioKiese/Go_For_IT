@@ -215,9 +215,6 @@ public class MapActivity extends AppCompatActivity {
                 mSteps = 0;
                 mDistance = 0.0;
                 mCalories = 0.0;
-                /*tvStepsValue.setText(String.valueOf(mSteps));
-                tvDistanceValue.setText(String.valueOf(mDistance));
-                tvCaloriesValue.setText(String.valueOf(mCalories));*/
                 tvStepsValue.setText("-");
                 tvDistanceValue.setText("-");
                 tvCaloriesValue.setText("-");

@@ -45,6 +45,7 @@ public class LocationRouteService extends Service implements LocationListener, S
     private SensorManager mSensorManager;
     private Sensor mStepSensor;
 
+    // Binder
     private IBinder mBinder = new LocationBinder();
 
     public LocationRouteService() {
@@ -55,9 +56,7 @@ public class LocationRouteService extends Service implements LocationListener, S
     public IBinder onBind(Intent intent) {
 
         Log.i(TAG, "onBind: connected");
-
         return mBinder;
-
     }
 
     @Override
@@ -96,12 +95,11 @@ public class LocationRouteService extends Service implements LocationListener, S
 
         }
 
-        // Configure Steps manager
+        // Configure steps manager
         mSteps = 0;
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         mSensorManager.registerListener(LocationRouteService.this, mStepSensor, SensorManager.SENSOR_DELAY_UI);
-
     }
 
     @Override
@@ -110,7 +108,6 @@ public class LocationRouteService extends Service implements LocationListener, S
         mLocationManager.removeUpdates(LocationRouteService.this);
         mSensorManager.unregisterListener(LocationRouteService.this);
         super.onDestroy();
-
     }
 
     // Location
@@ -120,7 +117,6 @@ public class LocationRouteService extends Service implements LocationListener, S
         Log.i(TAG, "Thread id: " + Thread.currentThread().getId());
         mRoute.add(location);
         sendLocationMessageToActivity(mRoute);
-
     }
 
 
@@ -149,13 +145,11 @@ public class LocationRouteService extends Service implements LocationListener, S
         bundle.putParcelableArrayList("Location", route);
         locationIntent.putExtra("Location", bundle);
         LocalBroadcastManager.getInstance(LocationRouteService.this).sendBroadcast(locationIntent);
-
     }
 
     public long getmBaseTime() {
 
         return mBaseTime;
-
     }
 
     private void createNotification() {
@@ -176,17 +170,15 @@ public class LocationRouteService extends Service implements LocationListener, S
             NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             manager.createNotificationChannel(chan);
 
-
             notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
-                    .setContentTitle("Test")
-                    .setContentText("Background location service in foreground")
+                    .setContentTitle("Go For IT")
+                    .setContentText("Your route is being recorded!")
                     .setContentIntent(pendingIntent)
                     .setTicker("2")
                     .build();
         }
 
         startForeground(12345678, notification);
-
     }
 
     // StepCounter
@@ -207,9 +199,7 @@ public class LocationRouteService extends Service implements LocationListener, S
         public LocationRouteService getService() {
 
             return LocationRouteService.this;
-
         }
-
     }
 
     private void sendStepMessageToActivity(int steps) {
@@ -217,7 +207,5 @@ public class LocationRouteService extends Service implements LocationListener, S
         Intent stepIntent = new Intent("StepsUpdate");
         stepIntent.putExtra("Steps", steps);
         LocalBroadcastManager.getInstance(LocationRouteService.this).sendBroadcast(stepIntent);
-
     }
-
 }

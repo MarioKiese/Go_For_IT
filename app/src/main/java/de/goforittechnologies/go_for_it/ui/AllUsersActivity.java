@@ -1,6 +1,7 @@
 package de.goforittechnologies.go_for_it.ui;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,6 +38,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import de.goforittechnologies.go_for_it.R;
+import de.goforittechnologies.go_for_it.logic.services.ChallengeStepCounterService;
 import de.goforittechnologies.go_for_it.storage.Request;
 import de.goforittechnologies.go_for_it.storage.User;
 
@@ -59,6 +61,7 @@ public class AllUsersActivity extends AppCompatActivity {
     // Firebase
     private FirebaseFirestore firebaseFirestore;
     FirebaseAuth mAuth;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +85,7 @@ public class AllUsersActivity extends AppCompatActivity {
         // Configure Firebase
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        userID = currentUser.getUid();
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -98,9 +102,9 @@ public class AllUsersActivity extends AppCompatActivity {
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
                             Log.d(TAG, "onEvent: Document ID : " + doc.getDocument().getId());
-                            Log.d(TAG, "onEvent: User ID : " + currentUser.getUid());
+                            Log.d(TAG, "onEvent: User ID : " + userID);
 
-                            if (!doc.getDocument().getId().equals(currentUser.getUid())) {
+                            if (!doc.getDocument().getId().equals(userID)) {
 
                                 Log.d(TAG, "onEvent: Document ID : " + doc.getDocument().getId());
                                 User user = doc.getDocument().toObject(User.class);
@@ -194,7 +198,7 @@ public class AllUsersActivity extends AppCompatActivity {
 
         String requestID = addRequestInFirestore(challengeRequest);
         addRequestToFirebaseUsers(challengeRequest.getSourceUserID(), challengeRequest.getTargetUserID(), requestID);
-        //startChallengeService(requestID);
+        startChallengeService(userID);
     }
 
     private String addRequestInFirestore(Request challengeRequest) {
@@ -212,6 +216,9 @@ public class AllUsersActivity extends AppCompatActivity {
 
                     Log.d(TAG, "onComplete: Request is stored in Firestore");
                     Toast.makeText(AllUsersActivity.this, "Request is stored in Firestore", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Toast.makeText(AllUsersActivity.this, "Write Request in Firestore failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -249,7 +256,10 @@ public class AllUsersActivity extends AppCompatActivity {
         });
     }
 
-    private void startChallengeService(String requestID) {
+    private void startChallengeService(String userID) {
 
+        Intent challengeServiceIntent = new Intent(AllUsersActivity.this, ChallengeStepCounterService.class);
+        challengeServiceIntent.putExtra("userID", userID);
+        startService(challengeServiceIntent);
     }
 }
