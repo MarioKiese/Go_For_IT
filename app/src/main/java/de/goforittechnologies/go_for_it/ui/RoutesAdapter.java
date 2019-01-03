@@ -16,6 +16,13 @@ import java.util.List;
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.RouteData;
 
+/**
+ * @author  Mario Kiese
+ * @version 0.8.
+ * @see ArrayAdapter
+ *
+ */
+
 public class RoutesAdapter extends ArrayAdapter<RouteData> {
 
     private Context mContext;

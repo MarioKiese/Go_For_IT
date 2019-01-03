@@ -19,6 +19,31 @@ import com.google.firebase.auth.FirebaseUser;
 
 import de.goforittechnologies.go_for_it.R;
 
+/**
+ * @author  Mario Kiese and Tom Hammerbacher
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ *
+ * This class is used to create a firebase account
+ * @see FirebaseAuth
+ * @see FirebaseUser
+ *
+ * Corresponding layout: res.layout.activity_register.xml
+ *
+ * The user is able to
+ * The user can type in a new username and a new password.
+ * He has to confirm the typed password in the textfield below.
+ *
+ * The user can register his account by klicking the "create new account" button.
+ *
+ * The user can use an existing firebase account by klicking
+ * "Already have an account?" at the bottom.
+ * @see LoginActivity
+ *
+ *
+ */
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etRegMailText;

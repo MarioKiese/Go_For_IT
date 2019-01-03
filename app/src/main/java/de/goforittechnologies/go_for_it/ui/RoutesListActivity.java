@@ -23,6 +23,22 @@ import de.goforittechnologies.go_for_it.storage.DataSourceRouteData;
 import de.goforittechnologies.go_for_it.storage.MapData;
 import de.goforittechnologies.go_for_it.storage.RouteData;
 
+/**
+ * @author Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ * This class is used to list all saved routes
+ *
+ * Corresponding layout: res.layout.activity_routes_list.xml
+ *
+ * The user can select the saved routes to see the details
+ *
+ * The store the route information:
+ * @see DataSourceRouteData
+ * @see DataSourceMapData
+ */
+
 public class RoutesListActivity extends AppCompatActivity {
 
     private static final String TAG = "RoutesListActivity";

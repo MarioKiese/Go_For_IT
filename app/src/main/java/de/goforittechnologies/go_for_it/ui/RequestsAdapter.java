@@ -18,7 +18,16 @@ import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.Request;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * @author  Mario Kiese
+ * @version 0.8.
+ * @see ArrayAdapter
+ *
+ */
+
 public class RequestsAdapter extends ArrayAdapter<Request> {
+
+
 
     private Context mContext;
     private List<Request> requestsList = new ArrayList<>();

@@ -47,13 +47,13 @@ import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
 import de.goforittechnologies.go_for_it.storage.DataSourceRouteData;
 import de.goforittechnologies.go_for_it.storage.RouteData;
 /**
- * @author  Mario Kiese and Tom Hammerbacher
+ * @author  Mario Kiese
  * @version 0.8.
  * @see AppCompatActivity
  *
  *
  * This class is used to log into the firebase account
- * 
+ *
  *
  * Corresponding layout: res.layout.activity_login
  *

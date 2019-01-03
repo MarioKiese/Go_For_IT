@@ -41,6 +41,28 @@ import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * @author Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ * This class is used to configure the account setting of the user and to create testdata
+ *
+ * Corresponding layout: res.layout.activity_setup.xml
+ *
+ * By klicking on the "smilys" image or the users profile picture, a userfoto can be loaded up
+ * and linked to the firebase account.
+ *
+ * In the text-view in above the profile picture the user is able to change his username
+ *
+ * The two buttons in the bottom are used to create and delete testdata for the
+ * november (11.) month, to test the given charts in the dashboard activity without
+ * using the app for one month.
+ * @see DashboardActivity
+ * @see FirebaseAuth
+ *
+ */
+
 public class SetupActivity extends AppCompatActivity {
 
     // Widgets
