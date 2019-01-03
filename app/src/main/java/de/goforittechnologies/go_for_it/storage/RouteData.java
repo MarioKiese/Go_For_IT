@@ -1,5 +1,14 @@
 package de.goforittechnologies.go_for_it.storage;
 
+/**
+ * @author  Mario Kiese
+ * @version 0.8.
+ *
+ * class to represent and temporary store route-information
+ * contain getter ad setter methods
+ */
+
+
 public class RouteData {
 
     private String route;

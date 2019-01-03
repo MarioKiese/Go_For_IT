@@ -32,6 +32,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import de.goforittechnologies.go_for_it.R;
@@ -68,37 +69,26 @@ public class MainActivity extends AppCompatActivity {
     // declaring (&initialising) widgets
     //___________________________________________________________________________________________//
     // displayed elements
-    private TextView tvSensorValue;
-    private TextView tvMaxSteps;
     private TextView tvStepGoalValue;
     private TextView tvBurnedCalories;
     private TextView tvTravelledDistance;
-    private TextView tvActiveMinutes;
     private RatingBar rbStepGoal;
-    private Toolbar tbMain;
-    private PieChart pieChartSteps;
-    private Button btnConfirmStepGoal;
-   // status variables
+    private PieChart pieChartSteps = null;
+    // status variables
    private double stepsForCurrentDay;
    private int stepGoal = 0;
    private Boolean firstTime = null;
    private List<PieEntry> entries = new ArrayList<>();
    private PieDataSet set;
 
-   //time sensitive variables
-   private Calendar calendar;
-
-   //shared preferences
+    //shared preferences
    SharedPreferences mPreferences;
 
-    //Service usage
-    private BroadcastReceiver mStepsBroadcastReceiver;
     StepCounterListener stepCounterListener;
 
     //Sensor
     SensorManager sensorManager;
     Sensor sensor;
-    private static int counter = 0;
 
     // Firebase
     private FirebaseAuth mAuth;
@@ -124,26 +114,27 @@ public class MainActivity extends AppCompatActivity {
         DataSourceStepData dataSourceStepData;
         Intent stepIntent = new Intent(MainActivity.this, StepCounterService.class);
         startService(stepIntent);
-        calendar = Calendar.getInstance(TimeZone.getDefault());
+        //time sensitive variables
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
         mAuth = FirebaseAuth.getInstance();
         //_________________________________________________//
         // linking views by id
         //_________________________________________________//
 
-        tvMaxSteps          = findViewById(R.id.tvMaxSteps);
+        TextView tvMaxSteps = findViewById(R.id.tvMaxSteps);
         tvStepGoalValue     = findViewById(R.id.tvStepGoalValue);
         tvBurnedCalories    = findViewById(R.id.tvBurnedCalories);
         tvTravelledDistance = findViewById(R.id.tvTravelledDistance);
-        tvActiveMinutes     = findViewById(R.id.tvActiveMinutes);
-        btnConfirmStepGoal  = findViewById(R.id.btnConfirmStepGoal);
+        TextView tvActiveMinutes = findViewById(R.id.tvActiveMinutes);
+        Button btnConfirmStepGoal = findViewById(R.id.btnConfirmStepGoal);
         rbStepGoal          = findViewById(R.id.rbStepGoal);
-        tbMain              = findViewById(R.id.tbMain);
+        Toolbar tbMain = findViewById(R.id.tbMain);
 
         //_________________________________________________//
         // setting data for first activity-overview
         //_________________________________________________//
         setSupportActionBar(tbMain);
-        getSupportActionBar().setTitle("Go For IT");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Go For IT");
         stepGoal = mPreferences.getInt("stepgoal", 0);
         Log.d(TAG, "onClick: stepGoal: "+ stepGoal );
         tvStepGoalValue.setText("Schrittziel: " + stepGoal + " Schritte");
@@ -151,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         //_________________________________________________//
         // creating table on first use for data storage
         //_________________________________________________//
-        if (isFirstTime() == true){
+        if (isFirstTime()){
             //Create empty database for current month on first Start
             for (int m = 1; m <=1; m++ ){
                 dataSourceStepData = new DataSourceStepData(this,
@@ -215,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
                     SharedPreferences.Editor editor = mPreferences.edit();
                     editor.putInt("stepgoal", (int) (cntStar * 2000));
-                    editor.commit();
+                    editor.apply();
 
                 stepGoal = mPreferences.getInt("stepgoal", 0);
                 Log.d(TAG, "onClick: stepGoal: "+ stepGoal );
@@ -227,29 +218,31 @@ public class MainActivity extends AppCompatActivity {
         // prepare Sensor Usage
         //_________________________________________________//
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        assert sensorManager != null;
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
 
         //_________________________________________________//
         // update pieChart and infocards
         //_________________________________________________//
         // Set steps broadcast receiver
-        mStepsBroadcastReceiver = new BroadcastReceiver() {
+        //Service usage
+        BroadcastReceiver mStepsBroadcastReceiver = new BroadcastReceiver() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onReceive(Context context, Intent intent) {
                 Log.d(TAG, "onReceive: Step receiver got data");
                 double steps = stepsForCurrentDay +
                         intent.getDoubleExtra("Steps", 0);
-                pieChartSteps.setCenterText(String.valueOf((int)steps) + " Steps");
+                pieChartSteps.setCenterText(String.valueOf((int) steps) + " Steps");
                 entries = new ArrayList<>();
-                if (stepGoal - steps < 0){
+                if (stepGoal - steps < 0) {
                     entries.add(new PieEntry(0f));
+                } else {
+                    entries.add(new PieEntry((float) (stepGoal - steps)));
                 }
-                else{
-                    entries.add(new PieEntry((float)(stepGoal - steps)));
-                }
-                entries.add(new PieEntry((float)steps));
-                set = new PieDataSet(entries,"Steps");
-                set.setColors(new int[] { Color.DKGRAY, Color.WHITE });
+                entries.add(new PieEntry((float) steps));
+                set = new PieDataSet(entries, "Steps");
+                set.setColors(Color.DKGRAY, Color.WHITE);
                 PieData data = new PieData(set);
                 pieChartSteps.setData(data);
                 pieChartSteps.setCenterTextColor(R.color.colorAccent);
@@ -257,10 +250,10 @@ public class MainActivity extends AppCompatActivity {
                 pieChartSteps.invalidate();
                 //formula: average steplenght: 0.65m
                 double distance = steps * 0.65;
-                tvTravelledDistance.setText(String.valueOf((int)distance) + " m");
+                tvTravelledDistance.setText(String.valueOf((int) distance) + " m");
                 //formula: average burned calories per kilometer: weight (70 kilogram) * 0,75
                 tvBurnedCalories.setText(
-                        String.valueOf((int)(70 * 0.75 * distance /1000)) + " kcal");
+                        String.valueOf((int) (70 * 0.75 * distance / 1000)) + " kcal");
             }
         };
 
@@ -276,6 +269,9 @@ public class MainActivity extends AppCompatActivity {
     // onStart method
     //___________________________________________________________________________________________//
 
+    /**
+     * authenticate the user for login
+     */
     @Override
     protected void onStart(){
         super.onStart();
@@ -292,6 +288,11 @@ public class MainActivity extends AppCompatActivity {
     // onCreateOptionsMenu method
     //___________________________________________________________________________________________//
 
+    /**
+     *
+     * @param menu
+     * @return true
+     */
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -310,6 +311,12 @@ public class MainActivity extends AppCompatActivity {
     // onOptionsItemSelected method
     //___________________________________________________________________________________________//
 
+    /**
+     * method to detect the selected item in the toolbar
+     *
+     * @param item Item from Menu
+     * @return true if one item was selected, otherwise false
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -355,6 +362,9 @@ public class MainActivity extends AppCompatActivity {
     // onResume method
     //___________________________________________________________________________________________//
 
+    /**
+     * register step-counter listener
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -369,11 +379,12 @@ public class MainActivity extends AppCompatActivity {
     // onPause method
     //___________________________________________________________________________________________//
 
+    /**
+     * unregister step-counter listener
+     */
     @Override
     protected void onPause() {
         super.onPause();
-//        unregisterReceiver(receiver);
-
         sensorManager.unregisterListener(stepCounterListener);
     }
 
@@ -381,6 +392,9 @@ public class MainActivity extends AppCompatActivity {
     // sendToLogin method
     //___________________________________________________________________________________________//
 
+    /**
+     * login user and start MainActivity
+     */
     private void sendToLogin() {
 
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
@@ -393,6 +407,9 @@ public class MainActivity extends AppCompatActivity {
     // logOut method
     //___________________________________________________________________________________________//
 
+    /**
+     * logging user out of firebase account
+     */
     private void logOut() {
 
         mAuth.signOut();
@@ -404,6 +421,10 @@ public class MainActivity extends AppCompatActivity {
     // isFirstTime method
     //___________________________________________________________________________________________//
 
+    /**
+     *
+     * @return true if the app starts first time after installation, return false otherwise
+     */
     private boolean isFirstTime() {
         if (firstTime == null) {
             mPreferences = this.getSharedPreferences("first_time", Context.MODE_PRIVATE);
@@ -411,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
             if (firstTime) {
                 SharedPreferences.Editor editor = mPreferences.edit();
                 editor.putBoolean("firstTime", false);
-                editor.commit();
+                editor.apply();
             }
         }
         return firstTime;
@@ -421,6 +442,12 @@ public class MainActivity extends AppCompatActivity {
     // getMaxForMonth method
     //___________________________________________________________________________________________//
 
+    /**
+     *
+     * @param inputList list of steps (list representing one month
+     *                  out of 24 double arrays representing 24 hours of one day).
+     * @return maximum step value out of adding 24 hours of each day
+     */
     private double getMaxForMonth(List<double[]> inputList){
         double max = 0;
         double value = 0;
@@ -433,7 +460,7 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 if (value > max){
-                    max = value;;
+                    max = value;
                 }
             }
             i++;

@@ -57,10 +57,6 @@ public class AllUsersActivity extends AppCompatActivity {
 
     private static final String TAG = "AllUsersActivity";
 
-    // Widgets
-    private TextView tvUserEmptyListText;
-    private ListView lvAllUsers;
-    private Toolbar tbAllUsers;
     private ProgressBar pbAllUsers;
 
     // Member variables
@@ -79,10 +75,11 @@ public class AllUsersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_users);
 
         // Set widgets
-        tvUserEmptyListText = findViewById(R.id.tvUsersEmptyListText);
-        lvAllUsers = findViewById(R.id.lvUsers);
+        // Widgets
+        TextView tvUserEmptyListText = findViewById(R.id.tvUsersEmptyListText);
+        ListView lvAllUsers = findViewById(R.id.lvUsers);
         lvAllUsers.setEmptyView(tvUserEmptyListText);
-        tbAllUsers = findViewById(R.id.tbAllUsers);
+        Toolbar tbAllUsers = findViewById(R.id.tbAllUsers);
         setSupportActionBar(tbAllUsers);
         pbAllUsers = findViewById(R.id.pbAllUsers);
         pbAllUsers.setVisibility(View.VISIBLE);
@@ -181,7 +178,7 @@ public class AllUsersActivity extends AppCompatActivity {
                                     String status = "pending";
 
                                     Request challengeRequest = new Request(requestID, stepTarget, sourceID, targetUserId, sourceUserName, targetUserName, sourceUserImage, challengeID, status);
-                                    
+
                                     manageRequest(challengeRequest);
 
                                     Toast.makeText(AllUsersActivity.this, "UserID : " + targetUser, Toast.LENGTH_SHORT).show();
@@ -265,7 +262,4 @@ public class AllUsersActivity extends AppCompatActivity {
         });
     }
 
-    private void startChallengeService(String requestID) {
-
-    }
 }

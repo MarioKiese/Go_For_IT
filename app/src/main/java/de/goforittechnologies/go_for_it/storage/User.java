@@ -1,5 +1,13 @@
 package de.goforittechnologies.go_for_it.storage;
 
+/**
+ * @author  Mario Kiese and Tom Hammerbacher
+ * @version 0.8.
+ *
+ * class to represent and temporary store user-data
+ * contain getter ad setter methods
+ */
+
 public class User {
 
     private String id;
@@ -9,6 +17,13 @@ public class User {
     public User() {
     }
 
+    /**
+     * Constructor to create a new user
+     *
+     * @param id users unique id
+     * @param name user-name
+     * @param image image-tag
+     */
     public User(String id, String name, String image) {
         this.id = id;
         this.name = name;

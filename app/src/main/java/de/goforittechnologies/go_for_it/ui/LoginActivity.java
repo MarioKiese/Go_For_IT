@@ -39,6 +39,7 @@ import de.goforittechnologies.go_for_it.R;
  *
  *
  */
+
 public class LoginActivity extends AppCompatActivity {
 
     // Widgets

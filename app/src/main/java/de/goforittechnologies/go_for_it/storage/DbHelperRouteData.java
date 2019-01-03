@@ -6,6 +6,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+/**
+ * @author Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ * @see SQLiteOpenHelper
+ *
+ *
+ */
+
 public class DbHelperRouteData extends SQLiteOpenHelper {
 
     private static final String TAG = "DbHelperRouteData";

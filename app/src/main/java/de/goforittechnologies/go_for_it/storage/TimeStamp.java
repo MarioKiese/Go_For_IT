@@ -2,6 +2,14 @@ package de.goforittechnologies.go_for_it.storage;
 
 import android.util.Log;
 
+/**
+ * @author  Tom Hammerbacher
+ * @version 0.8.
+ *
+ * class to represent and temporary store hour, day and month in one object
+ * contain getter ad setter methods
+ */
+
 public class TimeStamp {
     private int hour = 0;
     private int month = 0;
@@ -9,11 +17,24 @@ public class TimeStamp {
     private static final String TAG = "TimeStamp";
 
     //Constuctor
+
+    /**
+     * creating timestamp of month, day and hour
+     * @param month
+     * @param day
+     * @param hour
+     */
     public TimeStamp(int month, int day, int hour){
         this.hour = hour;
         this.day = day;
         this.month = month;
     }
+
+    /**
+     * creating timestamp out of database tablename and tableentry
+     * @param tablename
+     * @param tableentry
+     */
 
     public TimeStamp(String tablename, String tableentry){
         String [] containsmonth = tablename.split("_");

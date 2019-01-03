@@ -1,5 +1,13 @@
 package de.goforittechnologies.go_for_it.storage;
 
+/**
+ * @author  Mario Kiese and Tom Hammerbacher
+ * @version 0.8.
+ *
+ * class to represent and temporary store a challenge-request
+ * contain getter ad setter methods
+ */
+
 public class Request {
 
     private String id;

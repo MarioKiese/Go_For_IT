@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+
+
 public class DbHelperStepData extends SQLiteOpenHelper {
 
     private static final String TAG = "DbHelperStepData";
