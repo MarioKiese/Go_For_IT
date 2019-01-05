@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Go_For_IT</string>
+    <string name="app_name">Go For IT</string>
 
     <!-- LoginActivity -->
     <string name="et_login_mail">Your Email ...</string>
@@ -14,7 +14,7 @@
     <string name="et_confirm_password">Confirm Password ...</string>
     <string name="et_reg_password">Password ...</string>
 
-    <!-- MainAcitivity -->
+    <!-- MainActivity -->
     <string name="action_setting_text">Account settings</string>
     <string name="action_logout_text">Logout</string>
     <string name="action_location_text">Location Service</string>

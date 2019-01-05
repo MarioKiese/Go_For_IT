@@ -21,6 +21,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.goforittechnologies.go_for_it.storage.Challenge;
+import de.goforittechnologies.go_for_it.storage.User;
 import de.goforittechnologies.go_for_it.ui.ChallengesOverviewActivity;
 
 public class ChallengeStepCounterService extends Service implements SensorEventListener {
@@ -30,6 +32,7 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
     // Step management
     private int currentSteps;
     private int oldSteps;
+    private static final int STEPS_UPLOAD_RATE = 10;
     private SensorManager sensorManager;
     private Sensor stepSensor;
 
@@ -88,13 +91,15 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
 
         currentSteps++;
         int diff = currentSteps - oldSteps;
-        if (diff >= 10) {
+        if (diff >= STEPS_UPLOAD_RATE) {
 
             oldSteps = currentSteps;
-            ArrayList<String> challengeIDs = getChallengeIDs(userID);
-            /*for (String id : challengeIDs)  {
+            getChallengeIDs(userID, diff);
+            /*ArrayList<String> challengeIDs = getChallengeIDs(userID, diff);
+            for (String currentChallengeID : challengeIDs)  {
 
-                writeStepsInChallenge(diff);
+                Log.d(TAG, "onSensorChanged: Test currentChallengeID: " + currentChallengeID);
+                writeStepsInChallenge(currentChallengeID, diff);
             }*/
         }
     }
@@ -104,9 +109,9 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
 
     }
 
-    private ArrayList<String> getChallengeIDs(String userID) {
+    private void getChallengeIDs(String userID, int stepsToAdd) {
 
-        ArrayList<String> resultList = new ArrayList<>();
+        //ArrayList<String> resultList = new ArrayList<>();
         firebaseFirestore.collection("Users").document(userID).collection("Challenges").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -118,7 +123,8 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
                     for (DocumentSnapshot doc : list) {
 
                         String challengeID = doc.getString("challengeId");
-                        resultList.add(challengeID);
+                        writeStepsInChallenge(challengeID, stepsToAdd);
+                        //resultList.add(challengeID);
                         Log.d(TAG, "Challenge id : " + challengeID);
                     }
                 } else {
@@ -127,7 +133,67 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
                 }
             }
         });
-        return resultList;
+        //return resultList;
+    }
+
+    private void writeStepsInChallenge(String challengeID, int stepsToAdd) {
+
+        Log.d(TAG, "writeStepsInChallenge: Enter method writeStepsInChallenge");
+
+        firebaseFirestore.collection("Challenges").document(challengeID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+
+                    Log.d(TAG, "onComplete: Getting challenge successful");
+
+                    if (task.getResult().exists()) {
+
+                        Challenge challenge = task.getResult().toObject(Challenge.class);
+                        User user1 = challenge.getUser1();
+                        if (userID.equals(user1.getId())) {
+
+                            int currentSteps = challenge.getStepsUser1();
+                            int newSteps = currentSteps + stepsToAdd;
+                            firebaseFirestore.collection("Challenges").document(challengeID).update("stepsUser1", newSteps).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if (task.isSuccessful()) {
+
+                                        Log.d(TAG, "onComplete: Challenge steps updated");
+                                    } else {
+
+                                        Log.d(TAG, "onComplete: Error updating challenge steps");
+                                    }
+                                }
+                            });
+                        } else {
+
+                            int currentSteps = challenge.getStepsUser2();
+                            int newSteps = currentSteps + stepsToAdd;
+                            firebaseFirestore.collection("Challenges").document(challengeID).update("stepsUser2", newSteps).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if (task.isSuccessful()) {
+
+                                        Log.d(TAG, "onComplete: Challenge steps updated");
+                                    } else {
+
+                                        Log.d(TAG, "onComplete: Error updating challenge steps");
+                                    }
+                                }
+                            });
+                        }
+                    }
+                } else {
+
+                    Log.d(TAG, "onComplete: Error getting challenge");
+                }
+            }
+        });
     }
 
     public class LocationBinder extends Binder {
