@@ -55,10 +55,13 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
     private ListView lvRequests;
     private ListView lvActiveChallenges;
     private ProgressBar pbRequests;
+    private ProgressBar pbChallenges;
 
     // Member variables
     private List<Request> requestsList;
     private RequestsAdapter requestsAdapter;
+    private List<Challenge> challengesList;
+    private ChallengesAdapter challengesAdapter;
 
     // Firebase
     private FirebaseFirestore firebaseFirestore;
@@ -81,93 +84,28 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         lvActiveChallenges.setEmptyView(tvActiveChallengesListEmptyText);
         pbRequests = findViewById(R.id.pbRequests);
         pbRequests.setVisibility(View.VISIBLE);
+        pbChallenges = findViewById(R.id.pbChallenges);
+        pbChallenges.setVisibility(View.VISIBLE);
 
         // Set member variables
         requestsList = new ArrayList<>();
         requestsAdapter = new RequestsAdapter(ChallengesOverviewActivity.this, requestsList);
         lvRequests.setAdapter(requestsAdapter);
+        challengesList = new ArrayList<>();
+        challengesAdapter = new ChallengesAdapter(ChallengesOverviewActivity.this, challengesList);
+        lvActiveChallenges.setAdapter(challengesAdapter);
 
         // Configure Firebase
         auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
         userID = currentUser.getUid();
-
         firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("Users").document(userID).collection("Requests").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
 
-                if (e!=null){
+        // Populate request ListView with firebase data
+        fillRequestListViewWithFirebaseData();
 
-                    Log.d(TAG,"Error : " + e.getMessage());
-                    pbRequests.setVisibility(View.INVISIBLE);
-                    return;
-                } else {
-
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
-
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                            String requestID = (String)doc.getDocument().get("requestId");
-                            Log.d(TAG, "onEvent: Request ID found: " + requestID);
-                            Toast.makeText(ChallengesOverviewActivity.this, "Request ID found: " + requestID, Toast.LENGTH_SHORT).show();
-
-                            if (requestID != null) {
-
-                                firebaseFirestore.collection("Requests").document(requestID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-
-                                        if (e != null) {
-
-                                            Log.d(TAG,"Error : " + e.getMessage());
-                                            return;
-                                        } else {
-
-                                            if (documentSnapshot != null && documentSnapshot.exists()) {
-
-                                                Log.d(TAG, "Current data: " + documentSnapshot.getData());
-                                                Request request = documentSnapshot.toObject(Request.class);
-                                                Log.d(TAG, "onComplete: Firestore data converted to object");
-                                                Log.d(TAG, "onComplete: TargetUserID : " + request.getTargetUserID() + " UserID : " + userID);
-
-                                                if (request.getTargetUserID().equals(userID) && request.getStatus().equals("pending")) {
-
-                                                    Log.d(TAG, "onComplete: Request is compatible with userID");
-
-                                                    requestsList.add(request);
-                                                    requestsAdapter.notifyDataSetChanged();
-                                                }
-                                                else if(request.getTargetUserID().equals(userID) && (request.getStatus().equals("accepted") || request.getStatus().equals("declined"))) {
-
-                                                    Log.d(TAG, "onEvent: Remove request from request list");
-
-                                                    for (int i=0; i<requestsList.size(); i++) {
-
-                                                        if (requestsList.get(i).getId().equals(request.getId())) {
-
-                                                            requestsList.remove(i);
-                                                            requestsAdapter.notifyDataSetChanged();
-                                                        }
-                                                    }
-                                                }
-                                            } else {
-                                                Log.d(TAG, "Current data: null");
-                                            }
-                                        }
-                                    }
-                                });
-                            } else {
-
-                                Log.d(TAG, "onEvent: Request ID is null");
-                                Toast.makeText(ChallengesOverviewActivity.this, "Request ID is null", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                    pbRequests.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+        // Populate challenge ListView with firebase data
+        fillChallengeListViewWithFirebaseData();
 
         lvRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -250,6 +188,188 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                 return false;
 
         }
+    }
+
+    private void fillRequestListViewWithFirebaseData() {
+
+        firebaseFirestore.collection("Users").document(userID).collection("Requests").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                if (e!=null){
+
+                    Log.d(TAG,"Error : " + e.getMessage());
+                    pbRequests.setVisibility(View.INVISIBLE);
+                } else {
+
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                            String requestID = (String)doc.getDocument().get("requestId");
+                            Log.d(TAG, "onEvent: Request ID found: " + requestID);
+                            Toast.makeText(ChallengesOverviewActivity.this, "Request ID found: " + requestID, Toast.LENGTH_SHORT).show();
+
+                            if (requestID != null) {
+
+                                firebaseFirestore.collection("Requests").document(requestID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                                        if (e != null) {
+
+                                            Log.d(TAG,"Error : " + e.getMessage());
+                                        } else {
+
+                                            if (documentSnapshot != null && documentSnapshot.exists()) {
+
+                                                Log.d(TAG, "Current data: " + documentSnapshot.getData());
+                                                Request request = documentSnapshot.toObject(Request.class);
+                                                Log.d(TAG, "onComplete: Firestore data converted to object");
+                                                Log.d(TAG, "onComplete: TargetUserID : " + request.getTargetUserID() + " UserID : " + userID);
+
+                                                if (request.getTargetUserID().equals(userID) && request.getStatus().equals("pending")) {
+
+                                                    Log.d(TAG, "onComplete: Request is compatible with userID");
+
+                                                    requestsList.add(request);
+                                                    requestsAdapter.notifyDataSetChanged();
+                                                }
+                                                else if(request.getTargetUserID().equals(userID) && (request.getStatus().equals("accepted") || request.getStatus().equals("declined"))) {
+
+                                                    Log.d(TAG, "onEvent: Remove request from request list");
+
+                                                    for (int i=0; i<requestsList.size(); i++) {
+
+                                                        if (requestsList.get(i).getId().equals(request.getId())) {
+
+                                                            requestsList.remove(i);
+                                                            requestsAdapter.notifyDataSetChanged();
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                Log.d(TAG, "Current data: null");
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+
+                                Log.d(TAG, "onEvent: Request ID is null");
+                                Toast.makeText(ChallengesOverviewActivity.this, "Request ID is null", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                    pbRequests.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    private void fillChallengeListViewWithFirebaseData() {
+
+        firebaseFirestore.collection("Users").document(userID).collection("Challenges").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+
+                if (e!=null){
+
+                    Log.d(TAG,"Error : " + e.getMessage());
+                    pbChallenges.setVisibility(View.INVISIBLE);
+                } else {
+
+                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                            String challengeID = (String)doc.getDocument().get("challengeId");
+                            Log.d(TAG, "onEvent: Challenge ID found: " + challengeID);
+                            Toast.makeText(ChallengesOverviewActivity.this, "Challenge ID found: " + challengeID, Toast.LENGTH_SHORT).show();
+
+                            if (challengeID != null) {
+
+                                firebaseFirestore.collection("Challenges").document(challengeID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+
+                                        if (e != null) {
+
+                                            Log.d(TAG,"Error : " + e.getMessage());
+                                        } else {
+
+                                            if (documentSnapshot != null && documentSnapshot.exists()) {
+
+                                                Log.d(TAG, "Current data: " + documentSnapshot.getData());
+                                                Challenge challenge = documentSnapshot.toObject(Challenge.class);
+                                                Log.d(TAG, "onComplete: Firestore data converted to object");
+
+
+
+                                                if (challenge.getStatus().equals("running")) {
+
+                                                    Log.d(TAG, "onComplete: Challenge is active/running");
+
+                                                    if (!listContainsChallenge(challengesList, challengeID)) {
+
+                                                        challengesList.add(challenge);
+                                                        challengesAdapter.notifyDataSetChanged();
+                                                    }
+                                                }
+                                                else if(challenge.getStatus().equals("finished")) {
+
+                                                    Log.d(TAG, "onEvent: Remove challenge from challenge list");
+
+                                                    for (int i=0; i<challengesList.size(); i++) {
+
+                                                        if (challengesList.get(i).getId().equals(challenge.getId())) {
+
+                                                            challengesList.remove(i);
+                                                            challengesAdapter.notifyDataSetChanged();
+                                                        }
+                                                    }
+                                                }
+                                            } else {
+                                                Log.d(TAG, "Current data: null");
+                                            }
+                                        }
+                                    }
+                                });
+                            } else {
+
+                                Log.d(TAG, "onEvent: Challenge ID is null");
+                                Toast.makeText(ChallengesOverviewActivity.this, "Challenge ID is null", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                    pbChallenges.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+    }
+
+    private boolean listContainsChallenge(List<Challenge> list, String challengeID) {
+
+        boolean result = false;
+        if (list.isEmpty()) {
+
+            result = false;
+        } else {
+
+            for (Challenge challenge : list) {
+
+                String currentID = challenge.getId();
+                if (currentID.equals(challengeID)) {
+
+                    result = true;
+                } else {
+
+                    result = false;
+                }
+            }
+        }
+
+        return result;
     }
 
     private void manageChallenge(Challenge challenge) {

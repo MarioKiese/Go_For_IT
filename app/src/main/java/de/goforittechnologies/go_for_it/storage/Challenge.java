@@ -9,6 +9,7 @@ public class Challenge {
     private int stepsUser2;
     private User user1;
     private User user2;
+    private User winner;
     private String status;
 
     public Challenge(){}
@@ -76,6 +77,14 @@ public class Challenge {
 
     public void setUser2(User user2) {
         this.user2 = user2;
+    }
+
+    public User getWinner() {
+        return winner;
+    }
+
+    public void setWinner(User winner) {
+        this.winner = winner;
     }
 
     public String getStatus() {
