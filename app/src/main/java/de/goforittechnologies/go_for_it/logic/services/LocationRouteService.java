@@ -54,6 +54,7 @@ public class LocationRouteService extends Service implements LocationListener,
     private int mSteps;
     private SensorManager mSensorManager;
 
+    // Binder
     private IBinder mBinder = new LocationBinder();
 
 
@@ -70,9 +71,7 @@ public class LocationRouteService extends Service implements LocationListener,
     public IBinder onBind(Intent intent) {
 
         Log.i(TAG, "onBind: connected");
-
         return mBinder;
-
     }
 
     /**
@@ -111,12 +110,8 @@ public class LocationRouteService extends Service implements LocationListener,
             // Now get the Looper from the HandlerThread
             Looper looper = handlerThread.getLooper();
             // Request location updates to be called back on the HandlerThread
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 0, 0,
-                    LocationRouteService.this, looper);
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, 0, 0,
-                    LocationRouteService.this, looper);
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, LocationRouteService.this, looper);
+            // TODO: How to get the best accurate provider, for so long we just use GPS    mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, LocationRouteService.this, looper);
             //TODO Prove functionality and necessity for users use
             Location lastKnownLocation =
                     mLocationManager.getLastKnownLocation(
@@ -126,7 +121,7 @@ public class LocationRouteService extends Service implements LocationListener,
 
         }
 
-        // Configure Steps manager
+        // Configure steps manager
         mSteps = 0;
         mSensorManager = (SensorManager) getSystemService(
                 Context.SENSOR_SERVICE);
@@ -205,7 +200,6 @@ public class LocationRouteService extends Service implements LocationListener,
     public long getmBaseTime() {
 
         return mBaseTime;
-
     }
 
     /**
@@ -236,18 +230,15 @@ public class LocationRouteService extends Service implements LocationListener,
             assert manager != null;
             manager.createNotificationChannel(chan);
 
-
-            notification = new Notification.Builder(this,
-                    NOTIFICATION_CHANNEL_ID)
-                    .setContentTitle("Test")
-                    .setContentText("Background location service in foreground")
+            notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+                    .setContentTitle("Go For IT")
+                    .setContentText("Your route is being recorded!")
                     .setContentIntent(pendingIntent)
                     .setTicker("2")
                     .build();
         }
 
         startForeground(12345678, notification);
-
     }
 
     // StepCounter
@@ -273,9 +264,7 @@ public class LocationRouteService extends Service implements LocationListener,
         public LocationRouteService getService() {
 
             return LocationRouteService.this;
-
         }
-
     }
 
     /**

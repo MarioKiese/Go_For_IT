@@ -80,6 +80,14 @@
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
+        <ProgressBar
+            android:id="@+id/pbChallenges"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:visibility="invisible" />
+
         <ListView
             android:id="@+id/lvActiveChallenges"
             android:layout_width="match_parent"

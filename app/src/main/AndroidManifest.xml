@@ -30,7 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.LoginActivity"
             android:screenOrientation="portrait" />
@@ -61,6 +60,7 @@
         <activity
             android:name=".ui.DashboardActivity"
             android:screenOrientation="portrait" />
+
         <service
             android:name=".logic.services.ChallengeStepCounterService"
             android:enabled="true"
@@ -78,6 +78,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <activity android:name=".ui.AllChallengesActivity" />
+        <activity android:name=".ui.ChallengeDetailActivity"></activity>
     </application>
 
 </manifest>

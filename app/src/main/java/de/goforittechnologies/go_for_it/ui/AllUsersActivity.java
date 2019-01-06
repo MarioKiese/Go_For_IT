@@ -1,6 +1,7 @@
 package de.goforittechnologies.go_for_it.ui;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -37,6 +38,7 @@ import java.util.Map;
 import javax.annotation.Nullable;
 
 import de.goforittechnologies.go_for_it.R;
+import de.goforittechnologies.go_for_it.logic.services.ChallengeStepCounterService;
 import de.goforittechnologies.go_for_it.storage.Request;
 import de.goforittechnologies.go_for_it.storage.User;
 
@@ -70,6 +72,7 @@ public class AllUsersActivity extends AppCompatActivity {
     // Firebase
     private FirebaseFirestore firebaseFirestore;
     FirebaseAuth mAuth;
+    String userID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +98,7 @@ public class AllUsersActivity extends AppCompatActivity {
         // Configure Firebase
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        userID = currentUser.getUid();
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("Users").addSnapshotListener(
@@ -200,19 +204,15 @@ public class AllUsersActivity extends AppCompatActivity {
                                     User targetUser = ((User)adapterView
                                             .getItemAtPosition(position));
                                     String targetUserId = targetUser.getId();
-                                    String sourceID = currentUser.getUid();
-                                    String targetUserName =
-                                            targetUser.getName();
+                                    String sourceUserId = currentUser.getUid();
+                                    String targetUserName = targetUser.getName();
+                                    String targetUserImage = targetUser.getImage();
                                     String challengeID = "";
                                     String requestID = "";
                                     String status = "pending";
 
-                                    Request challengeRequest = new Request(
-                                            requestID, stepTarget, sourceID,
-                                            targetUserId, sourceUserName,
-                                            targetUserName, sourceUserImage,
-                                            challengeID, status);
-
+                                    Request challengeRequest = new Request(requestID, stepTarget, sourceUserId, targetUserId, sourceUserName, targetUserName, sourceUserImage, targetUserImage, challengeID, status);
+                                    
                                     manageRequest(challengeRequest);
 
                                     Toast.makeText(
@@ -244,10 +244,8 @@ public class AllUsersActivity extends AppCompatActivity {
     private void manageRequest(Request challengeRequest) {
 
         String requestID = addRequestInFirestore(challengeRequest);
-
-        addRequestToFirebaseUsers(challengeRequest.getSourceUserID(),
-                challengeRequest.getTargetUserID(), requestID);
-        //startChallengeService(requestID);
+        addRequestToFirebaseUsers(challengeRequest.getSourceUserID(), challengeRequest.getTargetUserID(), requestID);
+        startChallengeService(userID);
     }
 
     private String addRequestInFirestore(Request challengeRequest) {
@@ -258,18 +256,18 @@ public class AllUsersActivity extends AppCompatActivity {
                 "Requests")
                 .document();
         result = docRef.getId();
-        docRef.set(challengeRequest).addOnCompleteListener(
-                new OnCompleteListener<Void>() {
+        challengeRequest.setId(result);
+        docRef.set(challengeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
                 if (task.isSuccessful()) {
 
-                    Log.d(TAG,
-                    "onComplete: Request is stored in Firestore");
-                    Toast.makeText(AllUsersActivity.this,
-                            "Request is stored in Firestore",
-                            Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onComplete: Request is stored in Firestore");
+                    Toast.makeText(AllUsersActivity.this, "Request is stored in Firestore", Toast.LENGTH_SHORT).show();
+                } else {
+
+                    Toast.makeText(AllUsersActivity.this, "Write Request in Firestore failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -321,4 +319,10 @@ public class AllUsersActivity extends AppCompatActivity {
         });
     }
 
+    private void startChallengeService(String userID) {
+
+        Intent challengeServiceIntent = new Intent(AllUsersActivity.this, ChallengeStepCounterService.class);
+        challengeServiceIntent.putExtra("userID", userID);
+        startService(challengeServiceIntent);
+    }
 }

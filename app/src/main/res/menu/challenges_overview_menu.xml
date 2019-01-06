@@ -6,4 +6,8 @@
         android:id="@+id/action_new_challenge_btn"
         android:icon="@drawable/ic_action_new_challenge"
         android:title="@string/action_new_challenge_btn" />
+    <item
+        android:id="@+id/action_all_challenges_btn"
+        android:icon="@drawable/ic_action_all_challenges"
+        android:title="@string/action_all_challenges_text" />
 </menu>
