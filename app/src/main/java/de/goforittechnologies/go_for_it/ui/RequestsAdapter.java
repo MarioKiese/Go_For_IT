@@ -40,22 +40,30 @@ public class RequestsAdapter extends ArrayAdapter<Request> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position,
+    @Nullable View convertView,
+    @NonNull ViewGroup parent) {
         View listItem = convertView;
         if (listItem == null) {
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.request_list_item, parent, false);
+            listItem = LayoutInflater.from(mContext)
+            .inflate(R.layout.request_list_item, parent, false);
         }
 
         Request currentRequest = requestsList.get(position);
 
-        CircleImageView ivSourceUser = listItem.findViewById(R.id.ivSourceUser);
-        Glide.with(mContext).load(currentRequest.getSourceUserImage()).into(ivSourceUser);
+        CircleImageView ivSourceUser
+        = listItem.findViewById(R.id.ivSourceUser);
+        Glide.with(mContext).load(currentRequest
+        .getSourceUserImage()).into(ivSourceUser);
 
-        TextView tvUserName = listItem.findViewById(R.id.tvUserName);
+        TextView tvUserName =
+        listItem.findViewById(R.id.tvUserName);
         tvUserName.setText(currentRequest.getSourceUserName());
 
-        TextView tvRequestStepsValue = listItem.findViewById(R.id.tvRequestStepsValue);
-        tvRequestStepsValue.setText(String.valueOf(currentRequest.getStepTarget()));
+        TextView tvRequestStepsValue =
+        listItem.findViewById(R.id.tvRequestStepsValue);
+        tvRequestStepsValue
+        .setText(String.valueOf(currentRequest.getStepTarget()));
 
         return listItem;
     }

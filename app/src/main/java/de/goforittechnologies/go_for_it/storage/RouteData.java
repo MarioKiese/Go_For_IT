@@ -19,7 +19,8 @@ public class RouteData {
     private int id;
 
     // Constructor
-    public RouteData(String route, int steps, String time, double calories, double kilometers, int id) {
+    public RouteData(String route, int steps, String time, double calories,
+                     double kilometers, int id) {
         this.route = route;
         this.steps = steps;
         this.time = time;
@@ -28,7 +29,8 @@ public class RouteData {
         this.id = id;
     }
 
-    public RouteData(String route, String time, double calories, double kilometers) {
+    public RouteData(String route, String time, double calories,
+                     double kilometers) {
         this.route = route;
         this.time = time;
         this.calories = calories;

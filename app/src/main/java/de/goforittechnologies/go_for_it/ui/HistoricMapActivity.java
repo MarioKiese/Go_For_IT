@@ -26,8 +26,10 @@ import de.goforittechnologies.go_for_it.R;
  *
  * Corresponding layout: res.layout.activity_historic_map
  *
- * The user can navigate through the openstreetmap by swiping and zooming with two fingers
- * alternative: zooming with two buttons in the bottom (only visible when navigate over map).
+ * The user can navigate through the openstreetmap by swiping and zooming
+ * with two fingers.
+ * alternative: zooming with two buttons in the bottom (only visible when
+ * navigate over map).
  * @see MapView
  *
  */
@@ -78,7 +80,8 @@ public class HistoricMapActivity extends AppCompatActivity {
 
         if (!route.isEmpty()) {
 
-            mapView.getController().setCenter(new GeoPoint(route.get(route.size()-1)));
+            mapView.getController().setCenter(
+                    new GeoPoint(route.get(route.size()-1)));
             mapView.getOverlayManager().clear();
 
             if (route.size() > 1) {

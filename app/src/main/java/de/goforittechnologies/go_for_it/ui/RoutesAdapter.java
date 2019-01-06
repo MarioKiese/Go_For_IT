@@ -36,10 +36,13 @@ public class RoutesAdapter extends ArrayAdapter<RouteData> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position,
+    @Nullable View convertView,
+    @NonNull ViewGroup parent) {
         View listItem = convertView;
         if (listItem == null) {
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.route_list_item, parent, false);
+            listItem = LayoutInflater.from(mContext)
+            .inflate(R.layout.route_list_item, parent, false);
         }
 
         RouteData currentRouteData = routesList.get(position);
@@ -47,17 +50,23 @@ public class RoutesAdapter extends ArrayAdapter<RouteData> {
         TextView tvRouteName = listItem.findViewById(R.id.tvRouteName);
         tvRouteName.setText(currentRouteData.getRoute());
 
-        TextView tvRouteStepsValue = listItem.findViewById(R.id.tvRouteStepsValue);
+        TextView tvRouteStepsValue =
+        listItem.findViewById(R.id.tvRouteStepsValue);
         tvRouteStepsValue.setText(String.valueOf(currentRouteData.getSteps()));
 
-        TextView tvRouteTimeValue = listItem.findViewById(R.id.tvRouteTimeValue);
+        TextView tvRouteTimeValue =
+        listItem.findViewById(R.id.tvRouteTimeValue);
         tvRouteTimeValue.setText(currentRouteData.getTime());
 
-        TextView tvRouteDistanceValue = listItem.findViewById(R.id.tvRouteDistanceValue);
-        tvRouteDistanceValue.setText(String.valueOf(currentRouteData.getKilometers()));
+        TextView tvRouteDistanceValue =
+        listItem.findViewById(R.id.tvRouteDistanceValue);
+        tvRouteDistanceValue
+        .setText(String.valueOf(currentRouteData.getKilometers()));
 
-        TextView tvRouteCaloriesValue = listItem.findViewById(R.id.tvRouteCaloriesValue);
-        tvRouteCaloriesValue.setText(String.valueOf(currentRouteData.getCalories()));
+        TextView tvRouteCaloriesValue =
+        listItem.findViewById(R.id.tvRouteCaloriesValue);
+        tvRouteCaloriesValue
+        .setText(String.valueOf(currentRouteData.getCalories()));
 
         return listItem;
     }

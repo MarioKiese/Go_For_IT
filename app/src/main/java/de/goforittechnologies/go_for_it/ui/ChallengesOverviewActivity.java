@@ -41,13 +41,16 @@ import de.goforittechnologies.go_for_it.storage.Request;
  * @see AppCompatActivity
  *
  *
- * This class shows all requested and active challenges
- * Corresponding layout: res.layout.activity_challenges_overview.xml
+ * This class shows all requested and active challenges.
+ * Corresponding layout: res.layout.activity_challenges_overview.xml.
  *
- * The user can see all requested but not yet accepted challenges under "request".
- * The user can see all accepted and not yet completed challenges under "active challenges".
+ * The user can see all requested
+ * but not yet accepted challenges under "request".
+ * The user can see all accepted
+ * and not yet completed challenges under "active challenges".
  *
- * By klicking the menu button in the top right corner, the user is able to create new challenges
+ * By klicking the menu button in the top right corner,
+ * the user is able to create new challenges.
  * @see AllUsersActivity
  */
 
@@ -82,15 +85,19 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         tvRequestsListEmptyText = findViewById(R.id.tvRequestsEmtpyListText);
         lvRequests = findViewById(R.id.lvRequests);
         lvRequests.setEmptyView(tvRequestsListEmptyText);
-        tvActiveChallengesListEmptyText = findViewById(R.id.tvActiveChallengesEmtpyListText);
-        lvActiveChallenges = findViewById(R.id.lvActiveChallenges);
-        lvActiveChallenges.setEmptyView(tvActiveChallengesListEmptyText);
+        tvActiveChallengesListEmptyText = findViewById(
+                R.id.tvActiveChallengesEmtpyListText);
+        lvActiveChallenges = findViewById(
+                R.id.lvActiveChallenges);
+        lvActiveChallenges.setEmptyView(
+                tvActiveChallengesListEmptyText);
         pbRequests = findViewById(R.id.pbRequests);
         pbRequests.setVisibility(View.VISIBLE);
 
         // Set member variables
         requestsList = new ArrayList<>();
-        requestsAdapter = new RequestsAdapter(ChallengesOverviewActivity.this, requestsList);
+        requestsAdapter = new RequestsAdapter(
+                ChallengesOverviewActivity.this, requestsList);
         lvRequests.setAdapter(requestsAdapter);
 
         // Configure Firebase
@@ -99,52 +106,87 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         String userID = currentUser.getUid();
 
         firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("Users").document(userID).collection("Requests").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Users").document(userID)
+                .collection("Requests")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                @Nullable FirebaseFirestoreException e) {
 
                 if (e!=null){
                     Log.d(TAG,"Error : " + e.getMessage());
                     pbRequests.setVisibility(View.INVISIBLE);
                 } else {
 
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                    for (DocumentChange doc : queryDocumentSnapshots
+                            .getDocumentChanges()) {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String requestID = (String)doc.getDocument().get("requestId");
-                            Log.d(TAG, "onEvent: Request ID found: " + requestID);
-                            Toast.makeText(ChallengesOverviewActivity.this, "Request ID found: " + requestID, Toast.LENGTH_SHORT).show();
+                            String requestID = (String)doc.getDocument()
+                                    .get("requestId");
+                            Log.d(TAG,
+                                "onEvent: Request ID found: " + requestID);
+                            Toast.makeText(ChallengesOverviewActivity.this,
+                                "Request ID found: " + requestID,
+                                    Toast.LENGTH_SHORT).show();
 
                             if (requestID != null) {
-
-                                firebaseFirestore.collection("Requests").document(requestID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                firebaseFirestore
+                                .collection("Requests")
+                                .document(requestID).get()
+                                .addOnCompleteListener(
+                                new OnCompleteListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    public void onComplete(
+                                            @NonNull Task<DocumentSnapshot>
+                                                    task) {
 
                                         if (task.isSuccessful()) {
 
-                                            Request request = task.getResult().toObject(Request.class);
-                                            Log.d(TAG, "onComplete: Firestore data converted to object");
-                                            Log.d(TAG, "onComplete: TargetUserID : " + request.getTargetUserID() + " UserID : " + userID);
+                                            Request request = task.getResult()
+                                                    .toObject(Request.class);
+                                            Log.d(TAG,
+                                            "onComplete: Firestore " +
+                                             "data converted " +
+                                             "to object");
+                                            Log.d(TAG,
+                                            "onComplete: TargetUserID :"
+                                            + request.
+                                            getTargetUserID()
+                                            + " UserID : "
+                                            + userID);
 
-                                            if (request.getTargetUserID().equals(userID)) {
+                                            if (request.getTargetUserID()
+                                                    .equals(userID)) {
 
-                                                Log.d(TAG, "onComplete: Request is compatible with userID");
+                                            Log.d(TAG, "onComplete: " +
+                                            "Request is compatible " +
+                                            "with userID");
 
                                                 requestsList.add(request);
-                                                requestsAdapter.notifyDataSetChanged();
+                                                requestsAdapter
+                                                        .notifyDataSetChanged();
                                             }
                                         } else {
-                                            String error = task.getException().getMessage();
-                                            Toast.makeText(ChallengesOverviewActivity.this, "Firestore Retrieve Error : " + error, Toast.LENGTH_SHORT).show();
+                                            String error =
+                                                    task.getException()
+                                                            .getMessage();
+                                            Toast.makeText(
+                                            ChallengesOverviewActivity.
+                                            this,
+                                            "Firestore Retrieve Error : "
+                                            + error, Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });
                             } else {
 
                                 Log.d(TAG, "onEvent: Request ID is null");
-                                Toast.makeText(ChallengesOverviewActivity.this, "Request ID is null", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(
+                                ChallengesOverviewActivity.this,
+                                "Request ID is null", Toast.LENGTH_SHORT)
+                                .show();
                             }
                         }
                     }
@@ -174,7 +216,9 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
             case R.id.action_new_challenge_btn:
 
-                Intent allUsersIntent = new Intent(ChallengesOverviewActivity.this, AllUsersActivity.class);
+                Intent allUsersIntent = new Intent(
+                        ChallengesOverviewActivity.
+                        this, AllUsersActivity.class);
                 startActivity(allUsersIntent);
                 return true;
 

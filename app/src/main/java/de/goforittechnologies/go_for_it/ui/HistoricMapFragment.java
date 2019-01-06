@@ -43,7 +43,8 @@ public class HistoricMapFragment extends Fragment {
      * @return A new instance of fragment HistoricMapFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HistoricMapFragment newInstance(String param1, String param2) {
+    public static HistoricMapFragment newInstance(String param1,
+                                                  String param2) {
         HistoricMapFragment fragment = new HistoricMapFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -65,7 +66,8 @@ public class HistoricMapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_routes_list, container, false);
+        return inflater.inflate(R.layout.fragment_routes_list, container,
+                false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -99,7 +101,8 @@ public class HistoricMapFragment extends Fragment {
      * activity.
      * <p>
      * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * "http://developer.android.com/training/basics/fragments/
+     * communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {

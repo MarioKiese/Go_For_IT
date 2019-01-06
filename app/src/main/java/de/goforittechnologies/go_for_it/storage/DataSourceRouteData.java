@@ -33,9 +33,11 @@ public class DataSourceRouteData {
     }
 
     public void open() {
-        Log.d(TAG, "Eine Referenz auf die Datenbank wird jetzt angefragt.");
+        Log.d(TAG,
+                "Eine Referenz auf die Datenbank wird jetzt angefragt.");
         database = dbHelperRouteData.getWritableDatabase();
-        Log.d(TAG, "Datenbank-Referenz erhalten. Pfad zur Datenbank: " + database.getPath());
+        Log.d(TAG, "Datenbank-Referenz erhalten. Pfad zur Datenbank: "
+                + database.getPath());
     }
 
     public void close() {
@@ -49,7 +51,8 @@ public class DataSourceRouteData {
 
     }
 
-    public void createRouteData(String route, int steps, String time, double calories, double kilometers) {
+    public void createRouteData(String route, int steps, String time,
+                                double calories, double kilometers) {
         ContentValues values = new ContentValues();
         values.put(DbHelperRouteData.COLUMN_ROUTE, route);
         values.put(DbHelperRouteData.COLUMN_STEPS, steps);
@@ -70,12 +73,18 @@ public class DataSourceRouteData {
 
 
     private RouteData cursorToRouteData(Cursor cursor) {
-        int idIndex = cursor.getColumnIndex(DbHelperRouteData.COLUMN_ID);
-        int idRoute = cursor.getColumnIndex(DbHelperRouteData.COLUMN_ROUTE);
-        int idSteps = cursor.getColumnIndex(DbHelperRouteData.COLUMN_STEPS);
-        int idTime = cursor.getColumnIndex(DbHelperRouteData.COLUMN_TIME);
-        int idCalories = cursor.getColumnIndex(DbHelperRouteData.COLUMN_CALORIES);
-        int idKilometers = cursor.getColumnIndex(DbHelperRouteData.COLUMN_KILOMETERS);
+        int idIndex =
+                cursor.getColumnIndex(DbHelperRouteData.COLUMN_ID);
+        int idRoute =
+                cursor.getColumnIndex(DbHelperRouteData.COLUMN_ROUTE);
+        int idSteps =
+                cursor.getColumnIndex(DbHelperRouteData.COLUMN_STEPS);
+        int idTime =
+                cursor.getColumnIndex(DbHelperRouteData.COLUMN_TIME);
+        int idCalories =
+                cursor.getColumnIndex(DbHelperRouteData.COLUMN_CALORIES);
+        int idKilometers =
+                cursor.getColumnIndex(DbHelperRouteData.COLUMN_KILOMETERS);
 
         String route = cursor.getString(idRoute);
         int steps = cursor.getInt(idSteps);
@@ -92,7 +101,8 @@ public class DataSourceRouteData {
         List<RouteData> routeDataList = new ArrayList<>();
 
         Cursor cursor = database.query(TABLE_NAME,
-                columns, null, null, null, null, null);
+                columns, null, null,
+                null, null, null);
 
         cursor.moveToFirst();
         RouteData routeData;
@@ -100,7 +110,8 @@ public class DataSourceRouteData {
         while(!cursor.isAfterLast()) {
             routeData = cursorToRouteData(cursor);
             routeDataList.add(routeData);
-            Log.d(TAG, "ID: " + routeData.getId() + ", Inhalt: " + routeData.toString());
+            Log.d(TAG, "ID: " + routeData.getId() + "," +
+                    " Inhalt: " + routeData.toString());
             cursor.moveToNext();
         }
 
@@ -116,7 +127,8 @@ public class DataSourceRouteData {
                 DbHelperRouteData.COLUMN_ID + "=" + id,
                 null);
 
-        Log.d(TAG, "Eintrag gelöscht! ID: " + id + " Inhalt: " + routeData.toString());
+        Log.d(TAG, "Eintrag gelöscht! ID: " + id
+                + routeData.toString());
     }
 
 }

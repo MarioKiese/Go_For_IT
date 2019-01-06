@@ -18,7 +18,8 @@ public class MapData {
     private int id;
 
     // Constructor
-    MapData(double longitude, double latitude, double altitude, double height, int id) {
+    MapData(double longitude, double latitude,
+            double altitude, double height, int id) {
         this.longitude = longitude;
         this.latitude = latitude;
         this.altitude = altitude;

@@ -23,7 +23,9 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     DbHelperMapData(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
 
-        Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
+        Log.d(TAG, "DbHelperMapData hat die Datenbank " +
+                getDatabaseName() +
+                " erzeugt.");
     }
 
     @Override
@@ -52,12 +54,14 @@ public class DbHelperMapData extends SQLiteOpenHelper {
         try{
 
             sqLiteDatabase.execSQL(SQL_CREATE);
-            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
+            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE +
+                    " angelegt.");
 
 
         } catch (Exception ex) {
 
-            Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());
+            Log.e(TAG, "Fehler beim Anlegen der Tabelle: " +
+                    ex.getMessage());
 
         }
 
@@ -72,12 +76,14 @@ public class DbHelperMapData extends SQLiteOpenHelper {
         try{
 
             sqLiteDatabase.execSQL(SQL_DROP);
-            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_DROP + " gelöscht.");
+            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_DROP +
+                    " gelöscht.");
 
 
         } catch (Exception ex) {
 
-            Log.e(TAG, "Fehler beim Löschen der Tabelle: " + ex.getMessage());
+            Log.e(TAG, "Fehler beim Löschen der Tabelle: " +
+                    ex.getMessage());
 
         }
 

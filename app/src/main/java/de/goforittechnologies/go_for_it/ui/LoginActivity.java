@@ -34,7 +34,8 @@ import de.goforittechnologies.go_for_it.R;
  *
  * The user can log himself in by klicking the "login" button.
  *
- * The user can create a new firebase account by klicking "create new account" at the bottom.
+ * The user can create a new firebase account by klicking "create new
+ * account" at the bottom.
  * @see RegisterActivity
  *
  *
@@ -71,11 +72,14 @@ public class LoginActivity extends AppCompatActivity {
                 String loginEmail = etLoginMailText.getText().toString();
                 String loginPassword = etLoginPasswordText.getText().toString();
 
-                if (!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty(loginPassword)) {
+                if (!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty
+                        (loginPassword)) {
 
                     pbLogin.setVisibility(View.VISIBLE);
 
-                    mAuth.signInWithEmailAndPassword(loginEmail, loginPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    mAuth.signInWithEmailAndPassword(loginEmail, loginPassword)
+                            .addOnCompleteListener(new
+                            OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
@@ -86,7 +90,9 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
 
                                 String e = task.getException().getMessage();
-                                Toast.makeText(LoginActivity.this, "Error : " + e, Toast.LENGTH_LONG).show();
+                                Toast.makeText(LoginActivity.this,
+                                        "Error : " +
+                                        e, Toast.LENGTH_LONG).show();
 
                             }
 
@@ -104,7 +110,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+                Intent registerIntent = new Intent(
+                LoginActivity.this,
+                RegisterActivity.class);
                 startActivity(registerIntent);
 
             }
@@ -127,7 +135,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void sendToMain() {
 
-        Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
+        Intent loginIntent =
+        new Intent(LoginActivity.this, MainActivity.class);
         startActivity(loginIntent);
         finish();
 

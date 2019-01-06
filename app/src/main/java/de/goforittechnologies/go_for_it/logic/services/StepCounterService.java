@@ -28,7 +28,8 @@ public class StepCounterService extends Service implements SensorEventListener {
     Sensor sensor;
     private static final String TAG = "StepCounterService";
     private double steps;
-    public static final String NOTIFICATION = "de.goforittechnologies.go_for_it.receiver";
+    public static final String
+            NOTIFICATION = "de.goforittechnologies.go_for_it.receiver";
     boolean oldTimeSet = false;
     long oldTime = 0;
 
@@ -47,7 +48,8 @@ public class StepCounterService extends Service implements SensorEventListener {
         super.onCreate();
         Log.d(TAG, "onCreate: Service started");
         steps = 0;
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorManager =
+                (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         assert sensorManager != null;
         sensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         sensorManager.registerListener(this,
@@ -69,11 +71,16 @@ public class StepCounterService extends Service implements SensorEventListener {
         long diffTime = currentTime - oldTime;
         if (diffTime >= 10000){
             oldTimeSet = false;
-            String dbName = "StepDataTABLE_"+ (calendar.get(Calendar.MONTH)+1);
-            updateDatabase(steps,dbName,calendar.get(Calendar.DAY_OF_MONTH),calendar.get(Calendar.HOUR_OF_DAY));
-            Log.d(TAG, "onSensorChanged: Day " +calendar.get(Calendar.DAY_OF_MONTH));
-            Log.d(TAG, "onSensorChanged: Hour " +calendar.get(Calendar.HOUR_OF_DAY));
-            Log.d(TAG, "onSensorChanged: Month " + (calendar.get(Calendar.MONTH)+1));
+            String dbName = "StepDataTABLE_"+
+                    (calendar.get(Calendar.MONTH)+1);
+            updateDatabase(steps,dbName,calendar.get(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.HOUR_OF_DAY));
+            Log.d(TAG, "onSensorChanged: Day " +
+                    calendar.get(Calendar.DAY_OF_MONTH));
+            Log.d(TAG, "onSensorChanged: Hour " +
+                    calendar.get(Calendar.HOUR_OF_DAY));
+            Log.d(TAG, "onSensorChanged: Month " +
+                    (calendar.get(Calendar.MONTH)+1));
 
         }
 
@@ -84,15 +91,18 @@ public class StepCounterService extends Service implements SensorEventListener {
 
     }
 
-    private void updateDatabase(double steps, String dbName, int day, int hour){
+    private void updateDatabase(double steps,
+                                String dbName, int day, int hour){
         //TODO: Check Performance, to many DataSourceStepDataobjects?
 
         DataSourceStepData dataSourceStepData;
         try {
-            dataSourceStepData = new DataSourceStepData(this,dbName,1);
+            dataSourceStepData = new DataSourceStepData(this,
+                    dbName,1);
         } catch (Exception e) {
             e.printStackTrace();
-            dataSourceStepData = new DataSourceStepData(this,dbName,0);
+            dataSourceStepData = new DataSourceStepData(this,
+                    dbName,0);
         }
 
         dataSourceStepData.open();
@@ -110,7 +120,8 @@ public class StepCounterService extends Service implements SensorEventListener {
     private void sendStepMessageToActivity(double steps) {
         Intent stepsIntent = new Intent("GeneralStepsUpdate");
         stepsIntent.putExtra("Steps", steps);
-        LocalBroadcastManager.getInstance(StepCounterService.this).sendBroadcast(stepsIntent);
+        LocalBroadcastManager.getInstance(StepCounterService.this)
+                .sendBroadcast(stepsIntent);
         Log.d(TAG, "sendStepMessageToActivity: Steps sent");
     }
 }

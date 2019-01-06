@@ -33,7 +33,9 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     DbHelperRouteData(@Nullable Context context) {
         super(context,DB_NAME,null,DB_VERSION);
 
-        Log.d(TAG, "DbHelperRouteData hat die Datenbank " + getDatabaseName() + " erzeugt.");
+        Log.d(TAG, "DbHelperRouteData hat die Datenbank "
+                + getDatabaseName() +
+                " erzeugt.");
     }
 
     @Override
@@ -61,11 +63,13 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
         try{
 
             sqLiteDatabase.execSQL(SQL_CREATE);
-            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
+            Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: "
+                    + SQL_CREATE + " angelegt.");
 
         } catch (Exception ex) {
 
-            Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());
+            Log.e(TAG, "Fehler beim Anlegen der Tabelle: "
+                    + ex.getMessage());
 
         }
 

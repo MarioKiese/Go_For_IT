@@ -31,9 +31,11 @@ public class DataSourceMapData {
     }
 
     public void open() {
-        Log.d(TAG, "Eine Referenz auf die Datenbank wird jetzt angefragt.");
+        Log.d(TAG,
+                "Eine Referenz auf die Datenbank wird jetzt angefragt.");
         database = dbHelperMapData.getWritableDatabase();
-        Log.d(TAG, "Datenbank-Referenz erhalten. Pfad zur Datenbank: " + database.getPath());
+        Log.d(TAG, "Datenbank-Referenz erhalten. Pfad zur Datenbank: "
+                + database.getPath());
     }
 
     public void close() {
@@ -47,7 +49,8 @@ public class DataSourceMapData {
 
     }
 
-    public MapData createMapsData(String tableName, double lon,  double lat, double alt, double hei) {
+    public MapData createMapsData(String tableName, double lon,
+                                  double lat, double alt, double hei) {
         ContentValues values = new ContentValues();
         values.put(DbHelperMapData.COLUMN_Longitude, lon);
         values.put(DbHelperMapData.COLUMN_Latitude, lat);
@@ -69,11 +72,16 @@ public class DataSourceMapData {
 
 
     private MapData cursorToMapData(Cursor cursor) {
-        int idIndex = cursor.getColumnIndex(DbHelperMapData.COLUMN_ID);
-        int idLongitude = cursor.getColumnIndex(DbHelperMapData.COLUMN_Longitude);
-        int idLatitude = cursor.getColumnIndex(DbHelperMapData.COLUMN_Latitude);
-        int idAltitude = cursor.getColumnIndex(DbHelperMapData.COLUMN_Altitude);
-        int idHeight = cursor.getColumnIndex(DbHelperMapData.COLUMN_Height);
+        int idIndex =
+                cursor.getColumnIndex(DbHelperMapData.COLUMN_ID);
+        int idLongitude =
+                cursor.getColumnIndex(DbHelperMapData.COLUMN_Longitude);
+        int idLatitude =
+                cursor.getColumnIndex(DbHelperMapData.COLUMN_Latitude);
+        int idAltitude =
+                cursor.getColumnIndex(DbHelperMapData.COLUMN_Altitude);
+        int idHeight =
+                cursor.getColumnIndex(DbHelperMapData.COLUMN_Height);
 
         double longitude = cursor.getDouble(idLongitude);
         double latitude = cursor.getDouble(idLatitude);
@@ -89,7 +97,8 @@ public class DataSourceMapData {
         List<MapData> mapDataList = new ArrayList<>();
 
         Cursor cursor = database.query(tableName,
-                columns, null, null, null, null, null);
+                columns, null, null,
+                null, null, null);
 
         cursor.moveToFirst();
         MapData mapData;
@@ -97,7 +106,8 @@ public class DataSourceMapData {
         while(!cursor.isAfterLast()) {
             mapData = cursorToMapData(cursor);
             mapDataList.add(mapData);
-            Log.d(TAG, "ID: " + mapData.getId() + ", Inhalt: " + mapData.toString());
+            Log.d(TAG, "ID: " + mapData.getId() + ", " +
+                    "Inhalt: " + mapData.toString());
             cursor.moveToNext();
         }
 

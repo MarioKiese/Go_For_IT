@@ -26,7 +26,8 @@ public class DbHelperStepData extends SQLiteOpenHelper {
         super(context,DB_NAME,null,DB_VERSION);
         this.mode = mode;
         this.stepDataTableName = stepDataTable;
-        Log.d(TAG, "DbHelperMapData hat die Datenbank " + getDatabaseName() + " erzeugt.");
+        Log.d(TAG, "DbHelperMapData hat die Datenbank "
+                + getDatabaseName() + " erzeugt.");
 
             SQL_CREATE = "CREATE TABLE " + stepDataTableName +
                     "(" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -44,11 +45,13 @@ public class DbHelperStepData extends SQLiteOpenHelper {
 
         if (mode == 1){
             try {
-                Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: " + SQL_CREATE + " angelegt.");
+                Log.d(TAG, "Die Tabelle wird mit SQL-Befehl: "
+                        + SQL_CREATE + " angelegt.");
                 sqLiteDatabase.execSQL(SQL_CREATE);
             }
             catch (Exception ex) {
-                Log.e(TAG, "Fehler beim Anlegen der Tabelle: " + ex.getMessage());
+                Log.e(TAG, "Fehler beim Anlegen der Tabelle: " +
+                        ex.getMessage());
             }
         }
         else{

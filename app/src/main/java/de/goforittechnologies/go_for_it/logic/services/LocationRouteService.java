@@ -31,7 +31,8 @@ import android.util.Log;
 import java.util.ArrayList;
 
 
-public class LocationRouteService extends Service implements LocationListener, SensorEventListener {
+public class LocationRouteService extends Service implements LocationListener,
+        SensorEventListener {
 
     private static final String TAG = "LocationRouteService";
 
@@ -77,19 +78,31 @@ public class LocationRouteService extends Service implements LocationListener, S
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         if (mLocationManager != null) {
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED) {
 
             }
 
-            HandlerThread handlerThread = new HandlerThread("LocationHandlerThread");
+            HandlerThread handlerThread = new
+                    HandlerThread("LocationHandlerThread");
             handlerThread.start();
             // Now get the Looper from the HandlerThread
             Looper looper = handlerThread.getLooper();
             // Request location updates to be called back on the HandlerThread
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, LocationRouteService.this, looper);
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, LocationRouteService.this, looper);
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 0, 0,
+                    LocationRouteService.this, looper);
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER, 0, 0,
+                    LocationRouteService.this, looper);
             //TODO Prove functionality and necessity for users use
-            Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            Location lastKnownLocation =
+                    mLocationManager.getLastKnownLocation(
+                            LocationManager.NETWORK_PROVIDER);
             mRoute.add(lastKnownLocation);
             sendLocationMessageToActivity(mRoute);
 
@@ -97,10 +110,13 @@ public class LocationRouteService extends Service implements LocationListener, S
 
         // Configure Steps manager
         mSteps = 0;
-        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(
+                Context.SENSOR_SERVICE);
         assert mSensorManager != null;
-        Sensor mStepSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        mSensorManager.registerListener(LocationRouteService.this, mStepSensor, SensorManager.SENSOR_DELAY_UI);
+        Sensor mStepSensor = mSensorManager.getDefaultSensor(
+                Sensor.TYPE_STEP_DETECTOR);
+        mSensorManager.registerListener(LocationRouteService.this,
+                mStepSensor, SensorManager.SENSOR_DELAY_UI);
 
     }
 
@@ -148,7 +164,8 @@ public class LocationRouteService extends Service implements LocationListener, S
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("Location", route);
         locationIntent.putExtra("Location", bundle);
-        LocalBroadcastManager.getInstance(LocationRouteService.this).sendBroadcast(locationIntent);
+        LocalBroadcastManager.getInstance(LocationRouteService.this)
+                .sendBroadcast(locationIntent);
 
     }
 
@@ -160,25 +177,32 @@ public class LocationRouteService extends Service implements LocationListener, S
 
     private void createNotification() {
 
-        Intent notificationIntent = new Intent(this, LocationRouteService.class);
+        Intent notificationIntent = new Intent(this,
+                LocationRouteService.class);
         PendingIntent pendingIntent =
-                PendingIntent.getActivity(this, 0, notificationIntent, 0);
+                PendingIntent.getActivity(this, 0,
+                        notificationIntent, 0);
 
         Notification notification = null;
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (android.os.Build.VERSION.SDK_INT >=
+                android.os.Build.VERSION_CODES.O) {
 
             String NOTIFICATION_CHANNEL_ID = "de.goforittechnologies.go_for_it";
             String channelName = "My Background Service";
-            NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel chan = new NotificationChannel(
+                    NOTIFICATION_CHANNEL_ID, channelName,
+                    NotificationManager.IMPORTANCE_DEFAULT);
             chan.setLightColor(Color.BLUE);
             chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-            NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationManager manager = (NotificationManager)
+                    getSystemService(Context.NOTIFICATION_SERVICE);
             assert manager != null;
             manager.createNotificationChannel(chan);
 
 
-            notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+            notification = new Notification.Builder(this,
+                    NOTIFICATION_CHANNEL_ID)
                     .setContentTitle("Test")
                     .setContentText("Background location service in foreground")
                     .setContentIntent(pendingIntent)
@@ -217,7 +241,8 @@ public class LocationRouteService extends Service implements LocationListener, S
 
         Intent stepIntent = new Intent("StepsUpdate");
         stepIntent.putExtra("Steps", steps);
-        LocalBroadcastManager.getInstance(LocationRouteService.this).sendBroadcast(stepIntent);
+        LocalBroadcastManager.getInstance(LocationRouteService.this)
+                .sendBroadcast(stepIntent);
 
     }
 

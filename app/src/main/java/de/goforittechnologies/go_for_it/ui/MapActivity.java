@@ -47,21 +47,22 @@ import de.goforittechnologies.go_for_it.storage.DataSourceMapData;
 import de.goforittechnologies.go_for_it.storage.DataSourceRouteData;
 import de.goforittechnologies.go_for_it.storage.RouteData;
 /**
- * @author  Mario Kiese
+ * @author  Mario Kiese.
  * @version 0.8.
  * @see AppCompatActivity
  *
  *
- * This class is used to log into the firebase account
+ * This class is used to log into the firebase account.
  *
  *
- * Corresponding layout: res.layout.activity_login
+ * Corresponding layout: res.layout.activity_login.
  *
  * The user can type in username and password.
  *
  * The user can log himself in by klicking the "login" button.
  *
- * The user can create a new firebase account by klicking "create new account" at the bottom.
+ * The user can create a new firebase account by klicking "create new
+ * account" at the bottom.
  * @see RegisterActivity
  *
  *
@@ -131,7 +132,8 @@ public class MapActivity extends AppCompatActivity {
 
             if (!hasPermissions(this, PERMISSIONS)) {
                 // TODO Gibt es ActivityCompat auch in Support library v7
-                ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_ALL);
+                ActivityCompat.requestPermissions(
+                        this, PERMISSIONS, PERMISSION_ALL);
             }
 
         }
@@ -165,7 +167,8 @@ public class MapActivity extends AppCompatActivity {
                 Log.i(TAG, "onReceive: Location receiver got data");
 
                 Bundle bundle = intent.getBundleExtra("Location");
-                ArrayList<Location> data = bundle.getParcelableArrayList("Location");
+                ArrayList<Location> data =
+                        bundle.getParcelableArrayList("Location");
 
                 if (data != null) {
                     mRoute = data;
@@ -189,11 +192,16 @@ public class MapActivity extends AppCompatActivity {
         };
 
         // Set broadcast manager
-        LocalBroadcastManager.getInstance(MapActivity.this).registerReceiver(mLocationBroadcastReceiver, new IntentFilter("LocationUpdate"));
-        LocalBroadcastManager.getInstance(MapActivity.this).registerReceiver(mStepsBroadcastReceiver, new IntentFilter("StepsUpdate"));
+        LocalBroadcastManager.getInstance(MapActivity.this)
+                .registerReceiver(mLocationBroadcastReceiver,
+                        new IntentFilter("LocationUpdate"));
+        LocalBroadcastManager.getInstance(MapActivity.this)
+                .registerReceiver(mStepsBroadcastReceiver,
+                        new IntentFilter("StepsUpdate"));
 
         // Set shared preferences
-        pref = getApplicationContext().getSharedPreferences("MapsPref", MODE_PRIVATE);
+        pref = getApplicationContext()
+                .getSharedPreferences("MapsPref", MODE_PRIVATE);
         editor = pref.edit();
 
         // Configure widgets
@@ -208,7 +216,8 @@ public class MapActivity extends AppCompatActivity {
         }
 
         // Create location intent
-        locationRouteIntent = new Intent(MapActivity.this, LocationRouteService.class);
+        locationRouteIntent = new Intent(MapActivity.this,
+                LocationRouteService.class);
         mIsServiceBound = false;
 
         // Manage service binding
@@ -256,11 +265,13 @@ public class MapActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 unbindService();
-                stopService(new Intent(MapActivity.this, LocationRouteService.class));
+                stopService(new Intent(MapActivity.this,
+                        LocationRouteService.class));
 
                 chronometer.stop();
 
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(MapActivity.this);
+                AlertDialog.Builder dialogBuilder =
+                        new AlertDialog.Builder(MapActivity.this);
                 dialogBuilder.setTitle("Save route?");
 
                 // Set up the input
@@ -273,7 +284,8 @@ public class MapActivity extends AppCompatActivity {
                 // Set up the buttons
                 dialogBuilder.setPositiveButton("OK", null);
 
-                dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                dialogBuilder.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -282,13 +294,18 @@ public class MapActivity extends AppCompatActivity {
 
                 AlertDialog alertDialog = dialogBuilder.create();
 
-                // Implementation of a View.OnClickListener to control if dialog can be dismissed (not given with DialogInterface.OnClickListener
-                alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                // Implementation of a View.OnClickListener to control
+                // if dialog can be dismissed
+                // (not given with DialogInterface.OnClickListener)
+                alertDialog.setOnShowListener(new DialogInterface
+                        .OnShowListener() {
                     @Override
                     public void onShow(DialogInterface dialogInterface) {
 
-                        Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-                        positiveButton.setOnClickListener(new View.OnClickListener() {
+                        Button positiveButton = alertDialog
+                                .getButton(DialogInterface.BUTTON_POSITIVE);
+                        positiveButton.setOnClickListener(
+                                new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 String routeName = input.getText().toString();
@@ -296,14 +313,20 @@ public class MapActivity extends AppCompatActivity {
                                 if (validateRouteName(routeName)) {
                                     routeName = formatRouteName(routeName);
                                     if (checkIfRouteNameExists(routeName)) {
-                                        Toast.makeText(MapActivity.this, "Route name already exists! Please enter another name!", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MapActivity.this,
+                                        "Route name already exists! " +
+                                        "Please enter " +
+                                        "another name!",
+                                        Toast.LENGTH_LONG).show();
                                     } else {
                                         writeInDatabases(routeName);
                                         alertDialog.dismiss();
                                     }
 
                                 } else {
-                                    Toast.makeText(MapActivity.this, "Please enter a valid name", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MapActivity.this,
+                                            "Please enter a valid name",
+                                            Toast.LENGTH_LONG).show();
                                 }
                             }
                         });
@@ -340,7 +363,8 @@ public class MapActivity extends AppCompatActivity {
 
             case R.id.action_routes_btn:
 
-                Intent routesIntent = new Intent(MapActivity.this, RoutesListActivity.class);
+                Intent routesIntent = new Intent(MapActivity.this,
+                        RoutesListActivity.class);
                 startActivity(routesIntent);
 
                 return true;
@@ -372,8 +396,10 @@ public class MapActivity extends AppCompatActivity {
     protected void onDestroy() {
 
         // Unregister broadcast
-        LocalBroadcastManager.getInstance(MapActivity.this).unregisterReceiver(mLocationBroadcastReceiver);
-        LocalBroadcastManager.getInstance(MapActivity.this).unregisterReceiver(mStepsBroadcastReceiver);
+        LocalBroadcastManager.getInstance(MapActivity.this)
+                .unregisterReceiver(mLocationBroadcastReceiver);
+        LocalBroadcastManager.getInstance(MapActivity.this)
+                .unregisterReceiver(mStepsBroadcastReceiver);
 
         unbindService();
 
@@ -398,15 +424,18 @@ public class MapActivity extends AppCompatActivity {
 
 
                 @Override
-                public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                public void onServiceConnected(ComponentName componentName,
+                                               IBinder iBinder) {
 
-                    LocationRouteService.LocationBinder locationBinder = (LocationRouteService.LocationBinder) iBinder;
+                    LocationRouteService.LocationBinder locationBinder =
+                            (LocationRouteService.LocationBinder) iBinder;
                     mLocationRouteService = locationBinder.getService();
 
                     // Only if service is started, get Base time from service
                     if (pref.getBoolean("service_started", false)) {
 
-                        chronometer.setBase(mLocationRouteService.getmBaseTime());
+                        chronometer.setBase(mLocationRouteService
+                                .getmBaseTime());
                         chronometer.start();
 
                     }
@@ -430,7 +459,8 @@ public class MapActivity extends AppCompatActivity {
 
         }
 
-        bindService(locationRouteIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        bindService(locationRouteIntent, mServiceConnection,
+                Context.BIND_AUTO_CREATE);
 
     }
 
@@ -451,7 +481,8 @@ public class MapActivity extends AppCompatActivity {
 
             for (String permission : permissions) {
 
-                if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(context, permission) !=
+                        PackageManager.PERMISSION_GRANTED) {
 
                     return false;
 
@@ -471,13 +502,21 @@ public class MapActivity extends AppCompatActivity {
         mapView.setMultiTouchControls(true);
         mapView.getController().setZoom(16.0);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager =
+        (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat
+            .checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
-        Location currentLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        Location currentLocation
+        = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
         if (currentLocation != null) {
 
@@ -487,7 +526,8 @@ public class MapActivity extends AppCompatActivity {
         } else {
 
             //TODO: ggf. currentLocation mit NETWORK_PROVIDER ermitteln
-            Toast.makeText(MapActivity.this, "Position is null", Toast.LENGTH_LONG).show();
+            Toast.makeText(MapActivity.this,
+            "Position is null", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -503,7 +543,8 @@ public class MapActivity extends AppCompatActivity {
 
         if (!route.isEmpty()) {
 
-            mapView.getController().setCenter(new GeoPoint(route.get(route.size()-1)));
+            mapView.getController().setCenter(
+            new GeoPoint(route.get(route.size()-1)));
             mapView.getOverlayManager().clear();
 
             if (route.size() > 1) {
@@ -582,13 +623,16 @@ public class MapActivity extends AppCompatActivity {
 
             for (Location locationPoint : mRoute) {
 
-                dataSourceMapData.createMapsData(routeName, locationPoint.getLongitude(), locationPoint.getLatitude(), locationPoint.getAltitude(), 100.0);
+                dataSourceMapData.createMapsData(routeName,
+                locationPoint.getLongitude(), locationPoint.getLatitude(),
+                locationPoint.getAltitude(), 100.0);
             }
 
             dataSourceMapData.getAllMapData(routeName);
 
             // Route data
-            dataSourceRouteData.createRouteData(routeName, mSteps, chronometer.getText().toString(), 300.0, mDistance);
+            dataSourceRouteData.createRouteData(routeName, mSteps,
+            chronometer.getText().toString(), 300.0, mDistance);
             dataSourceRouteData.getAllRouteData();
         }
     }

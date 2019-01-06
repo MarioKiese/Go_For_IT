@@ -73,11 +73,14 @@ public class RoutesListActivity extends AppCompatActivity {
 
         lvRoutes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+            public void onItemClick(
+            AdapterView<?> adapterView, View view, int position, long id) {
 
-                String routeName = ((RouteData)adapterView.getItemAtPosition(position)).getRoute();
+                String routeName = ((RouteData)adapterView
+                .getItemAtPosition(position)).getRoute();
                 Log.d(TAG, "onItemClick: RouteName: " + routeName);
-                ArrayList<Location> route = convertRouteToLocationList(routeName);
+                ArrayList<Location> route =
+                convertRouteToLocationList(routeName);
                 sendRouteFromDatabaseToActivity(route);
 
             }
@@ -85,28 +88,37 @@ public class RoutesListActivity extends AppCompatActivity {
 
         lvRoutes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+            public boolean onItemLongClick(
+            AdapterView<?> adapterView, View view, int position, long id) {
 
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(RoutesListActivity.this);
+                AlertDialog.Builder dialogBuilder =
+                new AlertDialog.Builder(RoutesListActivity.this);
                 dialogBuilder.setTitle("Delete?")
-                        .setMessage("Are you sure you want to delete " + adapterView.getItemAtPosition(position).toString()+"?")
+                        .setMessage("Are you sure you want to delete " +
+                        adapterView.getItemAtPosition(position).toString()+"?")
                         .setCancelable(true)
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
+                        .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener(){
 
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(DialogInterface dialog,
+                            int which) {
 
                                 dialog.cancel();
 
                             }
 
                         })
-                        .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Delete",
+                        new DialogInterface.OnClickListener() {
 
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onClick(DialogInterface dialog,
+                                int which) {
 
-                                RouteData routeData = (RouteData) lvRoutes.getItemAtPosition(position);
+                                RouteData routeData =
+                                (RouteData) lvRoutes
+                                .getItemAtPosition(position);
                                 deleteListEntry(routeData);
 
                                 showAllListEntries();
@@ -130,9 +142,11 @@ public class RoutesListActivity extends AppCompatActivity {
 
         // Close databases
         dataSourceMapData.close();
-        Log.d(TAG, "onCreate: Die Datenquelle " + dataSourceMapData.getClass().getName() + " wird geschlossen!");
+        Log.d(TAG, "onCreate: Die Datenquelle " +
+        dataSourceMapData.getClass().getName() + " wird geschlossen!");
 
-        Log.d(TAG, "onCreate: Die Datenquelle " + dataSourceRouteData.getClass().getName() + " wird geschlossen!");
+        Log.d(TAG, "onCreate: Die Datenquelle " +
+        dataSourceRouteData.getClass().getName() + " wird geschlossen!");
         dataSourceRouteData.close();
 
         super.onDestroy();
@@ -141,13 +155,17 @@ public class RoutesListActivity extends AppCompatActivity {
     private void initializeDatabase() {
 
         // Test writing in Map database
-        dataSourceMapData = new DataSourceMapData(RoutesListActivity.this);
-        Log.d(TAG, "onCreate: Die Datenquelle " + dataSourceMapData.getClass().getName() + " wird geöffnet!");
+        dataSourceMapData =
+        new DataSourceMapData(RoutesListActivity.this);
+        Log.d(TAG, "onCreate: Die Datenquelle " +
+        dataSourceMapData.getClass().getName() + " wird geöffnet!");
         dataSourceMapData.open();
 
         // Test writing in Route database
-        dataSourceRouteData = new DataSourceRouteData(RoutesListActivity.this);
-        Log.d(TAG, "onCreate: Die Datenquelle " + dataSourceRouteData.getClass().getName() + " wird geöffnet!");
+        dataSourceRouteData =
+        new DataSourceRouteData(RoutesListActivity.this);
+        Log.d(TAG, "onCreate: Die Datenquelle " +
+        dataSourceRouteData.getClass().getName() + " wird geöffnet!");
         dataSourceRouteData.open();
 
     }
@@ -155,7 +173,8 @@ public class RoutesListActivity extends AppCompatActivity {
     private void showAllListEntries() {
 
         List<RouteData> routeDataList = dataSourceRouteData.getAllRouteData();
-        mRouteDataAdapter = new RoutesAdapter(RoutesListActivity.this, routeDataList);
+        mRouteDataAdapter = new RoutesAdapter(RoutesListActivity.this,
+        routeDataList);
         lvRoutes.setAdapter(mRouteDataAdapter);
 
     }
@@ -201,8 +220,11 @@ public class RoutesListActivity extends AppCompatActivity {
     // Communication methods
     private void sendRouteFromDatabaseToActivity(ArrayList<Location> route) {
 
-        Intent historicMapIntent = new Intent(RoutesListActivity.this, HistoricMapActivity.class);
-        Bundle bundle = new Bundle();
+        Intent historicMapIntent =
+        new Intent(RoutesListActivity.this,
+                HistoricMapActivity.class);
+        Bundle bundle =
+        new Bundle();
         bundle.putParcelableArrayList("Map", route);
         historicMapIntent.putExtra("Map", bundle);
         startActivity(historicMapIntent);

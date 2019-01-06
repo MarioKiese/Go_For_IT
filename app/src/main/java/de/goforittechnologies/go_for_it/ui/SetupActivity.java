@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.LogDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -46,18 +48,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @version 0.8.
  * @see AppCompatActivity
  *
- * This class is used to configure the account setting of the user and to create testdata
+ * This class is used to configure the account setting of the user and to
+ * create testdata.
  *
  * Corresponding layout: res.layout.activity_setup.xml
  *
- * By klicking on the "smilys" image or the users profile picture, a userfoto can be loaded up
- * and linked to the firebase account.
+ * By klicking on the "smilys" image or the users profile picture, a userfoto
+ * can be loaded up and linked to the firebase account.
  *
- * In the text-view in above the profile picture the user is able to change his username
+ * In the text-view in above the profile picture the user is able to change
+ * his username.
  *
- * The two buttons in the bottom are used to create and delete testdata for the
- * november (11.) month, to test the given charts in the dashboard activity without
- * using the app for one month.
+ * The two buttons in the bottom are used to create and delete testdata for
+ * the november (11.) month, to test the given charts in the dashboard
+ * activity without using the app for one month.
  * @see DashboardActivity
  * @see FirebaseAuth
  *
@@ -76,6 +80,7 @@ public class SetupActivity extends AppCompatActivity {
     private Uri mainImageUri = null;
     private String userID;
     private boolean isChanged = false;
+    private static final String TAG = "SetupActivity";
 
     // Firebase
     private StorageReference storageReference;
@@ -111,7 +116,9 @@ public class SetupActivity extends AppCompatActivity {
         pbSetup.setVisibility(View.VISIBLE);
         btSetup.setEnabled(false);
 
-        firebaseFirestore.collection("Users").document(userID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Users").document(userID)
+        .get().addOnCompleteListener(
+        new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -119,23 +126,32 @@ public class SetupActivity extends AppCompatActivity {
 
                     if (task.getResult().exists()) {
 
-                        String name = task.getResult().getString("name");
-                        String image = task.getResult().getString("image");
+                        String name =
+                        task.getResult().getString("name");
+                        String image =
+                        task.getResult().getString("image");
 
                         etSetupName.setText(name);
                         mainImageUri = Uri.parse(image);
 
-                        RequestOptions placeholderRequest = new RequestOptions();
-                        placeholderRequest.placeholder(R.drawable.default_image);
-                        Glide.with(SetupActivity.this).setDefaultRequestOptions(placeholderRequest).load(image).into(ivSetupImage);
+                        RequestOptions placeholderRequest =
+                        new RequestOptions();
+                        placeholderRequest
+                        .placeholder(R.drawable.default_image);
+                        Glide.with(SetupActivity.this)
+                        .setDefaultRequestOptions(placeholderRequest)
+                        .load(image).into(ivSetupImage);
                     } else {
 
-                        Toast.makeText(SetupActivity.this, "Data does not exist", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SetupActivity.this,
+                        "Data does not exist", Toast.LENGTH_SHORT).show();
                     }
 
                 } else {
                     String error = task.getException().getMessage();
-                    Toast.makeText(SetupActivity.this, "Firestore Retrieve Error : " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SetupActivity.this,
+                    "Firestore Retrieve Error : "
+                    + error, Toast.LENGTH_SHORT).show();
                 }
 
                 pbSetup.setVisibility(View.INVISIBLE);
@@ -149,19 +165,26 @@ public class SetupActivity extends AppCompatActivity {
                 DataSourceStepData dataSourceStepData = null;
                 try {
                     dataSourceStepData = new DataSourceStepData(
-                            SetupActivity.this, "StepDataTABLE_11",1);
-                } catch (Exception e) {
-                    dataSourceStepData = new DataSourceStepData(
-                            SetupActivity.this, "StepDataTABLE_11",0);
-                }
-                dataSourceStepData.open();
-                double[] day;
-                for (int i = 1; i <=31; i++){
-                    for (int j = 0; j <24; j++){
-                        dataSourceStepData.updateStepData(0,i+ ":" +j);
+                            SetupActivity.this,
+                            "StepDataTABLE_11",1);
+
+                    dataSourceStepData.open();
+                    double[] day;
+                    for (int i = 1; i <=31; i++){
+                        for (int j = 0; j <24; j++){
+                            dataSourceStepData.updateStepData(
+                            0,i+ ":" +j);
+                        }
                     }
+                    dataSourceStepData.close();
+                } catch (Exception e) {
+
+                    dataSourceStepData = new DataSourceStepData(
+                            SetupActivity.this,
+                            "StepDataTABLE_11",0);
+
                 }
-                dataSourceStepData.close();
+
             }
         });
 
@@ -171,38 +194,70 @@ public class SetupActivity extends AppCompatActivity {
 
 
                 DataSourceStepData dataSourceStepData = null;
+                boolean isfirst = false;
                 try {
                     dataSourceStepData = new DataSourceStepData(
-                            SetupActivity.this, "StepDataTABLE_11",1);
-                } catch (Exception e) {
+                            SetupActivity.this,
+                            "StepDataTABLE_11", 1);
+                    isfirst = true;
+                }catch (Exception e) {
+                    isfirst = false;
                     dataSourceStepData = new DataSourceStepData(
-                            SetupActivity.this, "StepDataTABLE_11",0);
+                            SetupActivity.this,
+                            "StepDataTABLE_11",0);
+                    e.printStackTrace();
                 }
 
-                dataSourceStepData.open();
+                if (isfirst){
+                        double[] day;
+                        for (int i = 1; i <= 30; i++) {
+                            if (i % 7 == 0 || i % 7 == 6) {
+                                day = buildWeekendDay();
 
-                double[] day;
-                for (int i = 1; i <=31; i++){
-                    if (i%7 == 0 || i%7 == 6){
-                        day = buildWeekendDay();
+                            } else if (i % 7 == 1 || i % 7 == 3) {
+                                day = buildUniDay1();
+                            } else if (i % 7 == 4) {
+                                day = buildWorkDay();
+                            } else {
+                                day = buildUniDay2();
+                            }
 
-                    }
-                    else if (i%7 == 1 ||i%7 == 3){
-                        day = buildUniDay1();
-                    }
-                    else if(i%7 == 4){
-                        day = buildWorkDay();
-                    }
-                    else {
-                        day = buildUniDay2();
-                    }
+                            for (int j = 0; j < 24; j++) {
+                                Log.d(TAG,
+                                "onClick: Create i:j" + i + ":" + j);
+                                dataSourceStepData
+                                .createStepData(day[j], i + ":" + j);
 
-                   for (int j = 0; j <24; j++){
-                        dataSourceStepData.updateStepData(day[j],i+ ":" +j);
+                            }
+                        }
                     }
-                }
+                    else{
+                        double[] day;
+                        for (int i = 1; i <=30; i++){
+                            if (i%7 == 0 || i%7 == 6){
+                                day = buildWeekendDay();
 
-                dataSourceStepData.close();
+                            }
+                            else if (i%7 == 1 ||i%7 == 3){
+                                day = buildUniDay1();
+                            }
+                            else if(i%7 == 4){
+                                day = buildWorkDay();
+                            }
+                            else {
+                                day = buildUniDay2();
+                            }
+
+                            for (int j = 0; j <24; j++){
+                                Log.d(TAG,
+                                "onClick: Update i:j" +i+ ":" +j);
+                                dataSourceStepData
+                                .updateStepData(day[j],i+ ":" +j);
+
+                            }
+                        }
+                    }
+                    dataSourceStepData.close();
             }
         });
 
@@ -219,11 +274,17 @@ public class SetupActivity extends AppCompatActivity {
 
                         userID = firebaseAuth.getCurrentUser().getUid();
 
-                        final StorageReference imagePath = storageReference.child("profile_images").child(userID + ".jpg");
+                        final StorageReference imagePath =
+                        storageReference.child("profile_images")
+                        .child(userID + ".jpg");
 
-                        imagePath.putFile(mainImageUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                        imagePath.putFile(mainImageUri)
+                        .continueWithTask(
+                        new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                             @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                            public Task<Uri> then(
+                            @NonNull Task<UploadTask.TaskSnapshot> task)
+                            throws Exception {
                                 if (!task.isSuccessful()) {
 
                                     throw task.getException();
@@ -241,8 +302,11 @@ public class SetupActivity extends AppCompatActivity {
 
                                 } else {
 
-                                    String error = task.getException().getMessage();
-                                    Toast.makeText(SetupActivity.this, "Error : " + error, Toast.LENGTH_LONG).show();
+                                    String error = task.getException()
+                                    .getMessage();
+                                    Toast.makeText(
+                                    SetupActivity.this, "Error : "
+                                        + error, Toast.LENGTH_LONG).show();
                                     pbSetup.setVisibility(View.INVISIBLE);
                                 }
                             }
@@ -262,10 +326,17 @@ public class SetupActivity extends AppCompatActivity {
 
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                    if(ContextCompat.checkSelfPermission(SetupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    if(ContextCompat.checkSelfPermission(
+                    SetupActivity.this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
 
-                        Toast.makeText(SetupActivity.this, "Permisson denied!", Toast.LENGTH_LONG).show();
-                        ActivityCompat.requestPermissions(SetupActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                        Toast.makeText(SetupActivity.this,
+                        "Permisson denied!", Toast.LENGTH_LONG).show();
+                        ActivityCompat.requestPermissions(
+                        SetupActivity.this, new String[]
+                            {Manifest.permission.READ_EXTERNAL_STORAGE},
+                            1);
 
                     } else {
 
@@ -284,7 +355,8 @@ public class SetupActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(
+    int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -298,10 +370,12 @@ public class SetupActivity extends AppCompatActivity {
 
                 isChanged = true;
 
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            } else if (resultCode ==
+                    CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
 
                 Exception error = result.getError();
-                Toast.makeText(this, "Error : " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Error : "
+                + error.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         }
@@ -325,24 +399,32 @@ public class SetupActivity extends AppCompatActivity {
         userMap.put("name", userName);
         userMap.put("image", downloadUri.toString());
 
-        firebaseFirestore.collection("Users").document(userID).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firebaseFirestore.collection("Users").document(userID)
+        .set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
                 if (task.isSuccessful()) {
-                    Toast.makeText(SetupActivity.this, "The user settings are updated", Toast.LENGTH_SHORT).show();
-                    Intent mainIntent = new Intent(SetupActivity.this, MainActivity.class);
+                    Toast.makeText(SetupActivity.this,
+                    "The user settings are updated",
+                    Toast.LENGTH_SHORT).show();
+                    Intent mainIntent = new Intent(
+                   SetupActivity.this, MainActivity.class);
                     startActivity(mainIntent);
                     finish();
                 } else {
                     String error = task.getException().getMessage();
-                    Toast.makeText(SetupActivity.this, "Firestore Error : " + error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SetupActivity.this,
+                    "Firestore Error : " + error,
+                    Toast.LENGTH_SHORT).show();
                 }
 
                 pbSetup.setVisibility(View.INVISIBLE);
             }
         });
-        Toast.makeText(SetupActivity.this, "The image is uploaded", Toast.LENGTH_LONG).show();
+        Toast.makeText(SetupActivity.this,
+        "The image is uploaded",
+        Toast.LENGTH_LONG).show();
     }
 
     private double[] buildUniDay1(){

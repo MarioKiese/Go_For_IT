@@ -37,7 +37,8 @@
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
         android:layout_width="400dp"
-        android:layout_height="300dp" />
+        android:layout_height="300dp"
+        android:layout_marginTop="25dp" />
 
     <SeekBar
         android:id="@+id/seekBarDay"

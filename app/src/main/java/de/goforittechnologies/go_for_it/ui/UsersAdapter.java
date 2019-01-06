@@ -32,11 +32,14 @@ public class UsersAdapter extends ArrayAdapter<User> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position,
+    @Nullable View convertView,
+    @NonNull ViewGroup parent) {
 
         View listItem = convertView;
         if (listItem == null) {
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.all_users_list_item, parent, false);
+            listItem = LayoutInflater.from(mContext)
+            .inflate(R.layout.all_users_list_item, parent, false);
         }
 
         User currentUser = mUserList.get(position);

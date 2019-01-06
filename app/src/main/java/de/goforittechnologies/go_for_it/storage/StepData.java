@@ -6,8 +6,9 @@ import java.sql.Timestamp;
  * @author  Mario Kiese and Tom Hammerbacher
  * @version 0.8.
  *
- * class to represent and temporary store one stepdata information with step-value and timestamp
- * contain getter ad setter methods
+ * class to represent and temporary store one stepdata
+ * information with step-value and timestamp.
+ * contain getter ad setter methods.
  * @see Timestamp
  */
 

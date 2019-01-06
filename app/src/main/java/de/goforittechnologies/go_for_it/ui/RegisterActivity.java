@@ -35,7 +35,8 @@ import de.goforittechnologies.go_for_it.R;
  * The user can type in a new username and a new password.
  * He has to confirm the typed password in the textfield below.
  *
- * The user can register his account by klicking the "create new account" button.
+ * The user can register his account by klicking the
+ * "create new account" button.
  *
  * The user can use an existing firebase account by klicking
  * "Already have an account?" at the bottom.
@@ -84,28 +85,40 @@ public class RegisterActivity extends AppCompatActivity {
 
                 String email = etRegMailText.getText().toString();
                 String password = etRegPasswordText.getText().toString();
-                String confirmPassword = etRegConfirmPasswordText.getText().toString();
+                String confirmPassword =
+                etRegConfirmPasswordText.getText().toString();
 
-                if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password) && !TextUtils.isEmpty(confirmPassword)) {
+                if (!TextUtils.isEmpty(email)
+                    && !TextUtils.isEmpty(password)
+                    && !TextUtils.isEmpty(confirmPassword)) {
 
                     if (password.equals(confirmPassword)) {
 
                         pbRegister.setVisibility(View.VISIBLE);
 
-                        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        mAuth.createUserWithEmailAndPassword(email,
+                        password).addOnCompleteListener(
+                        new OnCompleteListener<AuthResult>() {
                             @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
+                            public void onComplete(
+                                    @NonNull Task<AuthResult> task) {
 
                                 if (task.isSuccessful()) {
 
-                                    Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
+                                    Intent setupIntent = new Intent(
+                                    RegisterActivity.this,
+                                    SetupActivity.class);
                                     startActivity(setupIntent);
                                     finish();
 
                                 } else {
 
-                                    String errorMessage = task.getException().getMessage();
-                                    Toast.makeText(RegisterActivity.this, "Error : " + errorMessage, Toast.LENGTH_SHORT).show();
+                                    String errorMessage =
+                                    task.getException().getMessage();
+                                    Toast.makeText(
+                                    RegisterActivity.this,
+                                    "Error : " + errorMessage,
+                                    Toast.LENGTH_SHORT).show();
 
                                 }
 
@@ -116,7 +129,9 @@ public class RegisterActivity extends AppCompatActivity {
 
                     } else {
 
-                        Toast.makeText(RegisterActivity.this, "Confirm Password and Password field doesn't match!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.
+                        this, "Confirm Password and Password field " +
+                        "doesn't match!", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -142,7 +157,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void sendToMain() {
 
-        Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
+        Intent mainIntent = new Intent(RegisterActivity.this,
+                MainActivity.class);
         startActivity(mainIntent);
         finish();
 

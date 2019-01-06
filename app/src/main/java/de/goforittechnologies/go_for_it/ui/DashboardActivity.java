@@ -34,12 +34,12 @@ import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
  * This class creates the dashboard of the "Go_for_IT" android app.
  * Corresponding layout: res.layout.activity_dashboard.xml
  *
- * The user can choose between displaying the selected data in different time periods (week, day,
- * hour) by klicking on the dropdown spinner in the top.
- * The BarChart shows the choosen period. Zooming in X- and Y-direction is possible by using two
- * fingers.
- * The two seek-bars (sometimes only one is shown) can be used to change the displayed month and day
- * by swiping over it.
+ * The user can choose between displaying the selected data in different time
+ * periods (week, day, hour) by klicking on the dropdown spinner in the top.
+ * The BarChart shows the choosen period. Zooming in X- and Y-direction is
+ * possible by using two fingers.
+ * The two seek-bars (sometimes only one is shown) can be used to change the
+ * displayed month and day by swiping over it.
  */
 
 public class DashboardActivity extends AppCompatActivity
@@ -94,9 +94,11 @@ public class DashboardActivity extends AppCompatActivity
 
         //create a list of items for the spinner.
         String[] items = new String[]{"Week", "Day", "Hour"};
-        //create an adapter to describe how the items are displayed, adapters are used in several places in android.
+        //create an adapter to describe how the items are displayed,
+        // adapters are used in several places in android.
         //There are multiple variations of this, but this is the basic variant.
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_dropdown_item, items);
         //set the spinners adapter to the previously created one.
         dropdownPeriod.setAdapter(adapter);
 
@@ -112,8 +114,6 @@ public class DashboardActivity extends AppCompatActivity
         Log.d(TAG, "onCreate: Size of InputList:" + inputList.size());
 
         monthForHourUse = 0;
-
-        //Todo: Information Button for user + making dashboard fancy af
 
     }
     private List<BarEntry> buildMonthBarChart(int month){
@@ -132,7 +132,7 @@ public class DashboardActivity extends AppCompatActivity
                     e.printStackTrace();
                 }
             }
-            entries.add(new BarEntry((float)i +1,(float)value));
+            entries.add(new BarEntry(i +1,(int)value));
             value = 0;
             i++;
         }
@@ -144,7 +144,9 @@ public class DashboardActivity extends AppCompatActivity
 
         List<double[]> list = new ArrayList<>();
         try {
-            dataSourceStepData = new DataSourceStepData(this,"StepDataTABLE_"+ (month),0);
+            dataSourceStepData = new DataSourceStepData(this,
+                    "StepDataTABLE_"
+                    + (month),0);
             dataSourceStepData.open();
             list = dataSourceStepData.getAllStepData();
             dataSourceStepData.close();
@@ -153,7 +155,9 @@ public class DashboardActivity extends AppCompatActivity
             if (noTableToast!= null){
                 noTableToast.cancel();
             }
-            noTableToast = Toast.makeText(this,"No existing table for selected month",Toast.LENGTH_SHORT);
+            noTableToast = Toast.makeText(this,
+                    "No existing table for selected month",
+                    Toast.LENGTH_SHORT);
             noTableToast.show();
         }
         return list;
@@ -167,7 +171,8 @@ public class DashboardActivity extends AppCompatActivity
 
         for (int i = 0; i< 24;i++){
             try{
-                entries.add(new BarEntry((float)(i),(float)inputList.get(day)[i]));
+                entries.add(new BarEntry((i),
+                        (int)inputList.get(day)[i]));
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -191,7 +196,7 @@ public class DashboardActivity extends AppCompatActivity
                     }
                 }
             }
-            entries.add(new BarEntry((float)((i /7)+1),(float)value));
+            entries.add(new BarEntry(((i /7)+1),(int)value));
             value = 0;
             i = i+7;
         }
@@ -203,14 +208,15 @@ public class DashboardActivity extends AppCompatActivity
         BarDataSet set = new BarDataSet(inputList, "Steps");
         BarData data = new BarData(set);
         data.setBarWidth(0.9f); // set custom bar width
-        barChart.setData(data);
+        barChart.setData((data));
         barChart.getDescription().setEnabled(false);
         barChart.setFitBars(true); // make the x-axis fit exactly all bars
         barChart.invalidate(); // refresh
     }
 
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+    public void onItemSelected(AdapterView<?> adapterView,
+                               View view, int i, long l) {
 
         selectedPeriod = adapterView.getItemAtPosition(i).toString();
         switch (selectedPeriod){
