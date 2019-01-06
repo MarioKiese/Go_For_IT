@@ -53,10 +53,10 @@ import de.goforittechnologies.go_for_it.storage.User;
  * This class shows all requested and active challenges.
  * Corresponding layout: res.layout.activity_challenges_overview.xml.
  *
- * The user can see all requested
- * but not yet accepted challenges under "request".
- * The user can see all accepted
- * and not yet completed challenges under "active challenges".
+ * The user can see all requested but not yet accepted challenges under
+ * "request".
+ * The user can see all accepted and not yet completed challenges under
+ * "active challenges".
  *
  * By klicking the menu button in the top right corner,
  * the user is able to create new challenges.
@@ -87,6 +87,18 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private String userID;
 
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - configure firebase-usage
+     * - set event listeners
+     * - set click listeners
+     *
+     * @see EventListener
+     * @see FirebaseAuth
+     * @see FirebaseUser
+     * @see AdapterView
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -221,6 +233,11 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 
+     * @param menu
+     * @return
+     */
     @SuppressLint("RestrictedApi")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

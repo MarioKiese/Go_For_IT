@@ -7,11 +7,13 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
- * @author Mario Kiese and Tom Hammerbacher.
+ * @author  Mario Kiese and Tom Hammerbacher.
  * @version 0.8.
+ *
+ * This class is used to store and retrieve data from SQLite-Database.
+ *
  * @see SQLiteOpenHelper
- *
- *
+ * @see SQLiteDatabase
  */
 
 public class DbHelperRouteData extends SQLiteOpenHelper {
@@ -29,7 +31,11 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     static final String COLUMN_TIME = "time";
     static final String COLUMN_CALORIES = "calories";
     static final String COLUMN_KILOMETERS = "kilometers";
-
+    /**
+     * constructor to create database
+     * @param context context of usage
+     *
+     */
     DbHelperRouteData(@Nullable Context context) {
         super(context,DB_NAME,null,DB_VERSION);
 
@@ -47,7 +53,12 @@ public class DbHelperRouteData extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
-
+    /**
+     * method to create "create table" query and execute sql command
+     * @param tableName name of table that should be created
+     *
+     * @see SQLiteDatabase
+     */
     void createTable(String tableName) {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();

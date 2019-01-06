@@ -28,7 +28,7 @@ public class Request {
     String targetUserID, String sourceUserName, String targetUserName,
     String sourceUserImage, String targetUserImage, String challengeID,
                    String status) {
-        this.id = id; //TODO: Check if necessary and clear all traces
+        this.id = id;
         this.stepTarget = stepTarget;
         this.sourceUserID = sourceUserID;
         this.targetUserID = targetUserID;

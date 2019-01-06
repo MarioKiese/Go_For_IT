@@ -5,7 +5,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-
+/**
+ * @author  Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ *
+ * This class is used to store and retrieve data from SQLite-Database.
+ *
+ * @see SQLiteOpenHelper
+ * @see SQLiteDatabase
+ */
 
 public class DbHelperStepData extends SQLiteOpenHelper {
 
@@ -21,7 +29,10 @@ public class DbHelperStepData extends SQLiteOpenHelper {
     private int mode;
 
     private String SQL_CREATE = "";
-
+    /**
+     * constructor to create database and "create table" query (+ execution).
+     * @param context context of usage
+     */
     DbHelperStepData(Context context, String stepDataTable, int mode) {
         super(context,DB_NAME,null,DB_VERSION);
         this.mode = mode;
@@ -40,6 +51,12 @@ public class DbHelperStepData extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
     }
+    /**
+     * method to execute sql command
+     * @param
+     *
+     * @see SQLiteDatabase
+     */
     private void createTable(){
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
 
@@ -55,7 +72,7 @@ public class DbHelperStepData extends SQLiteOpenHelper {
             }
         }
         else{
-            Log.d(TAG,  SQL_CREATE + " angelegt.");
+            Log.d(TAG,  SQL_CREATE + " referenced.");
         }
     }
 

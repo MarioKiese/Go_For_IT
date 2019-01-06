@@ -43,7 +43,7 @@ import de.goforittechnologies.go_for_it.storage.Request;
 import de.goforittechnologies.go_for_it.storage.User;
 
 /**
- * @author  Mario Kiese.
+ * @author  Mario Kiese and Tom Hammerbacher.
  * @version 0.8.
  * @see AppCompatActivity
  *
@@ -74,13 +74,24 @@ public class AllUsersActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     String userID;
 
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - configure firebase-usage
+     * - set event listeners
+     * - set click listeners
+     *
+     * @see EventListener
+     * @see FirebaseAuth
+     * @see FirebaseUser
+     * @see AdapterView
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_users);
 
         // Set widgets
-        // Widgets
         TextView tvUserEmptyListText = findViewById(R.id.tvUsersEmptyListText);
         ListView lvAllUsers = findViewById(R.id.lvUsers);
         lvAllUsers.setEmptyView(tvUserEmptyListText);
@@ -250,6 +261,13 @@ public class AllUsersActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * method to add request to firebase user and store information in
+     * firestore-database.
+     *
+     * @param challengeRequest challenge request for firestore-database.
+     *
+     */
     private void manageRequest(Request challengeRequest) {
 
         String requestID = addRequestInFirestore(challengeRequest);
@@ -257,6 +275,15 @@ public class AllUsersActivity extends AppCompatActivity {
         challengeRequest.getTargetUserID(), requestID);
         startChallengeService(userID);
     }
+
+    /**
+     * method add request to firestore-database
+     * @param challengeRequest
+     * @return firestore ID of stored request
+     *
+     * @see DocumentReference
+     *
+     */
 
     private String addRequestInFirestore(Request challengeRequest) {
 
@@ -291,6 +318,14 @@ public class AllUsersActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * method add request-id into lists of users participating on requested
+     * challenge.
+     *
+     * @param sourceUserID id of user who requested the challenge
+     * @param targetUserID id of user who accepted the challenge request
+     * @param requestID id of request from challenge
+     */
     private void addRequestToFirebaseUsers(String sourceUserID,
                                            String targetUserID,
                                            String requestID) {
@@ -335,6 +370,14 @@ public class AllUsersActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * method to start the challenge service to count steps and save them
+     * into firebase.
+     *
+     * @param userID id of user participating on started challenge
+     *
+     * @see ChallengeStepCounterService
+     */
     private void startChallengeService(String userID) {
 
         Intent challengeServiceIntent = new Intent(

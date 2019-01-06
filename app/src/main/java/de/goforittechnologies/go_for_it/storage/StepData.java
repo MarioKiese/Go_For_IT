@@ -47,16 +47,28 @@ public class StepData {
 
     //Method
 
+    /**
+     * method to convert object to String
+     * @return String with information about object's values
+     */
     @Override
     public String toString() {
         return time.toString() + " Steps: " + steps;
     }
 
-    public String createDatabaseName(){
+    /**
+     * create table name depending on current month
+     * @return tablename
+     */
+    public String createTableName(){
         return "StepDataTABLE_" + time.getMonth();
     }
 
-    public String createTimestampEnrty(){
+    /**
+     * create timestamp with current day and hour
+     * @return timestamp
+     */
+    public String createTimestampEntry(){
         return time.getDay() + ":" + time.getHour();
     }
 }

@@ -3,7 +3,7 @@ package de.goforittechnologies.go_for_it.storage;
 import android.util.Log;
 
 /**
- * @author  Tom Hammerbacher
+ * @author  Mario Kiese and Tom Hammerbacher
  * @version 0.8.
  *
  * class to represent and temporary store hour, day and month in one object

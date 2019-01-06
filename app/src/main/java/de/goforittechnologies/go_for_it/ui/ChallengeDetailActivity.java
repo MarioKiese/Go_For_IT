@@ -8,6 +8,24 @@ import android.widget.TextView;
 
 import de.goforittechnologies.go_for_it.R;
 
+/**
+ * @author  Mario Kiese and Tom Hammerbacher
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ * This class shows the current standing of the selected challenge.
+ * Corresponding layout: res.layout.activity_challenge_detail.xml.
+ *
+ * The user can inform himself about the current steps made by himself since
+ *  * stating the challenge underneath the "you" textView (same for opponent's
+ *  * steps underneath the "rival" textView).
+ *  *
+ *  * In the center of this activity, the step-goal to archive is displayed.
+ *  *
+ *  * At the bottom under every step-value the user can see a progress bar with
+ *  * his current progress to the stepgoal.
+ */
+
 public class ChallengeDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "ChallengeDetailActivity";
@@ -19,7 +37,11 @@ public class ChallengeDetailActivity extends AppCompatActivity {
     private ProgressBar pbYou;
     private ProgressBar pbRival;
 
-
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - creating intent
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

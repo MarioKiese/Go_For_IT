@@ -8,7 +8,6 @@ package de.goforittechnologies.go_for_it.storage;
  * contain getter ad setter methods
  */
 
-
 public class RouteData {
 
     private String route;
@@ -28,15 +27,6 @@ public class RouteData {
         this.kilometers = kilometers;
         this.id = id;
     }
-
-    public RouteData(String route, String time, double calories,
-                     double kilometers) {
-        this.route = route;
-        this.time = time;
-        this.calories = calories;
-        this.kilometers = kilometers;
-    }
-
 
     // Getter
 
@@ -91,7 +81,10 @@ public class RouteData {
         this.id = id;
     }
 
-
+    /**
+     * method to convert object to String
+     * @return String with information about object's values
+     */
     @Override
     public String toString() {
 

@@ -4,7 +4,15 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-
+/**
+ * @author  Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ *
+ * This class is used to store and retrieve data from SQLite-Database.
+ *
+ * @see SQLiteOpenHelper
+ * @see SQLiteDatabase
+ */
 public class DbHelperMapData extends SQLiteOpenHelper {
 
     private static final String TAG = "DbHelperMapData";
@@ -20,6 +28,10 @@ public class DbHelperMapData extends SQLiteOpenHelper {
     static final String COLUMN_Latitude = "latitude";
     static final String COLUMN_Height = "heigth";
 
+    /**
+     * constructor to create database
+     * @param context context of usage
+     */
     DbHelperMapData(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
 
@@ -33,6 +45,14 @@ public class DbHelperMapData extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * method to inform developers in Logcat for easier debugging
+     * @param sqLiteDatabase SQLite-Database
+     * @param i (not used)
+     * @param i1 (not used)
+     *
+     * @see SQLiteDatabase
+     */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
@@ -40,6 +60,12 @@ public class DbHelperMapData extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * method to create "create table" query and execute sql command
+     * @param tableName name of table that should be created
+     *
+     * @see SQLiteDatabase
+     */
     void createTable(String tableName) {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
@@ -67,6 +93,12 @@ public class DbHelperMapData extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * method to create "drop table" query and execute sql command
+     * @param tableName
+     *
+     * @see SQLiteDatabase
+     */
     void dropTable(String tableName) {
 
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();

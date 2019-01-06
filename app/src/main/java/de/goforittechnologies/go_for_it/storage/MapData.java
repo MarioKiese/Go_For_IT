@@ -4,10 +4,9 @@ package de.goforittechnologies.go_for_it.storage;
  * @author  Mario Kiese
  * @version 0.8.
  *
- * class to represent and temporary store way-points
+ * class to represent and temporary store position-points
  * contain getter ad setter methods
  */
-
 
 public class MapData {
 
@@ -63,7 +62,10 @@ public class MapData {
         this.height = height;
     }
 
-    //
+    /**
+     * method to convert object to String
+     * @return String with information about object's values
+     */
     @Override
     public String toString() {
 
