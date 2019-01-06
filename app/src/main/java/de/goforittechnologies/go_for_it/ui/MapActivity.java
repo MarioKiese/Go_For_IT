@@ -233,31 +233,28 @@ public class MapActivity extends AppCompatActivity {
         }
 
         // OnClickListener
-        btnStartLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnStartLocation.setOnClickListener(view -> {
 
-                if (mRoute != null) {
-                    mRoute.clear();
-                }
-                mSteps = 0;
-                mDistance = 0.0;
-                mCalories = 0.0;
-                /*tvStepsValue.setText(String.valueOf(mSteps));
-                tvDistanceValue.setText(String.valueOf(mDistance));
-                tvCaloriesValue.setText(String.valueOf(mCalories));*/
-                tvStepsValue.setText("-");
-                tvDistanceValue.setText("-");
-                tvCaloriesValue.setText("-");
-
-                startService(locationRouteIntent);
-                editor.putBoolean("service_started", true);
-                editor.apply();
-                bindService();
-
-                btnStartLocation.setEnabled(false);
-                btnStopLocation.setEnabled(true);
+            if (mRoute != null) {
+                mRoute.clear();
             }
+            mSteps = 0;
+            mDistance = 0.0;
+            mCalories = 0.0;
+            /*tvStepsValue.setText(String.valueOf(mSteps));
+            tvDistanceValue.setText(String.valueOf(mDistance));
+            tvCaloriesValue.setText(String.valueOf(mCalories));*/
+            tvStepsValue.setText("-");
+            tvDistanceValue.setText("-");
+            tvCaloriesValue.setText("-");
+
+            startService(locationRouteIntent);
+            editor.putBoolean("service_started", true);
+            editor.apply();
+            bindService();
+
+            btnStartLocation.setEnabled(false);
+            btnStopLocation.setEnabled(true);
         });
 
         btnStopLocation.setOnClickListener(new View.OnClickListener() {
