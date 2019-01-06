@@ -157,6 +157,25 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                 alertDialog.show();
             }
         });
+
+        lvActiveChallenges.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Challenge currentChallenge = (Challenge)adapterView.getItemAtPosition(position);
+                int stepsYou = userID.equals(currentChallenge.getUser1().getId()) ? currentChallenge.getStepsUser1() : currentChallenge.getStepsUser2();
+                int stepsRival = userID.equals(currentChallenge.getUser1().getId()) ? currentChallenge.getStepsUser2() : currentChallenge.getStepsUser1();
+                int stepTarget = currentChallenge.getStepTarget();
+
+                Intent challengeDetailIntent = new Intent(ChallengesOverviewActivity.this, ChallengeDetailActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("stepsYou", stepsYou);
+                bundle.putInt("stepsRival", stepsRival);
+                bundle.putInt("stepTarget", stepTarget);
+                challengeDetailIntent.putExtras(bundle);
+                startActivity(challengeDetailIntent);
+            }
+        });
     }
 
     @SuppressLint("RestrictedApi")
@@ -181,6 +200,12 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
                 Intent allUsersIntent = new Intent(ChallengesOverviewActivity.this, AllUsersActivity.class);
                 startActivity(allUsersIntent);
+                return true;
+
+            case R.id.action_all_challenges_btn:
+
+                Intent allChallengesIntent = new Intent(ChallengesOverviewActivity.this, AllChallengesActivity.class);
+                startActivity(allChallengesIntent);
                 return true;
 
             default:

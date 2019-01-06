@@ -54,6 +54,7 @@
     <string name="action_new_challenge_btn">New Challenge</string>
     <string name="tv_no_request">No Requests for you</string>
     <string name="tv_no_active_challenges">You have no active Challenges</string>
+    <string name="action_all_challenges_text">All Challenges</string>
 
     <!-- AllUsersActivity -->
     <string name="all_users_toolbar_text">Challenge someone ...</string>
@@ -62,6 +63,9 @@
     <string name="challenges_overview_toolbar_text">Challenges</string>
     <string name="maps_toolbar_text">Maps</string>
     <string name="routes_list_toolbar_text">Routes</string>
+
+    <!-- ChallengeDetailActivity -->
+    <string name="challenge_detail_toolbar_text">Challenge Details</string>
 
     <string name="action_dashboard_text">Dashboard</string>
     <string name="tvSeekbarCategory">Day</string>
@@ -81,4 +85,9 @@
     <string name="tvInfoBox">Decide between displaying data from month,
         week or day by klicking on blue bar at the top.
         Choose month (and day) you want to display.</string>
+    <string name="tvYou">You</string>
+    <string name="tvRival">Rival</string>
+    <string name="tvCurrentSteps">Current Steps</string>
+    <string name="tvStepTarget">Step Target</string>
+
 </resources>
