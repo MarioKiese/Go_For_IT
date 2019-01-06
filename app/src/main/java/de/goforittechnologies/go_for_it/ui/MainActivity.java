@@ -36,7 +36,6 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 import de.goforittechnologies.go_for_it.R;
-import de.goforittechnologies.go_for_it.logic.StepCounterListener;
 import de.goforittechnologies.go_for_it.logic.services.StepCounterService;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 
@@ -86,9 +85,7 @@ public class MainActivity extends AppCompatActivity {
    private PieDataSet set;
 
     //shared preferences
-   SharedPreferences mPreferences;
-
-    StepCounterListener stepCounterListener;
+    SharedPreferences mPreferences;
 
     //Sensor
     SensorManager sensorManager;
@@ -402,11 +399,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-       /* registerReceiver(receiver, new IntentFilter(
-                StepCounterService.NOTIFICATION));*/
-
-        sensorManager.registerListener(stepCounterListener, sensor,
-                SensorManager.SENSOR_DELAY_UI);
 
     }
 
@@ -420,7 +412,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        sensorManager.unregisterListener(stepCounterListener);
     }
 
     //________________________________________________________________________//

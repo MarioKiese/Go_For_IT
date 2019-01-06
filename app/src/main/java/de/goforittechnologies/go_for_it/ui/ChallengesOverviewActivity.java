@@ -115,7 +115,8 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                 ChallengesOverviewActivity.this, requestsList);
         lvRequests.setAdapter(requestsAdapter);
         challengesList = new ArrayList<>();
-        challengesAdapter = new ChallengesAdapter(ChallengesOverviewActivity.this, challengesList);
+        challengesAdapter = new ChallengesAdapter(ChallengesOverviewActivity
+                .this, challengesList);
         lvActiveChallenges.setAdapter(challengesAdapter);
 
         // Configure Firebase

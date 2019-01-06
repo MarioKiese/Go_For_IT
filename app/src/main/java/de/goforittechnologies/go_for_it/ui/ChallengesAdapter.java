@@ -31,22 +31,30 @@ public class ChallengesAdapter extends ArrayAdapter<Challenge> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView,
+                        @NonNull ViewGroup parent) {
         View listItem = convertView;
         if (listItem == null) {
-            listItem = LayoutInflater.from(mContext).inflate(R.layout.challenge_list_item, parent, false);
+            listItem = LayoutInflater.from(mContext)
+                    .inflate(R.layout.challenge_list_item, parent,
+                            false);
         }
 
         Challenge currentChallenge = challengesList.get(position);
 
-        CircleImageView ivSourceUser = listItem.findViewById(R.id.ivSourceUserChallenge);
-        Glide.with(mContext).load(currentChallenge.getUser1().getImage()).into(ivSourceUser);
+        CircleImageView ivSourceUser = listItem.findViewById(R.id
+                .ivSourceUserChallenge);
+        Glide.with(mContext).load(currentChallenge.getUser1().getImage())
+                .into(ivSourceUser);
 
-        TextView tvUserName = listItem.findViewById(R.id.tvSourceUserNameChallenge);
+        TextView tvUserName = listItem.findViewById(R.id
+                .tvSourceUserNameChallenge);
         tvUserName.setText(currentChallenge.getUser1().getName());
 
-        TextView tvRequestStepsValue = listItem.findViewById(R.id.tvChallengeStepsValue);
-        tvRequestStepsValue.setText(String.valueOf(currentChallenge.getStepTarget()));
+        TextView tvRequestStepsValue = listItem.findViewById(R.id
+                .tvChallengeStepsValue);
+        tvRequestStepsValue.setText(String.valueOf(currentChallenge
+                .getStepTarget()));
 
         return listItem;
     }
