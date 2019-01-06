@@ -8,7 +8,16 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @author  Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ *
+ * This class is used to (re)convert objects representing step-data into
+ * database columns (storing and loading).
+ *
+ * @see DbHelperStepData
+ *
+ */
 public class DataSourceStepData {
 
     private static final String TAG = "DataSourceStepData";
@@ -21,7 +30,17 @@ public class DataSourceStepData {
             DbHelperStepData.COLUMN_TIMESTAMP,
     };
 
-
+    /**
+     * method to create DbHelperStepData object in same context and create or
+     * open table (based on selected mode).
+     *
+     * @param context given  context (of DataSourceStepObject).
+     * @param stepDataTableName name of table you want to create/open
+     *                          (based on param mode).
+     * @param mode select write or read mode (1 = create new table if
+     *             possible) (0 = open existing table).
+     * @see DbHelperStepData
+     */
     public DataSourceStepData(Context context,
                               String stepDataTableName, int mode) {
 
@@ -30,7 +49,11 @@ public class DataSourceStepData {
                 stepDataTableName, mode);
 
     }
-
+    /**
+     * method to request database reference and open connection.
+     *
+     * @see DbHelperStepData
+     */
     public void open() {
         Log.d(TAG,
                 "Eine Referenz auf die Datenbank wird jetzt angefragt.");
@@ -38,12 +61,27 @@ public class DataSourceStepData {
         Log.d(TAG, "Datenbank-Referenz erhalten. Pfad zur Datenbank: " +
                 database.getPath());
     }
-
+    /**
+     * method to close database connection.
+     *
+     * @see DbHelperStepData
+     */
     public void close() {
         dbHelperStepData.close();
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
 
+    /**
+     * method to store step-value.
+     *
+     * @param steps step-value that should be stored.
+     * @param time timestamp (based on "day:hour" convention).
+     *
+     * @see Cursor
+     * @see DbHelperStepData
+     * @see StepData
+     * @see ContentValues
+     */
     public void createStepData(double steps, String time) {
         ContentValues values = new ContentValues();
         values.put(DbHelperStepData.COLUMN_STEPS, steps);
@@ -63,6 +101,14 @@ public class DataSourceStepData {
 
     }
 
+    /**
+     * method to update existing database table entries based on columns with
+     * same timestamp ("day:hour")
+     *
+     * @param steps new step-value that should be updated
+     * @param time timestamp (based on "day:hour" convention).
+     * @return
+     */
     public StepData updateStepData(double steps, String time) {
         ContentValues values = new ContentValues();
         values.put(DbHelperStepData.COLUMN_STEPS, steps);
@@ -84,7 +130,15 @@ public class DataSourceStepData {
 
         return stepData;
     }
-
+    /**
+     * method to create  step-value out of returned cursor from database.
+     *
+     * @param cursor cursor connected to location-point.
+     * @return step-value representing cursor information.
+     *
+     * @see StepData
+     * @see Cursor
+     */
     private StepData cursorToStepData(Cursor cursor) {
         int idIndex =
                 cursor.getColumnIndex(DbHelperStepData.COLUMN_ID);
@@ -105,7 +159,15 @@ public class DataSourceStepData {
         StepData stepData= new StepData(id, steps, time);
         return stepData;
     }
-
+    /**
+     * method to return List-object out of all table values from selected table
+     *
+     * @return List-object out of all table values
+     *
+     * @see StepData
+     * @see Cursor
+     *
+     */
     public List<double[]> getAllStepData() {
 
         List<StepData> entireStepDataList = new ArrayList<>();

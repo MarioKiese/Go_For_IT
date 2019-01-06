@@ -9,6 +9,16 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author  Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ *
+ * This class is used to (re)convert objects representing routes into
+ * database columns (storing and loading).
+ *
+ * @see DbHelperRouteData
+ *
+ */
 public class DataSourceRouteData {
 
     private static final String TAG = "DataSourceRouteData";
@@ -25,13 +35,24 @@ public class DataSourceRouteData {
             DbHelperRouteData.COLUMN_KILOMETERS
     };
 
+    /**
+     * method to create DbHelperRouteData object in same context.
+     *
+     * @param context given  context (of DataSourceRouteObject)
+     *
+     * @see DbHelperRouteData
+     */
     public DataSourceRouteData(Context context) {
 
         Log.d(TAG, "DataSourceMapData erzeugt DbHelperMapData");
         dbHelperRouteData = new DbHelperRouteData(context);
 
     }
-
+    /**
+     * method to request database reference and open connection
+     *
+     * @see DbHelperRouteData
+     */
     public void open() {
         Log.d(TAG,
                 "Eine Referenz auf die Datenbank wird jetzt angefragt.");
@@ -40,17 +61,41 @@ public class DataSourceRouteData {
                 + database.getPath());
     }
 
+    /**
+     * method to close database connection
+     *
+     * @see DbHelperRouteData
+     */
     public void close() {
         dbHelperRouteData.close();
         Log.d(TAG, "Datenbank mit Hilfe des DbHelpers geschlossen.");
     }
-
+    /**
+     * method to create new table in referenced database (binding operation
+     * on created DbHelperRouteData-object.
+     *
+     * @see DbHelperRouteData
+     */
     public void createTable() {
 
         dbHelperRouteData.createTable(TABLE_NAME);
 
     }
 
+    /**
+     * method to store routes in database table
+     *
+     * @param route name of route
+     * @param steps steps of hole route
+     * @param time time spent on route
+     * @param calories calories burned on route
+     * @param kilometers distance of route
+     *
+     * @see ContentValues
+     * @see Cursor
+     * @see DbHelperRouteData
+     * @see RouteData
+     */
     public void createRouteData(String route, int steps, String time,
                                 double calories, double kilometers) {
         ContentValues values = new ContentValues();
@@ -71,7 +116,15 @@ public class DataSourceRouteData {
 
     }
 
-
+    /**
+     * method to create route out of returned cursor from database.
+     *
+     * @param cursor cursor connected to route.
+     * @return route representing cursor information.
+     *
+     * @see RouteData
+     * @see Cursor
+     */
     private RouteData cursorToRouteData(Cursor cursor) {
         int idIndex =
                 cursor.getColumnIndex(DbHelperRouteData.COLUMN_ID);
@@ -96,7 +149,15 @@ public class DataSourceRouteData {
 
         return new RouteData(route, steps, time, calories, kilometers, id);
     }
-
+    /**
+     * method to return List-object out of all table values from selected table
+     *
+     * @return List-object out of all table values
+     *
+     * @see RouteData
+     * @see Cursor
+     *
+     */
     public List<RouteData> getAllRouteData() {
         List<RouteData> routeDataList = new ArrayList<>();
 
@@ -119,7 +180,10 @@ public class DataSourceRouteData {
 
         return routeDataList;
     }
-
+    /**
+     * method to delete route out of database.
+     * @param routeData name of data-set that should be deleted.
+     */
     public void deleteRouteData(RouteData routeData) {
         long id = routeData.getId();
 

@@ -30,6 +30,15 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+/**
+ * @author  Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ *
+ * This service is used to log the location and steps of the device this
+ * application is
+ * installed on.
+ *
+ */
 
 public class LocationRouteService extends Service implements LocationListener,
         SensorEventListener {
@@ -47,9 +56,15 @@ public class LocationRouteService extends Service implements LocationListener,
 
     private IBinder mBinder = new LocationBinder();
 
+
     public LocationRouteService() {
     }
 
+    /**
+     *
+     * @param intent Intent for connecting service.
+     * @return IBinder to connect service to activity.
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -60,6 +75,9 @@ public class LocationRouteService extends Service implements LocationListener,
 
     }
 
+    /**
+     * method to declare and initialise service functions and variables
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -120,6 +138,10 @@ public class LocationRouteService extends Service implements LocationListener,
 
     }
 
+    /**
+     * method to unregister LocationRouteService and remove updates
+     * @see LocationManager
+     */
     @Override
     public void onDestroy() {
 
@@ -129,6 +151,12 @@ public class LocationRouteService extends Service implements LocationListener,
 
     }
 
+    /**
+     * method to log the location for storing location and
+     * send current location to corresponding activity for displaying.
+     *
+     * @param location input location data to store and display
+     */
     // Location
     @Override
     public void onLocationChanged(Location location) {
@@ -157,6 +185,11 @@ public class LocationRouteService extends Service implements LocationListener,
 
     }
 
+    /**
+     * method to create intent to transfer the location ArrayList to
+     * corresponding activity
+     * @param route ArrayLIst out of location point to build route
+     */
     // Communication methods
     private void sendLocationMessageToActivity(ArrayList<Location> route) {
 
@@ -175,6 +208,9 @@ public class LocationRouteService extends Service implements LocationListener,
 
     }
 
+    /**
+     * method to create notification "Background location service in foreground"
+     */
     private void createNotification() {
 
         Intent notificationIntent = new Intent(this,
@@ -216,6 +252,11 @@ public class LocationRouteService extends Service implements LocationListener,
 
     // StepCounter
 
+    /**
+     * method to count steps while recording location route and send
+     * information to corresponding activity
+     * @param sensorEvent event triggered on sensor-event
+     */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         mSteps++;
@@ -236,6 +277,11 @@ public class LocationRouteService extends Service implements LocationListener,
         }
 
     }
+
+    /**
+     * mathod to send step-value to activity via intent
+     * @param steps
+     */
 
     private void sendStepMessageToActivity(int steps) {
 

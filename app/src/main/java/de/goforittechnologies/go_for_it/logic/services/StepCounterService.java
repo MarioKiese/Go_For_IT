@@ -22,6 +22,17 @@ import java.util.TimeZone;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
 import de.goforittechnologies.go_for_it.storage.StepData;
 
+/**
+ * @author  Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ *
+ * This service is used to count steps made by user and transfer them to the
+ * corresponding activity via intent
+ * @see SensorEventListener
+ * @see Service
+ *
+ */
+
 public class StepCounterService extends Service implements SensorEventListener {
 
     SensorManager sensorManager;
@@ -36,13 +47,20 @@ public class StepCounterService extends Service implements SensorEventListener {
     public StepCounterService() {
     }
 
-
+    /**
+     *
+     * @param intent
+     * @return
+     */
     @Override
     public IBinder onBind(Intent intent) {
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /**
+     *  method to declare and initialise service functions and variables
+     */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -56,6 +74,15 @@ public class StepCounterService extends Service implements SensorEventListener {
                 sensor, SensorManager.SENSOR_DELAY_UI);
     }
 
+    /**
+     * method used to store current step-value in database every 10 seconds
+     * based on todays date.
+     *
+     * @param sensorEvent event triggered on sensor-event
+     *
+     * @see Calendar
+     *
+     */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         steps++;
@@ -91,9 +118,20 @@ public class StepCounterService extends Service implements SensorEventListener {
 
     }
 
+    /**
+     * method to update step-value of current hour of todays date.
+     *
+     * @param steps value to store into database.
+     * @param dbName name of database.
+     * @param day day of timestamp for position in database table for current
+     *           month.
+     * @param hour hour of timestamp for position in database table for
+     *             current month.
+     *
+     * @see DataSourceStepData
+     */
     private void updateDatabase(double steps,
                                 String dbName, int day, int hour){
-        //TODO: Check Performance, to many DataSourceStepDataobjects?
 
         DataSourceStepData dataSourceStepData;
         try {
@@ -117,6 +155,11 @@ public class StepCounterService extends Service implements SensorEventListener {
         dataSourceStepData.close();
     }
 
+    /**
+     * method to create Intent for transfer step-value to corresponding
+     * activity.
+     * @param steps value to sent to activity
+     */
     private void sendStepMessageToActivity(double steps) {
         Intent stepsIntent = new Intent("GeneralStepsUpdate");
         stepsIntent.putExtra("Steps", steps);
