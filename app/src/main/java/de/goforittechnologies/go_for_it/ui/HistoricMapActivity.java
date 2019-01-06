@@ -39,6 +39,13 @@ public class HistoricMapActivity extends AppCompatActivity {
     // Widgets
     private MapView mapView;
 
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - initialising map data for viewing
+     *
+     * @see MapView
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +76,16 @@ public class HistoricMapActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     * method to display route in activity
+     *
+     * @param route route that should be shown
+     *
+     * @see GeoPoint
+     * @see Polyline
+     * @see MapView
+     */
     private void showRoute(List<Location> route) {
 
         List<GeoPoint> geoPoints = new ArrayList<>();

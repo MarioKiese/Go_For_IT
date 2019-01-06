@@ -94,11 +94,23 @@ public class MainActivity extends AppCompatActivity {
     // Firebase
     private FirebaseAuth mAuth;
 
-
-
     //________________________________________________________________________//
     // onCreate method
     //________________________________________________________________________//
+
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - configure firebase-usage
+     * - set click listeners
+     * - update charts and infocards
+     *
+     * @see FirebaseAuth
+     * @see FirebaseUser
+     * @see DataSourceStepData
+     * @see PieChart
+     *
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
         entries.add(new PieEntry((float) 0));
         set = new PieDataSet(entries, "");
-        set.setColors( Color.WHITE);
+        set.setColors( Color.TRANSPARENT);
         PieData data = new PieData(set);
         pieChartSteps.setCenterText((int)stepsForCurrentDay + " Steps");
         pieChartSteps.setData(data);
@@ -205,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
         pieChartSteps.setNoDataText("Make Steps to calculate data");
         pieChartSteps.getDescription().setEnabled(false);
         pieChartSteps.setDrawHoleEnabled(true);
+        pieChartSteps.setHoleColor(Color.TRANSPARENT);
         pieChartSteps.invalidate();
 
         //_________________________________________________//
@@ -264,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
                 set.setColors(Color.DKGRAY, Color.WHITE);
                 PieData data = new PieData(set);
                 pieChartSteps.setData(data);
-                pieChartSteps.setCenterTextColor(R.color.colorAccent);
+                pieChartSteps.getLegend().setEnabled(false);
                 pieChartSteps.setDrawHoleEnabled(true);
                 pieChartSteps.invalidate();
                 //formula: average steplenght: 0.65m
@@ -293,7 +306,12 @@ public class MainActivity extends AppCompatActivity {
     //________________________________________________________________________//
 
     /**
-     * authenticate the user for login
+     * method to check if user is authenticated for login and navigate him to
+     * login screen if not.
+     *
+     * @see FirebaseUser
+     * @see FirebaseAuth
+     * @see LoginActivity
      */
     @Override
     protected void onStart(){
@@ -313,8 +331,13 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      *
-     * @param menu
-     * @return true
+     * method to create menu.
+     * info: "@SuppressLint("RestrictedApi")" because of icons inside of menu
+     *
+     * @param menu viewed menu
+     * @return true if called
+     *
+     * @see Menu
      */
     @SuppressLint("RestrictedApi")
     @Override
@@ -339,6 +362,11 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param item Item from Menu.
      * @return true if one item was selected, otherwise false.
+     *
+     * @see ChallengesOverviewActivity
+     * @see MapActivity
+     * @see SetupActivity
+     * @see DashboardActivity
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -416,7 +444,9 @@ public class MainActivity extends AppCompatActivity {
     //________________________________________________________________________//
 
     /**
-     * login user and start MainActivity
+     * method to navigate user to login activity
+     *
+     * @see LoginActivity
      */
     private void sendToLogin() {
 
@@ -432,7 +462,10 @@ public class MainActivity extends AppCompatActivity {
     //________________________________________________________________________//
 
     /**
-     * logging user out of firebase account
+     * method to log out user out of firebase account and navigate him to
+     * login activity.
+     *
+     * @see LoginActivity
      */
     private void logOut() {
 
@@ -446,9 +479,15 @@ public class MainActivity extends AppCompatActivity {
     //________________________________________________________________________//
 
     /**
+     * method to test of app is opened at first time after installation
+     * info: rerunning the app with android studio after building will not
+     * let this method return true.
      *
      * @return true if the app starts first time after installation,
      * return false otherwise.
+     *
+     * @see SharedPreferences
+     * @see Editor
      */
     private boolean isFirstTime() {
         if (firstTime == null) {
@@ -469,10 +508,13 @@ public class MainActivity extends AppCompatActivity {
     //________________________________________________________________________//
 
     /**
+     * method to get the maximum step value from day with most stored steps
+     * in current month.
      *
      * @param inputList list of steps (list representing one month
      * out of 24 double arrays representing 24 hours of one day).
      * @return maximum step value out of adding 24 hours of each day.
+     *
      */
     private double getMaxForMonth(List<double[]> inputList){
         double max = 0;

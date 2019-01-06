@@ -52,6 +52,17 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - configure firebase-usage
+     * - set click listeners
+     * - set complete listeners
+     *
+     * @see FirebaseAuth
+     * @see FirebaseUser
+     * @see OnCompleteListener
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,6 +131,14 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to test if current user is authenticated to log in and navigate
+     * him to main activity if authentication is correct.
+     *
+     * @see FirebaseUser
+     * @see FirebaseAuth
+     * @see MainActivity
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -133,6 +152,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * method to navigate user to main activity via Intent
+     *
+     * @see MainActivity
+     */
     private void sendToMain() {
 
         Intent loginIntent =

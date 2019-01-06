@@ -118,6 +118,23 @@ public class MapActivity extends AppCompatActivity {
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 
     };
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - checking permissions for location and storage.
+     * - initialise database.
+     * - setup Broadcast receivers.
+     * - setup LocalBroadcastManager.
+     * - set click listeners.
+     *
+     * @see BroadcastReceiver
+     * @see LocalBroadcastManager
+     * @see MapActivity
+     * @see Location
+     * @see MapView
+     * @see SharedPreferences
+     * @see LocationRouteService
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -341,6 +358,12 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to initialise the menu
+     *
+     * @param menu menu to build up
+     * @return true of called
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -350,6 +373,13 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *
+     * method to switch depending on selected item of menu
+     *
+     * @param item selected menu item
+     * @return true of called
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -386,6 +416,12 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to unregister location and step broadcast receiver when
+     * activity is destroyed.
+     *
+     * @see BroadcastReceiver
+     */
     @Override
     protected void onDestroy() {
 
@@ -407,9 +443,14 @@ public class MapActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-
-    // Methods
-
+    /**
+     *
+     * method to bind service to activity to simplify the communication
+     * between service and activity
+     *
+     * @see ServiceConnection
+     * @see ComponentName
+     */
     private void bindService() {
 
         if (mServiceConnection == null) {
@@ -458,6 +499,11 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to unbind service from activity.
+     *
+     * @see ServiceConnection
+     */
     private void unbindService() {
 
         if (mIsServiceBound) {
@@ -469,6 +515,16 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to check if needed permissions are granted
+     *
+     * @param context current context of app
+     * @param permissions array out of permissions to check
+     * @return return true if permissions are granted, return false if not
+     *
+     * @see ActivityCompat
+     * @see PackageManager
+     */
     public boolean hasPermissions(Context context, String[] permissions) {
 
         if (context != null && permissions != null) {
@@ -490,6 +546,13 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to initialize map view for displaying in activity
+     *
+     * @see ActivityCompat
+     * @see PackageManager
+     * @see LocationManager
+     */
     private void initializeMap() {
 
         mapView.setBuiltInZoomControls(true);
@@ -526,6 +589,14 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to display route out of location points
+     *
+     * @param route route to display
+     *
+     * @see GeoPoint
+     * @see Polyline
+     */
     private void showRoute(List<Location> route) {
 
         List<GeoPoint> geoPoints = new ArrayList<>();
@@ -555,6 +626,14 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * method to claculate distance out of location points
+     *
+     * @param route route for calculation basis
+     * @return double value of distance
+     *
+     * @see Location
+     */
     private double getDistance(List<Location> route) {
 
         double kilometers = 0.0;
@@ -567,6 +646,11 @@ public class MapActivity extends AppCompatActivity {
         return kilometers;
     }
 
+    /**
+     * method to display distance in activity
+     *
+     * @param route route for calculation and display basis
+     */
     private void showDistance(List<Location> route) {
 
         mDistance = getDistance(route);
@@ -582,6 +666,11 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * method to calculate burned calories out of distance
+     *
+     * @return burned calories in kcal
+     */
     private double getCalories() {
 
         double calories = 0.0;
@@ -589,11 +678,21 @@ public class MapActivity extends AppCompatActivity {
         return calories;
     }
 
+    /**
+     * method to calculate and display burned calories
+     */
     private void showCalories() {
 
 
     }
 
+    /**
+     * method to initialise database for storing map and route values
+     *
+     * @see DataSourceMapData
+     * @see DataSourceRouteData
+     *
+     */
     private void initializeDatabase() {
 
         // Test writing in Map database
@@ -608,6 +707,15 @@ public class MapActivity extends AppCompatActivity {
         dataSourceRouteData.createTable();
     }
 
+    /**
+     * method to insert route and location points into database
+     *
+     * @param routeName name of route that should be stored
+     *
+     * @see Location
+     * @see DataSourceMapData
+     * @see DataSourceRouteData
+     */
     private void writeInDatabases(String routeName) {
 
         if (mRoute.size() > 1) {
@@ -631,6 +739,14 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * method to check of route name is valid
+     *
+     * @param routeName name of route that should be checked
+     *
+     * @return true if route name is valid, return false otherwise
+     *
+     */
     private boolean validateRouteName(String routeName) {
 
         if (routeName.isEmpty()) {
@@ -638,6 +754,12 @@ public class MapActivity extends AppCompatActivity {
         } else return !consistsOfBlanks(routeName);
     }
 
+    /**
+     * method to check of route name only contains blanks
+     *
+     * @param routeName name of route that should be checked
+     * @return true if name only contains blanks return false otherwise
+     */
     private boolean consistsOfBlanks(String routeName) {
 
         char[] charArray = routeName.toCharArray();
@@ -653,12 +775,29 @@ public class MapActivity extends AppCompatActivity {
         return countBlanks == charArray.length;
     }
 
+    /**
+     * method to filter specific characters out of route name.
+     * only valid characters: a-z, A-Z, 0-9
+     *
+     * @param routeName route name that should be checked.
+     * @return route name containing only valid characters.
+     */
     private String formatRouteName(String routeName) {
         routeName = routeName.trim();
         routeName = routeName.replaceAll("[^a-zA-Z0-9]", "");
         return routeName;
     }
 
+    /**
+     * method to check if route name exists in route list
+     *
+     * @param routeName route name that should be checked
+     * @return true of route name is existing in route list, return false
+     * otherwise.
+     *
+     * @see RouteData
+     * @see DataSourceRouteData
+     */
     private boolean checkIfRouteNameExists(String routeName) {
 
         List<RouteData> routeDataList = dataSourceRouteData.getAllRouteData();

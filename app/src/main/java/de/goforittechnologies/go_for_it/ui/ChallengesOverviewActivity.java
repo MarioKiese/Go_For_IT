@@ -234,9 +234,14 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
     }
 
     /**
-     * 
-     * @param menu
-     * @return
+     * method to implement menu in this activity.
+     * info: "@SuppressLint("RestrictedApi")" because of usage of icons
+     * inside the menu.
+     * @param menu menu to show inside the activity.
+     *
+     * @return true if method is called.
+     *
+     * @see MenuBuilder
      */
     @SuppressLint("RestrictedApi")
     @Override
@@ -251,6 +256,16 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * method to switch to selected activity based on selected item in menu.
+     *
+     * @param item item select in menu.
+     *
+     * @return true if specific item is select, return false otherwise.
+     *
+     * @see AllChallengesActivity
+     * @see AllUsersActivity
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -279,6 +294,9 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * method to prepare and fill request list out of firestore database.
+     */
     private void fillRequestListViewWithFirebaseData() {
 
         firebaseFirestore.collection("Users")
@@ -412,6 +430,9 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *  method to prepare and fill challenge list out of firestore database.
+     */
     private void fillChallengeListViewWithFirebaseData() {
 
         firebaseFirestore.collection("Users")
@@ -543,6 +564,17 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     * method to check if challenge-list contains challenge
+     *
+     * @param list list to search in
+     * @param challengeID if from searched challenge
+     *
+     * @return true if challenge-list contains challege, false if not.
+     *
+     * @see Challenge
+     */
     private boolean listContainsChallenge(List<Challenge> list,
                                           String challengeID) {
 
@@ -568,6 +600,13 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * method to add challenge in firestore database, add challenge in users
+     * challenge list, start challenge service.
+     *
+     * @param challenge challenge to be stored, be connected to users, get
+     *                  challenge service steps
+     */
     private void manageChallenge(Challenge challenge) {
 
         updateRequestStatus(challenge.getRequestID(),
@@ -578,6 +617,11 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         startChallengeService(userID);
     }
 
+    /**
+     * method to change status of request (values: accepted, declined, pending.
+     * @param requestID id of request which status should be changed
+     * @param newStatus new status for request
+     */
     private void updateRequestStatus(String requestID, String newStatus) {
 
         firebaseFirestore.collection("Requests")
@@ -598,6 +642,13 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * method to add challenge to firestore database
+     *
+     * @param challenge challenge that should be stored
+     *
+     * @return id from stored challenge
+     */
     private String addChallengeInFirestore(Challenge challenge) {
 
         String result;
@@ -629,6 +680,13 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * method to add challenge into challenge list of involved users
+     *
+     * @param user1ID id of first user (initiator of challenge)
+     * @param user2ID if of second user (acceptor of challenge)
+     * @param challengeID id of challenge that should be added
+     */
     private void addChallengeToFirebaseUsers(String user1ID,
     String user2ID, String challengeID) {
 
@@ -687,6 +745,10 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * method to start challenge service for step counting
+     * @param userID id of user who participate to challenge
+     */
     private void startChallengeService(String userID) {
 
         Intent challengeServiceIntent = new Intent(

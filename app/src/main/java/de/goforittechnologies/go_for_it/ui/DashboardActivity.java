@@ -63,6 +63,13 @@ public class DashboardActivity extends AppCompatActivity
     private static final String TAG = "DashboardActivity";
     DataSourceStepData dataSourceStepData;
 
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * -connect to database
+     *
+     * @see AdapterView
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,8 +121,17 @@ public class DashboardActivity extends AppCompatActivity
         Log.d(TAG, "onCreate: Size of InputList:" + inputList.size());
 
         monthForHourUse = 0;
-
     }
+
+    /**
+     *
+     * method to build up bar chart for selected month
+     *
+     * @param month month that should be shown
+     * @return list of entry bars for bar chart
+     *
+     * @see BarEntry
+     */
     private List<BarEntry> buildMonthBarChart(int month){
         List<BarEntry> entries = new ArrayList<>();
         inputList = selectData(month);
@@ -140,6 +156,16 @@ public class DashboardActivity extends AppCompatActivity
         return entries;
     }
 
+    /**
+     *
+     * method to select data out of selected month (creates toast if no
+     * database table of selected month is available).
+     *
+     * @param month month that should be shown
+     * @return list for every day out of 24 value arrays for every hour
+     *
+     * @see DataSourceStepData
+     */
     private List<double[]> selectData(int month){
 
         List<double[]> list = new ArrayList<>();
@@ -163,6 +189,16 @@ public class DashboardActivity extends AppCompatActivity
         return list;
     }
 
+    /**
+     * method to build up bar chart for every hour on selected day in
+     * selected month.
+     *
+     * @param day selected day to be shown.
+     * @param month selected month to be shown.
+     * @return list of entry bars for bar chart
+     *
+     * @see BarEntry
+     */
     private List<BarEntry> buildDayBarChart(int day, int month){
 
         List<BarEntry> entries = new ArrayList<>();
@@ -181,6 +217,16 @@ public class DashboardActivity extends AppCompatActivity
         return entries;
     }
 
+    /**
+     * method to build up bar chart for every week in selected month.
+     * info: week  one is count from 1. to 7. of month, second week from 8.
+     * to 14. etc..
+     * @param month selected month to be shown.
+     *
+     * @return list of entry bars for bar chart.
+     *
+     * @see BarEntry
+     */
     private List<BarEntry> buildWeekBarChart(int month){
         List<BarEntry> entries = new ArrayList<>();
         double value = 0;
@@ -204,6 +250,15 @@ public class DashboardActivity extends AppCompatActivity
         return entries;
     }
 
+    /**
+     * invalidate bar chart for displaying.
+     *
+     * @param inputList selected entry bar list to be shown.
+     *
+     * @see BarDataSet
+     * @see BarChart
+     * @see BarData
+     */
     private void invalitadeBarChart(List<BarEntry> inputList){
         BarDataSet set = new BarDataSet(inputList, "Steps");
         BarData data = new BarData(set);
@@ -214,6 +269,18 @@ public class DashboardActivity extends AppCompatActivity
         barChart.invalidate(); // refresh
     }
 
+    /**
+     * method to select procedure based on selected period to show and hide
+     * viewed elements.
+     *
+     * @param adapterView adapter view for selecting view in activity.
+     * @param view selected view.
+     * @param i value of selected seek bar entry
+     * @param l not used
+     *
+     * @see AdapterView
+     * @see View
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView,
                                View view, int i, long l) {
@@ -251,6 +318,14 @@ public class DashboardActivity extends AppCompatActivity
 
     }
 
+    /**
+     * method to calculate the car chard values based on selected month (day)
+     * on seek bar.
+     *
+     * @param seekBar used seek bar from this activity
+     * @param i current value of seek bar
+     * @param b not used
+     */
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
         List<BarEntry> entries;
