@@ -110,9 +110,11 @@ public class LocationRouteService extends Service implements LocationListener,
             // Now get the Looper from the HandlerThread
             Looper looper = handlerThread.getLooper();
             // Request location updates to be called back on the HandlerThread
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, LocationRouteService.this, looper);
-            // TODO: How to get the best accurate provider, for so long we just use GPS    mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, LocationRouteService.this, looper);
-            //TODO Prove functionality and necessity for users use
+            mLocationManager
+            .requestLocationUpdates(LocationManager
+            .GPS_PROVIDER, 0, 0,
+            LocationRouteService.this, looper);
+
             Location lastKnownLocation =
                     mLocationManager.getLastKnownLocation(
                             LocationManager.NETWORK_PROVIDER);
@@ -230,7 +232,8 @@ public class LocationRouteService extends Service implements LocationListener,
             assert manager != null;
             manager.createNotificationChannel(chan);
 
-            notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+            notification = new Notification.Builder(this,
+                    NOTIFICATION_CHANNEL_ID)
                     .setContentTitle("Go For IT")
                     .setContentText("Your route is being recorded!")
                     .setContentIntent(pendingIntent)

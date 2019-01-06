@@ -115,7 +115,8 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                 ChallengesOverviewActivity.this, requestsList);
         lvRequests.setAdapter(requestsAdapter);
         challengesList = new ArrayList<>();
-        challengesAdapter = new ChallengesAdapter(ChallengesOverviewActivity.this, challengesList);
+        challengesAdapter = new ChallengesAdapter(
+        ChallengesOverviewActivity.this, challengesList);
         lvActiveChallenges.setAdapter(challengesAdapter);
 
         // Configure Firebase
@@ -132,45 +133,55 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
         lvRequests.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView,
+                                    View view, int position, long l) {
 
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(ChallengesOverviewActivity.this);
+                AlertDialog.Builder dialogBuilder = new AlertDialog
+                .Builder(ChallengesOverviewActivity.this);
                 dialogBuilder.setTitle("Challenge request!");
 
                 // Set up the buttons
-                dialogBuilder.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                dialogBuilder.setPositiveButton("Accept",
+                new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
-                        Request request = (Request)adapterView.getItemAtPosition(position);
+                        Request request =
+                        (Request)adapterView.getItemAtPosition(position);
                         // Source user data
                         String sourceUserID = request.getSourceUserID();
                         String sourceUserName = request.getSourceUserName();
                         String sourceUserImage = request.getSourceUserImage();
-                        User sourceUser = new User(sourceUserID, sourceUserName, sourceUserImage);
+                        User sourceUser = new User(sourceUserID,
+                        sourceUserName, sourceUserImage);
                         // Target user data
                         String targetUserID = request.getTargetUserID();
                         String targetUserName = request.getTargetUserName();
                         String targetUserImage = request.getTargetUserImage();
-                        User targetUser = new User(targetUserID, targetUserName, targetUserImage);
+                        User targetUser = new User(targetUserID, targetUserName,
+                        targetUserImage);
 
                         String challengeID = "";
                         String requestID = request.getId();
                         int stepTarget = request.getStepTarget();
                         String status = "running";
 
-                        Challenge challenge = new Challenge(challengeID, requestID, stepTarget, sourceUser, targetUser, status);
+                        Challenge challenge = new Challenge(challengeID,
+                        requestID, stepTarget, sourceUser, targetUser, status);
 
                         manageChallenge(challenge);
                     }
                 });
 
-                dialogBuilder.setNegativeButton("Decline", new DialogInterface.OnClickListener() {
+                dialogBuilder.setNegativeButton("Decline",
+                new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        Request request = (Request)adapterView.getItemAtPosition(position);
-                        updateRequestStatus(request.getId(), "declined");
+                        Request request =
+                        (Request)adapterView.getItemAtPosition(position);
+                        updateRequestStatus(request.getId(),
+                        "declined");
 
                         dialog.cancel();
                     }
@@ -181,16 +192,25 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
             }
         });
 
-        lvActiveChallenges.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvActiveChallenges
+        .setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemClick(AdapterView<?> adapterView,
+            View view, int position, long l) {
 
-                Challenge currentChallenge = (Challenge)adapterView.getItemAtPosition(position);
-                int stepsYou = userID.equals(currentChallenge.getUser1().getId()) ? currentChallenge.getStepsUser1() : currentChallenge.getStepsUser2();
-                int stepsRival = userID.equals(currentChallenge.getUser1().getId()) ? currentChallenge.getStepsUser2() : currentChallenge.getStepsUser1();
+                Challenge currentChallenge =
+                (Challenge)adapterView.getItemAtPosition(position);
+                int stepsYou = userID.equals(currentChallenge.getUser1()
+                .getId()) ? currentChallenge.getStepsUser1() :
+                currentChallenge.getStepsUser2();
+                int stepsRival = userID.equals(currentChallenge
+                .getUser1().getId()) ? currentChallenge.getStepsUser2()
+                : currentChallenge.getStepsUser1();
                 int stepTarget = currentChallenge.getStepTarget();
 
-                Intent challengeDetailIntent = new Intent(ChallengesOverviewActivity.this, ChallengeDetailActivity.class);
+                Intent challengeDetailIntent =
+                new Intent(ChallengesOverviewActivity.this,
+                ChallengeDetailActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putInt("stepsYou", stepsYou);
                 bundle.putInt("stepsRival", stepsRival);
@@ -221,13 +241,17 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
             case R.id.action_new_challenge_btn:
 
-                Intent allUsersIntent = new Intent(ChallengesOverviewActivity.this, AllUsersActivity.class);
+                Intent allUsersIntent = new Intent(
+                ChallengesOverviewActivity.this,
+                AllUsersActivity.class);
                 startActivity(allUsersIntent);
                 return true;
 
             case R.id.action_all_challenges_btn:
 
-                Intent allChallengesIntent = new Intent(ChallengesOverviewActivity.this, AllChallengesActivity.class);
+                Intent allChallengesIntent = new Intent(
+                ChallengesOverviewActivity.this,
+                AllChallengesActivity.class);
                 startActivity(allChallengesIntent);
                 return true;
 
@@ -240,7 +264,9 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
     private void fillRequestListViewWithFirebaseData() {
 
-        firebaseFirestore.collection("Users").document(userID).collection("Requests").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Users")
+        .document(userID).collection("Requests")
+        .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
                                 @Nullable FirebaseFirestoreException e) {
@@ -259,51 +285,96 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                             String requestID = (String)doc.getDocument()
                                     .get("requestId");
                             Log.d(TAG,
-                                "onEvent: Request ID found: " + requestID);
-                            Toast.makeText(ChallengesOverviewActivity.this,
+                                "onEvent: Request ID found: " +
+                                requestID);
+                            Toast.makeText(
+                            ChallengesOverviewActivity.this,
                                 "Request ID found: " + requestID,
                                     Toast.LENGTH_SHORT).show();
 
                             if (requestID != null) {
 
-                                firebaseFirestore.collection("Requests").document(requestID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                firebaseFirestore
+                                .collection("Requests")
+                                .document(requestID)
+                                .addSnapshotListener(
+                                new EventListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                    public void onEvent(
+                                    @Nullable DocumentSnapshot documentSnapshot,
+                                    @Nullable FirebaseFirestoreException e) {
 
                                         if (e != null) {
 
-                                            Log.d(TAG,"Error : " + e.getMessage());
+                                            Log.d(TAG,"Error : " +
+                                            e.getMessage());
                                         } else {
 
-                                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                            if (documentSnapshot !=
+                                            null && documentSnapshot.exists()) {
 
-                                                Log.d(TAG, "Current data: " + documentSnapshot.getData());
-                                                Request request = documentSnapshot.toObject(Request.class);
-                                                Log.d(TAG, "onComplete: Firestore data converted to object");
-                                                Log.d(TAG, "onComplete: TargetUserID : " + request.getTargetUserID() + " UserID : " + userID);
+                                                Log.d(TAG,
+                                                "Current data: " +
+                                                documentSnapshot.getData());
+                                                Request request =
+                                                documentSnapshot
+                                                .toObject(Request.class);
+                                                Log.d(TAG,
+                                                "onComplete: Firestore " +
+                                                "data converted to object");
+                                                Log.d(TAG,
+                                                "onComplete:" +
+                                                " TargetUserID : " +
+                                                request.getTargetUserID() +
+                                                " UserID : " + userID);
 
-                                                if (request.getTargetUserID().equals(userID) && request.getStatus().equals("pending")) {
+                                                if (request.getTargetUserID()
+                                                .equals(userID) && request
+                                                .getStatus()
+                                                .equals("pending")) {
 
-                                                    Log.d(TAG, "onComplete: Request is compatible with userID");
+                                                    Log.d(TAG,
+                                                    "onComplete: " +
+                                                    "Request is compatible" +
+                                                    " with userID");
 
-                                                    requestsList.add(request);
-                                                    requestsAdapter.notifyDataSetChanged();
+                                                    requestsList
+                                                    .add(request);
+                                                    requestsAdapter
+                                                    .notifyDataSetChanged();
                                                 }
-                                                else if(request.getTargetUserID().equals(userID) && (request.getStatus().equals("accepted") || request.getStatus().equals("declined"))) {
+                                                else if(request
+                                                .getTargetUserID()
+                                                .equals(userID) &&
+                                                (request.getStatus()
+                                                .equals("accepted")
+                                                || request.getStatus()
+                                                .equals("declined"))) {
 
-                                                    Log.d(TAG, "onEvent: Remove request from request list");
+                                                    Log.d(TAG,
+                                                    "onEvent: Remove" +
+                                                    " request from request" +
+                                                    " list");
 
-                                                    for (int i=0; i<requestsList.size(); i++) {
+                                                    for (int i=0;
+                                                    i<requestsList.size();
+                                                    i++) {
 
-                                                        if (requestsList.get(i).getId().equals(request.getId())) {
+                                                        if (requestsList
+                                                        .get(i).getId()
+                                                        .equals(request
+                                                        .getId())) {
 
-                                                            requestsList.remove(i);
-                                                            requestsAdapter.notifyDataSetChanged();
+                                                        requestsList
+                                                        .remove(i);
+                                                        requestsAdapter
+                                                        .notifyDataSetChanged();
                                                         }
                                                     }
                                                 }
                                             } else {
-                                                Log.d(TAG, "Current data: null");
+                                                Log.d(TAG,
+                                                "Current data: null");
                                             }
                                         }
                                     }
@@ -326,9 +397,12 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
     private void fillChallengeListViewWithFirebaseData() {
 
-        firebaseFirestore.collection("Users").document(userID).collection("Challenges").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Users")
+        .document(userID).collection("Challenges")
+        .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                @Nullable FirebaseFirestoreException e) {
 
                 if (e!=null){
 
@@ -336,66 +410,113 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                     pbChallenges.setVisibility(View.INVISIBLE);
                 } else {
 
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                    for (DocumentChange doc : queryDocumentSnapshots
+                    .getDocumentChanges()) {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String challengeID = (String)doc.getDocument().get("challengeId");
-                            Log.d(TAG, "onEvent: Challenge ID found: " + challengeID);
-                            Toast.makeText(ChallengesOverviewActivity.this, "Challenge ID found: " + challengeID, Toast.LENGTH_SHORT).show();
+                            String challengeID = (String)doc.getDocument()
+                            .get("challengeId");
+                            Log.d(TAG, "onEvent: Challenge ID found: " +
+                            challengeID);
+                            Toast.makeText(ChallengesOverviewActivity
+                            .this, "Challenge ID found: " + challengeID,
+                            Toast.LENGTH_SHORT).show();
 
                             if (challengeID != null) {
 
-                                firebaseFirestore.collection("Challenges").document(challengeID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                firebaseFirestore.collection(
+                                "Challenges")
+                                .document(challengeID)
+                                .addSnapshotListener(
+                                new EventListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                    public void onEvent(
+                                    @Nullable DocumentSnapshot documentSnapshot,
+                                    @Nullable FirebaseFirestoreException e) {
 
                                         if (e != null) {
 
-                                            Log.d(TAG,"Error : " + e.getMessage());
+                                            Log.d(TAG,"Error : "
+                                            + e.getMessage());
                                         } else {
 
-                                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                            if (documentSnapshot !=
+                                            null && documentSnapshot.exists()) {
 
-                                                Log.d(TAG, "Current data: " + documentSnapshot.getData());
-                                                Challenge challenge = documentSnapshot.toObject(Challenge.class);
-                                                Log.d(TAG, "onComplete: Firestore data converted to object");
+                                                Log.d(TAG,
+                                                "Current data: " +
+                                                documentSnapshot.getData());
+                                                Challenge challenge =
+                                                documentSnapshot
+                                                .toObject(Challenge.class);
+                                                Log.d(TAG,
+                                                "onComplete: " +
+                                                "Firestore data converted" +
+                                                " to object");
 
 
 
-                                                if (challenge.getStatus().equals("running")) {
+                                                if (challenge.getStatus()
+                                                    .equals("running")) {
 
-                                                    Log.d(TAG, "onComplete: Challenge is active/running");
+                                                    Log.d(TAG,
+                                                    "onComplete: " +
+                                                    "Challenge is " +
+                                                    "active/running");
 
-                                                    if (!listContainsChallenge(challengesList, challengeID)) {
+                                                    if (!listContainsChallenge(
+                                                    challengesList,
+                                                    challengeID)) {
 
-                                                        challengesList.add(challenge);
-                                                        challengesAdapter.notifyDataSetChanged();
+                                                        challengesList
+                                                        .add(challenge);
+                                                        challengesAdapter
+                                                        .notifyDataSetChanged();
                                                     }
                                                 }
-                                                else if(challenge.getStatus().equals("finished")) {
+                                                else if(challenge
+                                                .getStatus()
+                                                .equals("finished")) {
 
-                                                    Log.d(TAG, "onEvent: Remove challenge from challenge list");
+                                                    Log.d(TAG,
+                                                    "onEvent: Remove " +
+                                                    "challenge from " +
+                                                    "challenge list");
 
-                                                    for (int i=0; i<challengesList.size(); i++) {
+                                                    for (int i=0;
+                                                     i<challengesList.size();
+                                                     i++) {
 
-                                                        if (challengesList.get(i).getId().equals(challenge.getId())) {
+                                                        if (challengesList
+                                                        .get(i)
+                                                        .getId()
+                                                        .equals(challenge
+                                                        .getId())) {
 
-                                                            challengesList.remove(i);
-                                                            challengesAdapter.notifyDataSetChanged();
+                                                        challengesList
+                                                        .remove(i);
+                                                        challengesAdapter
+                                                        .notifyDataSetChanged();
                                                         }
                                                     }
                                                 }
                                             } else {
-                                                Log.d(TAG, "Current data: null");
+                                                Log.d(TAG,
+                                                "Current data: null");
                                             }
                                         }
                                     }
                                 });
                             } else {
 
-                                Log.d(TAG, "onEvent: Challenge ID is null");
-                                Toast.makeText(ChallengesOverviewActivity.this, "Challenge ID is null", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG,
+                                "onEvent: " +
+                                "Challenge ID is null");
+                                Toast.makeText(
+                                ChallengesOverviewActivity.this,
+                                "Challenge ID is null",
+                                Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -405,7 +526,8 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         });
     }
 
-    private boolean listContainsChallenge(List<Challenge> list, String challengeID) {
+    private boolean listContainsChallenge(List<Challenge> list,
+                                          String challengeID) {
 
         boolean result = false;
         if (list.isEmpty()) {
@@ -431,23 +553,29 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
     private void manageChallenge(Challenge challenge) {
 
-        updateRequestStatus(challenge.getRequestID(), "accepted");
+        updateRequestStatus(challenge.getRequestID(),
+        "accepted");
         String challengeID = addChallengeInFirestore(challenge);
-        addChallengeToFirebaseUsers(challenge.getUser1().getId(), challenge.getUser2().getId(), challengeID);
+        addChallengeToFirebaseUsers(challenge.getUser1().getId(),
+        challenge.getUser2().getId(), challengeID);
         startChallengeService(userID);
     }
 
     private void updateRequestStatus(String requestID, String newStatus) {
 
-        firebaseFirestore.collection("Requests").document(requestID).update("status", newStatus).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firebaseFirestore.collection("Requests")
+        .document(requestID).update("status", newStatus)
+        .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
 
-                    Toast.makeText(ChallengesOverviewActivity.this, "Request is updated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChallengesOverviewActivity.this,
+                    "Request is updated", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    Toast.makeText(ChallengesOverviewActivity.this, "Request update failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChallengesOverviewActivity.this,
+                    "Request update failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -457,20 +585,26 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
         String result;
 
-        DocumentReference docRef = firebaseFirestore.collection("Challenges").document();
+        DocumentReference docRef = firebaseFirestore.collection(
+                "Challenges").document();
         result = docRef.getId();
         challenge.setId(result);
-        docRef.set(challenge).addOnCompleteListener(new OnCompleteListener<Void>() {
+        docRef.set(challenge)
+        .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
                 if (task.isSuccessful()) {
 
                     Log.d(TAG, "onComplete: Request is stored in Firestore");
-                    Toast.makeText(ChallengesOverviewActivity.this, "Challenge is stored in Firestore", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChallengesOverviewActivity.this,
+                    "Challenge is stored in Firestore",
+                    Toast.LENGTH_SHORT).show();
                 } else {
 
-                    Toast.makeText(ChallengesOverviewActivity.this, "Write Challenge in Firestore failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ChallengesOverviewActivity.this,
+                    "Write Challenge in Firestore failed",
+                    Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -478,39 +612,59 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         return result;
     }
 
-    private void addChallengeToFirebaseUsers(String user1ID, String user2ID, String challengeID) {
+    private void addChallengeToFirebaseUsers(String user1ID,
+    String user2ID, String challengeID) {
 
         Map<String, String> challengeMap = new HashMap<>();
         challengeMap.put("challengeId", challengeID);
 
-        firebaseFirestore.collection("Users").document(user1ID).collection("Challenges").document().set(challengeMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firebaseFirestore.collection("Users")
+        .document(user1ID).collection("Challenges")
+        .document().set(challengeMap)
+        .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
                 if (task.isSuccessful()) {
 
-                    Log.d(TAG, "onComplete: Challenge ist stored for source user / user 1");
-                    Toast.makeText(ChallengesOverviewActivity.this, "Challenge ist stored for source user / user 1", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,
+                    "onComplete: Challenge ist " +
+                    "stored for source user / user 1");
+                    Toast.makeText(ChallengesOverviewActivity.this,
+                    "Challenge ist stored for source user / user 1",
+                    Toast.LENGTH_SHORT).show();
                 } else {
 
-                    Log.d(TAG, "onComplete: Write challenge ID to user 1 failed");
-                    Toast.makeText(ChallengesOverviewActivity.this, "Write challenge ID to user 1 failed", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onComplete: Write " +
+                    "challenge ID to user 1 failed");
+                    Toast.makeText(ChallengesOverviewActivity.this,
+                    "Write challenge ID to user 1 failed",
+                    Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        firebaseFirestore.collection("Users").document(user2ID).collection("Challenges").document().set(challengeMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+        firebaseFirestore.collection("Users")
+        .document(user2ID).collection("Challenges")
+        .document().set(challengeMap)
+        .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
                 if (task.isSuccessful()) {
 
-                    Log.d(TAG, "onComplete: Challenge ist stored for target user / user 2");
-                    Toast.makeText(ChallengesOverviewActivity.this, "Challenge ist stored for target user / user 2", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "onComplete: Challenge is " +
+                    "stored for target user / user 2");
+                    Toast.makeText(ChallengesOverviewActivity.this,
+                    "Challenge ist stored for target user / user 2",
+                    Toast.LENGTH_SHORT).show();
                 } else {
 
-                    Log.d(TAG, "onComplete: Write challenge ID to user 2 failed");
-                    Toast.makeText(ChallengesOverviewActivity.this, "Write challenge ID to user 2 failed", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,
+                    "onComplete: Write challenge ID to user 2 failed");
+                    Toast.makeText(ChallengesOverviewActivity.this,
+                    "Write challenge ID to user 2 failed",
+                    Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -518,7 +672,9 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
     private void startChallengeService(String userID) {
 
-        Intent challengeServiceIntent = new Intent(ChallengesOverviewActivity.this, ChallengeStepCounterService.class);
+        Intent challengeServiceIntent = new Intent(
+        ChallengesOverviewActivity.this,
+        ChallengeStepCounterService.class);
         challengeServiceIntent.putExtra("userID", userID);
         startService(challengeServiceIntent);
     }

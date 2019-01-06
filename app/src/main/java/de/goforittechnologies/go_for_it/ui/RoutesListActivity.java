@@ -86,7 +86,8 @@ public class RoutesListActivity extends AppCompatActivity {
             }
         });
 
-        lvRoutes.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        lvRoutes.setOnItemLongClickListener(
+        new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(
             AdapterView<?> adapterView, View view, int position, long id) {

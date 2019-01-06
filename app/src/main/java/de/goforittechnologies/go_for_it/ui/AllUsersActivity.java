@@ -201,17 +201,26 @@ public class AllUsersActivity extends AppCompatActivity {
                                             "Valid step target!",
                                             Toast.LENGTH_SHORT).show();
 
-                                    User targetUser = ((User)adapterView
-                                            .getItemAtPosition(position));
-                                    String targetUserId = targetUser.getId();
-                                    String sourceUserId = currentUser.getUid();
-                                    String targetUserName = targetUser.getName();
-                                    String targetUserImage = targetUser.getImage();
+                                    User targetUser =
+                                    ((User)adapterView
+                                    .getItemAtPosition(position));
+                                    String targetUserId =
+                                    targetUser.getId();
+                                    String sourceUserId =
+                                    currentUser.getUid();
+                                    String targetUserName =
+                                    targetUser.getName();
+                                    String targetUserImage =
+                                    targetUser.getImage();
                                     String challengeID = "";
                                     String requestID = "";
                                     String status = "pending";
 
-                                    Request challengeRequest = new Request(requestID, stepTarget, sourceUserId, targetUserId, sourceUserName, targetUserName, sourceUserImage, targetUserImage, challengeID, status);
+                                    Request challengeRequest =
+                                    new Request(requestID, stepTarget,
+                                    sourceUserId, targetUserId, sourceUserName,
+                                    targetUserName, sourceUserImage,
+                                    targetUserImage, challengeID, status);
                                     
                                     manageRequest(challengeRequest);
 
@@ -244,7 +253,8 @@ public class AllUsersActivity extends AppCompatActivity {
     private void manageRequest(Request challengeRequest) {
 
         String requestID = addRequestInFirestore(challengeRequest);
-        addRequestToFirebaseUsers(challengeRequest.getSourceUserID(), challengeRequest.getTargetUserID(), requestID);
+        addRequestToFirebaseUsers(challengeRequest.getSourceUserID(),
+        challengeRequest.getTargetUserID(), requestID);
         startChallengeService(userID);
     }
 
@@ -257,17 +267,23 @@ public class AllUsersActivity extends AppCompatActivity {
                 .document();
         result = docRef.getId();
         challengeRequest.setId(result);
-        docRef.set(challengeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+        docRef.set(challengeRequest)
+        .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
 
                 if (task.isSuccessful()) {
 
-                    Log.d(TAG, "onComplete: Request is stored in Firestore");
-                    Toast.makeText(AllUsersActivity.this, "Request is stored in Firestore", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG,
+                    "onComplete: Request is stored in Firestore");
+                    Toast.makeText(AllUsersActivity.this,
+                    "Request is stored in Firestore",
+                    Toast.LENGTH_SHORT).show();
                 } else {
 
-                    Toast.makeText(AllUsersActivity.this, "Write Request in Firestore failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AllUsersActivity.this,
+                    "Write Request in Firestore failed",
+                    Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -321,7 +337,8 @@ public class AllUsersActivity extends AppCompatActivity {
 
     private void startChallengeService(String userID) {
 
-        Intent challengeServiceIntent = new Intent(AllUsersActivity.this, ChallengeStepCounterService.class);
+        Intent challengeServiceIntent = new Intent(
+        AllUsersActivity.this, ChallengeStepCounterService.class);
         challengeServiceIntent.putExtra("userID", userID);
         startService(challengeServiceIntent);
     }

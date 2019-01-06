@@ -33,7 +33,8 @@ import de.goforittechnologies.go_for_it.storage.User;
  *
  */
 
-public class ChallengeStepCounterService extends Service implements SensorEventListener {
+public class ChallengeStepCounterService extends Service implements
+SensorEventListener {
 
 
     private static final String TAG = "ChallengeStepCounterSer";
@@ -75,9 +76,12 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
         // Configure steps manager
         currentSteps = 0;
         oldSteps = 0;
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
-        sensorManager.registerListener(ChallengeStepCounterService.this, stepSensor, SensorManager.SENSOR_DELAY_UI);
+        sensorManager =
+        (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        stepSensor =
+        sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        sensorManager.registerListener(ChallengeStepCounterService.this,
+                stepSensor, SensorManager.SENSOR_DELAY_UI);
     }
 
     @Override
@@ -104,12 +108,6 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
 
             oldSteps = currentSteps;
             manageChallenges(userID, diff);
-            /*ArrayList<String> challengeIDs = manageChallenges(userID, diff);
-            for (String currentChallengeID : challengeIDs)  {
-
-                Log.d(TAG, "onSensorChanged: Test currentChallengeID: " + currentChallengeID);
-                writeStepsInChallenge(currentChallengeID, diff);
-            }*/
         }
     }
 
@@ -120,23 +118,28 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
 
     private void manageChallenges(String userID, int stepsToAdd) {
 
-        firebaseFirestore.collection("Users").document(userID).collection("Challenges").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseFirestore.collection("Users")
+        .document(userID).collection("Challenges").get()
+        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
                 if (task.isSuccessful()) {
 
                     Log.d(TAG, "onComplete: Getting challenge IDs");
-                    List<DocumentSnapshot> list = task.getResult().getDocuments();
+                    List<DocumentSnapshot> list =
+                    task.getResult().getDocuments();
                     for (DocumentSnapshot doc : list) {
 
-                        String challengeID = doc.getString("challengeId");
+                        String challengeID =
+                        doc.getString("challengeId");
                         writeStepsInChallenge(challengeID, stepsToAdd);
                         Log.d(TAG, "Challenge id : " + challengeID);
                     }
                 } else {
 
-                    Log.d(TAG, "onComplete: Getting challenge IDs failed!");
+                    Log.d(TAG,
+                    "onComplete: Getting challenge IDs failed!");
                 }
             }
         });
@@ -144,9 +147,12 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
 
     private void writeStepsInChallenge(String challengeID, int stepsToAdd) {
 
-        Log.d(TAG, "writeStepsInChallenge: Enter method writeStepsInChallenge");
+        Log.d(TAG,
+        "writeStepsInChallenge: Enter method writeStepsInChallenge");
 
-        firebaseFirestore.collection("Challenges").document(challengeID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Challenges")
+        .document(challengeID).get()
+        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -156,14 +162,16 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
 
                     if (task.getResult().exists()) {
 
-                        Challenge challenge = task.getResult().toObject(Challenge.class);
+                        Challenge challenge =
+                        task.getResult().toObject(Challenge.class);
                         String status = challenge.getStatus();
                         if (status.equals("running")) {
 
                             User user1 = challenge.getUser1();
                             User user2 = challenge.getUser2();
 
-                            // Prove who of the two challenge users is the current user to know who is to be updated
+                            // Prove who of the two challenge users
+                            // is the current user to know who is to be updated
                             if (userID.equals(user1.getId())) {
 
                                 int currentSteps = challenge.getStepsUser1();
@@ -172,52 +180,84 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
                                 if (newSteps >= stepTarget) {
 
                                     // Update challenge status
-                                    firebaseFirestore.collection("Challenges").document(challengeID).update("status", "finished").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    firebaseFirestore.collection(
+                                    "Challenges")
+                                    .document(challengeID).update("status",
+                                    "finished").addOnCompleteListener
+                                    (new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                                        public void onComplete(
+                                                @NonNull Task<Void> task) {
 
                                             if (task.isSuccessful()) {
 
-                                                Log.d(TAG, "onComplete: Challenge status updated");
+                                                Log.d(TAG,
+                                                "onComplete: " +
+                                                "Challenge status updated");
                                             } else {
 
-                                                Log.d(TAG, "onComplete: Error updating challenge status");
+                                                Log.d(TAG,
+                                                "onComplete: Error " +
+                                                "updating challenge status");
                                             }
                                         }
                                     });
 
-                                    Map<String, Object> userMap = new HashMap<>();
+                                    Map<String, Object> userMap =
+                                    new HashMap<>();
                                     userMap.put("id", user1.getId());
                                     userMap.put("image", user1.getImage());
                                     userMap.put("name", user1.getName());
 
                                     // Update challenge winner
-                                    firebaseFirestore.collection("Challenges").document(challengeID).update("winner", userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    firebaseFirestore
+                                    .collection("Challenges")
+                                    .document(challengeID)
+                                    .update("winner", userMap)
+                                    .addOnCompleteListener(
+                                    new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                                        public void onComplete(
+                                        @NonNull Task<Void> task) {
 
                                             if (task.isSuccessful()) {
 
-                                                Log.d(TAG, "onComplete: Challenge winner updated");
+                                                Log.d(TAG,
+                                               "onComplete: " +
+                                                       "Challenge winner " +
+                                                     "updated");
                                             } else {
 
-                                                Log.d(TAG, "onComplete: Error updating challenge winner");
+                                                Log.d(TAG,
+                                                "onComplete: " +
+                                                        "Error updating " +
+                                                        "challenge winner");
                                             }
                                         }
                                     });
                                 }
 
                                 // Update challenge steps
-                                firebaseFirestore.collection("Challenges").document(challengeID).update("stepsUser1", newSteps).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                firebaseFirestore
+                                .collection("Challenges")
+                                .document(challengeID)
+                                .update("stepsUser1", newSteps)
+                                .addOnCompleteListener(
+                                new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                                    public void onComplete(
+                                    @NonNull Task<Void> task) {
 
                                         if (task.isSuccessful()) {
 
-                                            Log.d(TAG, "onComplete: Challenge steps updated");
+                                            Log.d(TAG,
+                                            "onComplete: " +
+                                            "Challenge steps updated");
                                         } else {
 
-                                            Log.d(TAG, "onComplete: Error updating challenge steps");
+                                            Log.d(TAG,
+                                            "onComplete: " +
+                                            "Error updating challenge steps");
                                         }
                                     }
                                 });
@@ -228,49 +268,80 @@ public class ChallengeStepCounterService extends Service implements SensorEventL
                                 int stepTarget = challenge.getStepTarget();
                                 if (newSteps >= stepTarget) {
 
-                                    firebaseFirestore.collection("Challenges").document(challengeID).update("status", "finished").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    firebaseFirestore
+                                    .collection("Challenges")
+                                    .document(challengeID)
+                                    .update("status", "finished")
+                                    .addOnCompleteListener(
+                                    new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                                        public void onComplete(
+                                        @NonNull Task<Void> task) {
 
                                             if (task.isSuccessful()) {
 
-                                                Log.d(TAG, "onComplete: Challenge status updated");
+                                                Log.d(TAG,
+                                                "onComplete: " +
+                                                "Challenge status updated");
                                             } else {
 
-                                                Log.d(TAG, "onComplete: Error updating challenge status");
+                                                Log.d(TAG,
+                                                "onComplete: Error " +
+                                                "updating challenge status");
                                             }
                                         }
                                     });
 
-                                    Map<String, Object> userMap = new HashMap<>();
+                                    Map<String, Object> userMap =
+                                    new HashMap<>();
                                     userMap.put("id", user2.getId());
                                     userMap.put("image", user2.getImage());
                                     userMap.put("name", user2.getName());
-                                    firebaseFirestore.collection("Challenges").document(challengeID).update("winner", userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    firebaseFirestore
+                                    .collection("Challenges")
+                                    .document(challengeID)
+                                    .update("winner", userMap)
+                                    .addOnCompleteListener(
+                                    new OnCompleteListener<Void>() {
                                         @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
+                                        public void onComplete(
+                                        @NonNull Task<Void> task) {
 
                                             if (task.isSuccessful()) {
 
-                                                Log.d(TAG, "onComplete: Challenge winner updated");
+                                                Log.d(TAG,
+                                                "onComplete: Challenge" +
+                                                " winner updated");
                                             } else {
 
-                                                Log.d(TAG, "onComplete: Error updating challenge winner");
+                                                Log.d(TAG,
+                                                "onComplete: Error " +
+                                                "updating challenge winner");
                                             }
                                         }
                                     });
                                 }
 
-                                firebaseFirestore.collection("Challenges").document(challengeID).update("stepsUser2", newSteps).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                firebaseFirestore
+                                .collection("Challenges")
+                                .document(challengeID)
+                                .update("stepsUser2", newSteps)
+                                .addOnCompleteListener(
+                                new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                                    public void onComplete(
+                                    @NonNull Task<Void> task) {
 
                                         if (task.isSuccessful()) {
 
-                                            Log.d(TAG, "onComplete: Challenge steps updated");
+                                            Log.d(TAG,
+                                            "onComplete: Challenge " +
+                                            "steps updated");
                                         } else {
 
-                                            Log.d(TAG, "onComplete: Error updating challenge steps");
+                                            Log.d(TAG,
+                                            "onComplete: Error updating" +
+                                            " challenge steps");
                                         }
                                     }
                                 });

@@ -27,7 +27,7 @@ import de.goforittechnologies.go_for_it.storage.StepData;
  * @version 0.8.
  *
  * This service is used to count steps made by user and transfer them to the
- * corresponding activity via intent
+ * corresponding activity via intent.
  * @see SensorEventListener
  * @see Service
  *

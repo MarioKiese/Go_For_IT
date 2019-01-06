@@ -21,7 +21,8 @@ public class Challenge {
 
     public Challenge(){}
 
-    public Challenge(String id, String requestID, int stepTarget, User user1, User user2, String status) {
+    public Challenge(String id, String requestID, int stepTarget,
+                     User user1, User user2, String status) {
         this.id = id;
         this.requestID = requestID;
         this.stepTarget = stepTarget;

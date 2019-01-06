@@ -24,7 +24,10 @@ public class Request {
     public Request() {
     }
 
-    public Request(String id, int stepTarget, String sourceUserID, String targetUserID, String sourceUserName, String targetUserName, String sourceUserImage, String targetUserImage, String challengeID, String status) {
+    public Request(String id, int stepTarget, String sourceUserID,
+    String targetUserID, String sourceUserName, String targetUserName,
+    String sourceUserImage, String targetUserImage, String challengeID,
+                   String status) {
         this.id = id; //TODO: Check if necessary and clear all traces
         this.stepTarget = stepTarget;
         this.sourceUserID = sourceUserID;
