@@ -46,6 +46,20 @@ import static android.content.SharedPreferences.*;
  * @version 0.8.
  * @see AppCompatActivity
  *
+ *
+ * USED EXTERNAL LIBRARIES:
+ * ____________________________________________________________________________
+ * com.google.firebase:firebase-core:16.0.6
+ * com.google.firebase:firebase-auth:16.1.0
+ * com.google.firebase:firebase-firestore:17.1.4
+ * com.google.firebase:firebase-storage:16.0.5
+ * de.hdodenhof:circleimageview:2.2.0
+ * com.theartofdev.edmodo:android-image-cropper:2.7.0
+ * com.github.PhilJay:MPAndroidChart:v3.1.0-alpha
+ * org.osmdroid:osmdroid-android:6.0.2
+ * com.github.bumptech.glide:glide:4.8.0
+ * ____________________________________________________________________________
+ *
  * This class creates the main overview of the "Go_for_IT" android app.
  * Corresponding layout: res.layout.activity_main.xml
  *
