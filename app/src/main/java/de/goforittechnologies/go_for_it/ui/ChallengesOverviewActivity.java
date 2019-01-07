@@ -67,12 +67,6 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
     private static final String TAG = "ChallengesOverviewActy";
 
-    // Widgets
-    private Toolbar tbChallenges;
-    private TextView tvRequestsListEmptyText;
-    private TextView tvActiveChallengesListEmptyText;
-    private ListView lvRequests;
-    private ListView lvActiveChallenges;
     private ProgressBar pbRequests;
     private ProgressBar pbChallenges;
 
@@ -84,7 +78,6 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
     // Firebase
     private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth auth;
     private String userID;
 
     /**
@@ -105,14 +98,15 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_challenges_overview);
 
         // Set widgets
-        tbChallenges = findViewById(R.id.tbChallenges);
+        // Widgets
+        Toolbar tbChallenges = findViewById(R.id.tbChallenges);
         setSupportActionBar(tbChallenges);
-        tvRequestsListEmptyText = findViewById(R.id.tvRequestsEmtpyListText);
-        lvRequests = findViewById(R.id.lvRequests);
+        TextView tvRequestsListEmptyText = findViewById(R.id.tvRequestsEmtpyListText);
+        ListView lvRequests = findViewById(R.id.lvRequests);
         lvRequests.setEmptyView(tvRequestsListEmptyText);
-        tvActiveChallengesListEmptyText = findViewById(
+        TextView tvActiveChallengesListEmptyText = findViewById(
                 R.id.tvActiveChallengesEmtpyListText);
-        lvActiveChallenges = findViewById(
+        ListView lvActiveChallenges = findViewById(
                 R.id.lvActiveChallenges);
         lvActiveChallenges.setEmptyView(
                 tvActiveChallengesListEmptyText);
@@ -132,7 +126,7 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         lvActiveChallenges.setAdapter(challengesAdapter);
 
         // Configure Firebase
-        auth = FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = auth.getCurrentUser();
         userID = currentUser.getUid();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -205,31 +199,27 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
         });
 
         lvActiveChallenges
-        .setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView,
-            View view, int position, long l) {
+        .setOnItemClickListener((adapterView, view, position, l) -> {
 
-                Challenge currentChallenge =
-                (Challenge)adapterView.getItemAtPosition(position);
-                int stepsYou = userID.equals(currentChallenge.getUser1()
-                .getId()) ? currentChallenge.getStepsUser1() :
-                currentChallenge.getStepsUser2();
-                int stepsRival = userID.equals(currentChallenge
-                .getUser1().getId()) ? currentChallenge.getStepsUser2()
-                : currentChallenge.getStepsUser1();
-                int stepTarget = currentChallenge.getStepTarget();
+            Challenge currentChallenge =
+            (Challenge)adapterView.getItemAtPosition(position);
+            int stepsYou = userID.equals(currentChallenge.getUser1()
+            .getId()) ? currentChallenge.getStepsUser1() :
+            currentChallenge.getStepsUser2();
+            int stepsRival = userID.equals(currentChallenge
+            .getUser1().getId()) ? currentChallenge.getStepsUser2()
+            : currentChallenge.getStepsUser1();
+            int stepTarget = currentChallenge.getStepTarget();
 
-                Intent challengeDetailIntent =
-                new Intent(ChallengesOverviewActivity.this,
-                ChallengeDetailActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("stepsYou", stepsYou);
-                bundle.putInt("stepsRival", stepsRival);
-                bundle.putInt("stepTarget", stepTarget);
-                challengeDetailIntent.putExtras(bundle);
-                startActivity(challengeDetailIntent);
-            }
+            Intent challengeDetailIntent =
+            new Intent(ChallengesOverviewActivity.this,
+            ChallengeDetailActivity.class);
+            Bundle bundle = new Bundle();
+            bundle.putInt("stepsYou", stepsYou);
+            bundle.putInt("stepsRival", stepsRival);
+            bundle.putInt("stepTarget", stepTarget);
+            challengeDetailIntent.putExtras(bundle);
+            startActivity(challengeDetailIntent);
         });
     }
 
@@ -587,13 +577,7 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
             for (Challenge challenge : list) {
 
                 String currentID = challenge.getId();
-                if (currentID.equals(challengeID)) {
-
-                    result = true;
-                } else {
-
-                    result = false;
-                }
+                result = currentID.equals(challengeID);
             }
         }
 

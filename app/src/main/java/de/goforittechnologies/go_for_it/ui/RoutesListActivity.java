@@ -43,15 +43,12 @@ public class RoutesListActivity extends AppCompatActivity {
 
     private static final String TAG = "RoutesListActivity";
 
-    // Widgets
-    private TextView tvRoutesEmptyListText;
     private ListView lvRoutes;
-    private RoutesAdapter mRouteDataAdapter;
     private Toolbar tbRoutes;
 
     // Database
-    DataSourceMapData dataSourceMapData;
-    DataSourceRouteData dataSourceRouteData;
+    private DataSourceMapData dataSourceMapData;
+    private DataSourceRouteData dataSourceRouteData;
     /**
      * method to declare and initialise activity functions and variables.
      * - connecting Views via R.id.
@@ -70,7 +67,8 @@ public class RoutesListActivity extends AppCompatActivity {
         // Set widgets
         tbRoutes = findViewById(R.id.tbRoutes);
         setSupportActionBar(tbRoutes);
-        tvRoutesEmptyListText = findViewById(R.id.tvRoutesEmptyListText);
+        // Widgets
+        TextView tvRoutesEmptyListText = findViewById(R.id.tvRoutesEmptyListText);
         lvRoutes = findViewById(R.id.lvRoutes);
         lvRoutes.setEmptyView(tvRoutesEmptyListText);
 
@@ -79,19 +77,15 @@ public class RoutesListActivity extends AppCompatActivity {
 
         showAllListEntries();
 
-        lvRoutes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(
-            AdapterView<?> adapterView, View view, int position, long id) {
+        lvRoutes.setOnItemClickListener((adapterView, view, position, id) -> {
 
-                String routeName = ((RouteData)adapterView
-                .getItemAtPosition(position)).getRoute();
-                Log.d(TAG, "onItemClick: RouteName: " + routeName);
-                ArrayList<Location> route =
-                convertRouteToLocationList(routeName);
-                sendRouteFromDatabaseToActivity(route);
+            String routeName = ((RouteData)adapterView
+            .getItemAtPosition(position)).getRoute();
+            Log.d(TAG, "onItemClick: RouteName: " + routeName);
+            ArrayList<Location> route =
+            convertRouteToLocationList(routeName);
+            sendRouteFromDatabaseToActivity(route);
 
-            }
         });
 
         lvRoutes.setOnItemLongClickListener(
@@ -200,8 +194,8 @@ public class RoutesListActivity extends AppCompatActivity {
     private void showAllListEntries() {
 
         List<RouteData> routeDataList = dataSourceRouteData.getAllRouteData();
-        mRouteDataAdapter = new RoutesAdapter(RoutesListActivity.this,
-        routeDataList);
+        RoutesAdapter mRouteDataAdapter = new RoutesAdapter(RoutesListActivity.this,
+                routeDataList);
         lvRoutes.setAdapter(mRouteDataAdapter);
 
     }

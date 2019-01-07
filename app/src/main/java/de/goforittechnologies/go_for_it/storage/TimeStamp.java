@@ -1,7 +1,5 @@
 package de.goforittechnologies.go_for_it.storage;
 
-import android.util.Log;
-
 /**
  * @author  Mario Kiese and Tom Hammerbacher
  * @version 0.8.
@@ -11,9 +9,9 @@ import android.util.Log;
  */
 
 public class TimeStamp {
-    private int hour = 0;
-    private int month = 0;
-    private int day = 0;
+    private int hour;
+    private int month;
+    private int day;
     private static final String TAG = "TimeStamp";
 
     //Constuctor

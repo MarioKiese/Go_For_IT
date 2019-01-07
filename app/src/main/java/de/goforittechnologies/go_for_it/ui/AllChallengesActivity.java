@@ -41,11 +41,7 @@ public class AllChallengesActivity extends AppCompatActivity {
 
     private static final String TAG = "AllChallengesActivity";
 
-    // Widgets
-    private Toolbar tbAllChallenges;
     private ProgressBar pbAllChallenges;
-    private ListView lvAllChallenges;
-    private TextView tvAllChallengesListEmptyText;
 
     // Member variables
     private List<Challenge> allChallengesList;
@@ -53,8 +49,7 @@ public class AllChallengesActivity extends AppCompatActivity {
 
     // Firebase
     private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth auth;
-    private String userID;
+
     /**
      * method to declare and initialise activity functions and variables.
      * - connecting Views via R.id.
@@ -66,11 +61,12 @@ public class AllChallengesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_all_challenges);
 
         // Set widgets
-        tbAllChallenges = findViewById(R.id.tbAllChallenges);
+        // Widgets
+        Toolbar tbAllChallenges = findViewById(R.id.tbAllChallenges);
         setSupportActionBar(tbAllChallenges);
-        tvAllChallengesListEmptyText = findViewById(R.id
+        TextView tvAllChallengesListEmptyText = findViewById(R.id
                 .tvAllChallengesEmptyListText);
-        lvAllChallenges = findViewById(R.id.lvAllChallenges);
+        ListView lvAllChallenges = findViewById(R.id.lvAllChallenges);
         lvAllChallenges.setEmptyView(tvAllChallengesListEmptyText);
         allChallengesList = new ArrayList<>();
         allChallengesAdapter = new AllChallengesAdapter
@@ -81,103 +77,99 @@ public class AllChallengesActivity extends AppCompatActivity {
         pbAllChallenges.setVisibility(View.VISIBLE);
 
         // Configure Firebase
-        auth = FirebaseAuth.getInstance();
-        userID = auth.getCurrentUser().getUid();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userID = auth.getCurrentUser().getUid();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         firebaseFirestore.collection("Users").document(userID)
                 .collection
                 ("Challenges")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                @Nullable FirebaseFirestoreException e) {
+                .addSnapshotListener((queryDocumentSnapshots, e) -> {
 
-                if (e!=null){
+                    if (e!=null){
 
-                    Log.d(TAG,"Error : " + e.getMessage());
-                    pbAllChallenges.setVisibility(View.INVISIBLE);
-                } else {
+                        Log.d(TAG,"Error : " + e.getMessage());
+                        pbAllChallenges.setVisibility(View.INVISIBLE);
+                    } else {
 
-                    for (DocumentChange doc :
-                            queryDocumentSnapshots.getDocumentChanges()) {
+                        for (DocumentChange doc :
+                                queryDocumentSnapshots.getDocumentChanges()) {
 
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String challengeID =
-                            (String)doc.getDocument().get("challengeId");
-                            Log.d(TAG,
-                            "onEvent: Challenge ID found: " + challengeID);
-                            Toast.makeText(AllChallengesActivity.this,
-                                    "Challenge ID found: " +
-                                    challengeID, Toast.LENGTH_SHORT).show();
+                                String challengeID =
+                                (String)doc.getDocument().get("challengeId");
+                                Log.d(TAG,
+                                "onEvent: Challenge ID found: " + challengeID);
+                                Toast.makeText(AllChallengesActivity.this,
+                                        "Challenge ID found: " +
+                                        challengeID, Toast.LENGTH_SHORT).show();
 
-                            if (challengeID != null) {
+                                if (challengeID != null) {
 
-                                firebaseFirestore
-                                .collection("Challenges")
-                                .document(challengeID)
-                                .addSnapshotListener(
-                                    new EventListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onEvent(
-                                    @Nullable DocumentSnapshot documentSnapshot,
-                                    @Nullable FirebaseFirestoreException e) {
+                                    firebaseFirestore
+                                    .collection("Challenges")
+                                    .document(challengeID)
+                                    .addSnapshotListener(
+                                        new EventListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onEvent(
+                                        @Nullable DocumentSnapshot documentSnapshot,
+                                        @Nullable FirebaseFirestoreException e) {
 
-                                        if (e != null) {
+                                            if (e != null) {
 
-                                            Log.d(TAG,"Error : "
-                                            + e.getMessage());
-                                        } else {
+                                                Log.d(TAG,"Error : "
+                                                + e.getMessage());
+                                            } else {
 
-                                            if (documentSnapshot != null
-                                            && documentSnapshot.exists()) {
-
-                                                Log.d(TAG,
-                                                "Current data: " +
-                                                documentSnapshot.getData());
-                                                Challenge challenge =
-                                                documentSnapshot
-                                                .toObject(Challenge.class);
-                                                Log.d(TAG,
-                                                "onComplete: " +
-                                                "Firestore data " +
-                                                "converted to object");
-
-                                                if (challenge.getStatus()
-                                                        .equals("finished")) {
+                                                if (documentSnapshot != null
+                                                && documentSnapshot.exists()) {
 
                                                     Log.d(TAG,
-                                                        "onComplete: " +
-                                                            "Challenge is " +
-                                                            "finished");
+                                                    "Current data: " +
+                                                    documentSnapshot.getData());
+                                                    Challenge challenge =
+                                                    documentSnapshot
+                                                    .toObject(Challenge.class);
+                                                    Log.d(TAG,
+                                                    "onComplete: " +
+                                                    "Firestore data " +
+                                                    "converted to object");
 
-                                                    allChallengesList
-                                                            .add(challenge);
-                                                    allChallengesAdapter
-                                                    .notifyDataSetChanged();
+                                                    if (challenge.getStatus()
+                                                            .equals("finished")) {
+
+                                                        Log.d(TAG,
+                                                            "onComplete: " +
+                                                                "Challenge is " +
+                                                                "finished");
+
+                                                        allChallengesList
+                                                                .add(challenge);
+                                                        allChallengesAdapter
+                                                        .notifyDataSetChanged();
+                                                    }
+                                                } else {
+                                                    Log.d(TAG,
+                                                        "Current data: null");
                                                 }
-                                            } else {
-                                                Log.d(TAG,
-                                                    "Current data: null");
                                             }
                                         }
-                                    }
-                                });
-                            } else {
+                                    });
+                                } else {
 
-                                Log.d(TAG,
-                                "onEvent: Challenge ID is null");
-                                Toast.makeText(
-                                AllChallengesActivity.this,
-                                "Challenge ID is " +
-                                        "null", Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG,
+                                    "onEvent: Challenge ID is null");
+                                    Toast.makeText(
+                                    AllChallengesActivity.this,
+                                    "Challenge ID is " +
+                                            "null", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
+                        pbAllChallenges.setVisibility(View.INVISIBLE);
                     }
-                    pbAllChallenges.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+                });
     }
 }

@@ -13,7 +13,7 @@ import android.util.Log;
  * @see SQLiteOpenHelper
  * @see SQLiteDatabase
  */
-public class DbHelperMapData extends SQLiteOpenHelper {
+class DbHelperMapData extends SQLiteOpenHelper {
 
     private static final String TAG = "DbHelperMapData";
 

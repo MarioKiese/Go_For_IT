@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
@@ -31,12 +30,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @see CircleImageView
  *
  */
-public class RequestsAdapter extends ArrayAdapter<Request> {
+class RequestsAdapter extends ArrayAdapter<Request> {
 
 
 
     private Context mContext;
-    private List<Request> requestsList = new ArrayList<>();
+    private List<Request> requestsList;
     /**
      *  constructor to connect context and list with member variables
      * @param context

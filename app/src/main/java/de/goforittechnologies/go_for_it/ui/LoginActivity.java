@@ -17,6 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 import de.goforittechnologies.go_for_it.R;
 /**
  * @author  Mario Kiese and Tom Hammerbacher
@@ -46,8 +48,6 @@ public class LoginActivity extends AppCompatActivity {
     // Widgets
     private EditText etLoginMailText;
     private EditText etLoginPasswordText;
-    private Button btLogin;
-    private Button btLoginRegister;
     private ProgressBar pbLogin;
 
     private FirebaseAuth mAuth;
@@ -70,51 +70,48 @@ public class LoginActivity extends AppCompatActivity {
 
         etLoginMailText = findViewById(R.id.etLoginMail);
         etLoginPasswordText = findViewById(R.id.etLoginPassword);
-        btLogin = findViewById(R.id.btnLogin);
-        btLoginRegister = findViewById(R.id.btnLoginRegister);
+        Button btLogin = findViewById(R.id.btnLogin);
+        Button btLoginRegister = findViewById(R.id.btnLoginRegister);
         pbLogin = findViewById(R.id.pbLogin);
 
         mAuth = FirebaseAuth.getInstance();
 
-        btLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btLogin.setOnClickListener(view -> {
 
-                String loginEmail = etLoginMailText.getText().toString();
-                String loginPassword = etLoginPasswordText.getText().toString();
+            String loginEmail = etLoginMailText.getText().toString();
+            String loginPassword = etLoginPasswordText.getText().toString();
 
-                if (!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty
-                        (loginPassword)) {
+            if (!TextUtils.isEmpty(loginEmail) && !TextUtils.isEmpty
+                    (loginPassword)) {
 
-                    pbLogin.setVisibility(View.VISIBLE);
+                pbLogin.setVisibility(View.VISIBLE);
 
-                    mAuth.signInWithEmailAndPassword(loginEmail, loginPassword)
-                            .addOnCompleteListener(new
-                            OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
+                mAuth.signInWithEmailAndPassword(loginEmail, loginPassword)
+                        .addOnCompleteListener(new
+                        OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            if (task.isSuccessful()) {
+                        if (task.isSuccessful()) {
 
-                                sendToMain();
+                            sendToMain();
 
-                            } else {
+                        } else {
 
-                                String e = task.getException().getMessage();
-                                Toast.makeText(LoginActivity.this,
-                                        "Error : " +
-                                        e, Toast.LENGTH_LONG).show();
-
-                            }
-
-                            pbLogin.setVisibility(View.INVISIBLE);
+                            String e = Objects.requireNonNull(task.getException()).getMessage();
+                            Toast.makeText(LoginActivity.this,
+                                    "Error : " +
+                                    e, Toast.LENGTH_LONG).show();
 
                         }
-                    });
 
-                }
+                        pbLogin.setVisibility(View.INVISIBLE);
+
+                    }
+                });
 
             }
+
         });
 
         btLoginRegister.setOnClickListener(new View.OnClickListener() {

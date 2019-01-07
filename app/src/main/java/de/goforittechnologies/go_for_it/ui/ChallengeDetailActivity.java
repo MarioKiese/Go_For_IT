@@ -30,13 +30,6 @@ public class ChallengeDetailActivity extends AppCompatActivity {
 
     private static final String TAG = "ChallengeDetailActivity";
 
-    // Widgets
-    private TextView tvStepsYou;
-    private TextView tvStepsRival;
-    private TextView tvStepTarget;
-    private ProgressBar pbYou;
-    private ProgressBar pbRival;
-
     /**
      * method to declare and initialise activity functions and variables.
      * - connecting Views via R.id.
@@ -48,11 +41,12 @@ public class ChallengeDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_challenge_detail);
 
         // Set widgets
-        tvStepsYou = findViewById(R.id.tvCurrentStepsYou);
-        tvStepsRival = findViewById(R.id.tvCurrentStepsRival);
-        tvStepTarget = findViewById(R.id.tvStepTarget);
-        pbYou = findViewById(R.id.pbYou);
-        pbRival = findViewById(R.id.pbRival);
+        // Widgets
+        TextView tvStepsYou = findViewById(R.id.tvCurrentStepsYou);
+        TextView tvStepsRival = findViewById(R.id.tvCurrentStepsRival);
+        TextView tvStepTarget = findViewById(R.id.tvStepTarget);
+        ProgressBar pbYou = findViewById(R.id.pbYou);
+        ProgressBar pbRival = findViewById(R.id.pbRival);
 
         // Get intent extras
         Intent intent = getIntent();

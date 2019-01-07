@@ -73,9 +73,7 @@ public class MapActivity extends AppCompatActivity {
     private MapView mapView;
     private Button btnStartLocation;
     private Button btnStopLocation;
-    private TextView tvSteps;
     private TextView tvStepsValue;
-    private TextView tvDistanceText;
     private TextView tvDistanceValue;
     private TextView tvCaloriesText;
     private TextView tvCaloriesValue;
@@ -92,21 +90,21 @@ public class MapActivity extends AppCompatActivity {
     private boolean mIsServiceBound;
 
     // Route information
-    List<Location> mRoute;
+    private List<Location> mRoute;
     private int mSteps;
     private double mDistance;
     private double mCalories;
     private double mWeight;
 
-    LocationManager locationManager;
+    private LocationManager locationManager;
 
     // Shared preferences
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
     // Database
-    DataSourceMapData dataSourceMapData;
-    DataSourceRouteData dataSourceRouteData;
+    private DataSourceMapData dataSourceMapData;
+    private DataSourceRouteData dataSourceRouteData;
 
     // Permissions
     private static final int PERMISSION_ALL = 1;
@@ -164,9 +162,9 @@ public class MapActivity extends AppCompatActivity {
         setSupportActionBar(tbMaps);
         btnStartLocation = findViewById(R.id.btn_start_location);
         btnStopLocation = findViewById(R.id.btn_stop_location);
-        tvSteps = findViewById(R.id.tvSteps);
+        TextView tvSteps = findViewById(R.id.tvSteps);
         tvStepsValue = findViewById(R.id.tvStepsValue);
-        tvDistanceText = findViewById(R.id.tvDistance);
+        TextView tvDistanceText = findViewById(R.id.tvDistance);
         tvDistanceValue = findViewById(R.id.tvDistanceValue);
         tvCaloriesText = findViewById(R.id.tvCalories);
         tvCaloriesValue = findViewById(R.id.tvCaloriesValue);
@@ -301,12 +299,7 @@ public class MapActivity extends AppCompatActivity {
             dialogBuilder.setPositiveButton("OK", null);
 
             dialogBuilder.setNegativeButton("Cancel",
-                    new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
+                    (dialog, which) -> dialog.cancel());
 
             AlertDialog alertDialog = dialogBuilder.create();
 
@@ -531,7 +524,7 @@ public class MapActivity extends AppCompatActivity {
      * @see ActivityCompat
      * @see PackageManager
      */
-    public boolean hasPermissions(Context context, String[] permissions) {
+    private boolean hasPermissions(Context context, String[] permissions) {
 
         if (context != null && permissions != null) {
 

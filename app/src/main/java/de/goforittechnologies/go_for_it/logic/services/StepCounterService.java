@@ -1,6 +1,5 @@
 package de.goforittechnologies.go_for_it.logic.services;
 
-import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,21 +12,16 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.DataSourceStepData;
-import de.goforittechnologies.go_for_it.storage.StepData;
 
 /**
  * @author  Mario Kiese and Tom Hammerbacher.
@@ -42,14 +36,14 @@ import de.goforittechnologies.go_for_it.storage.StepData;
 
 public class StepCounterService extends Service implements SensorEventListener {
 
-    SensorManager sensorManager;
-    Sensor sensor;
+    private SensorManager sensorManager;
+    private Sensor sensor;
     private static final String TAG = "StepCounterService";
     private double steps;
     public static final String
             NOTIFICATION = "de.goforittechnologies.go_for_it.receiver";
-    boolean oldTimeSet = false;
-    long oldTime = 0;
+    private boolean oldTimeSet = false;
+    private long oldTime = 0;
 
     public StepCounterService() {
     }
@@ -147,7 +141,7 @@ public class StepCounterService extends Service implements SensorEventListener {
         DataSourceStepData dataSourceStepData;
         try {
             dataSourceStepData = new DataSourceStepData(this,
-                    dbName,1);
+                    dbName,0);
         } catch (Exception e) {
             e.printStackTrace();
             dataSourceStepData = new DataSourceStepData(this,
@@ -179,6 +173,7 @@ public class StepCounterService extends Service implements SensorEventListener {
         Log.d(TAG, "sendStepMessageToActivity: Steps sent");
     }
 
+    @SuppressWarnings("deprecation")
     private void createNotification() {
 
         Intent notificationIntent = new Intent(this,
@@ -187,7 +182,7 @@ public class StepCounterService extends Service implements SensorEventListener {
                 PendingIntent.getActivity(this, 0,
                         notificationIntent, 0);
 
-        Notification notification = null;
+        Notification notification;
 
         if (android.os.Build.VERSION.SDK_INT >=
                 android.os.Build.VERSION_CODES.O) {

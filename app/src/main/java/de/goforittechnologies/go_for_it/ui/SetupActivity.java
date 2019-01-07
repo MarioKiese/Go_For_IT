@@ -36,6 +36,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import de.goforittechnologies.go_for_it.R;
@@ -76,8 +77,6 @@ public class SetupActivity extends AppCompatActivity {
     private EditText etSetupWeight;
     private EditText etSetupHeight;
     private Button btSetup;
-    private Button btCreateTestdata;
-    private Button btDeleteTestdata;
     private ProgressBar pbSetup;
     private CircleImageView ivSetupImage;
 
@@ -121,7 +120,7 @@ public class SetupActivity extends AppCompatActivity {
         setSupportActionBar(tbSetup);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        userID = firebaseAuth.getCurrentUser().getUid();
+        userID = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -133,8 +132,8 @@ public class SetupActivity extends AppCompatActivity {
         etSetupHeight = findViewById(R.id.etSetupHeight);
         ivSetupImage = findViewById(R.id.ivSetupImage);
         btSetup = findViewById(R.id.btnSetup);
-        btCreateTestdata = findViewById(R.id.btnCreateTestdata);
-        btDeleteTestdata = findViewById(R.id.btnDeleteTestdata);
+        Button btCreateTestdata = findViewById(R.id.btnCreateTestdata);
+        Button btDeleteTestdata = findViewById(R.id.btnDeleteTestdata);
         pbSetup = findViewById(R.id.pbSetup);
 
         pbSetup.setVisibility(View.VISIBLE);
@@ -191,29 +190,26 @@ public class SetupActivity extends AppCompatActivity {
             }
         });
 
-        btDeleteTestdata.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataSourceStepData dataSourceStepData;
-                try {
-                    dataSourceStepData = new DataSourceStepData(
-                            SetupActivity.this,
-                            "StepDataTABLE_11",1);
+        btDeleteTestdata.setOnClickListener(view -> {
+            DataSourceStepData dataSourceStepData;
+            try {
+                dataSourceStepData = new DataSourceStepData(
+                        SetupActivity.this,
+                        "StepDataTABLE_11",1);
 
-                    dataSourceStepData.open();
-                    double[] day;
-                    for (int i = 1; i <=31; i++){
-                        for (int j = 0; j <24; j++){
-                            dataSourceStepData.updateStepData(
-                            0,i+ ":" +j);
-                        }
+                dataSourceStepData.open();
+                double[] day;
+                for (int i = 1; i <=31; i++){
+                    for (int j = 0; j <24; j++){
+                        dataSourceStepData.updateStepData(
+                        0,i+ ":" +j);
                     }
-                    dataSourceStepData.close();
-                } catch (Exception e) {
-
                 }
-
+                dataSourceStepData.close();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         });
 
         btCreateTestdata.setOnClickListener(new View.OnClickListener() {

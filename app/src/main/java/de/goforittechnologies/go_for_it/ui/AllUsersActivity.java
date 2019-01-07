@@ -71,8 +71,8 @@ public class AllUsersActivity extends AppCompatActivity {
 
     // Firebase
     private FirebaseFirestore firebaseFirestore;
-    FirebaseAuth mAuth;
-    String userID;
+    private FirebaseAuth mAuth;
+    private String userID;
 
     /**
      * method to declare and initialise activity functions and variables.
@@ -114,48 +114,44 @@ public class AllUsersActivity extends AppCompatActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection("Users").addSnapshotListener(
-                new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
-                                @Nullable FirebaseFirestoreException e) {
+                (queryDocumentSnapshots, e) -> {
 
-                if (e!=null){
-                    Log.d(TAG,"Error : " + e.getMessage());
-                    pbAllUsers.setVisibility(View.INVISIBLE);
-                } else {
+                    if (e!=null){
+                        Log.d(TAG,"Error : " + e.getMessage());
+                        pbAllUsers.setVisibility(View.INVISIBLE);
+                    } else {
 
-                    for (DocumentChange doc : queryDocumentSnapshots
-                            .getDocumentChanges()) {
+                        for (DocumentChange doc : queryDocumentSnapshots
+                                .getDocumentChanges()) {
 
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                            Log.d(TAG, "onEvent: Document ID : " +
-                                    doc.getDocument().getId());
-                            Log.d(TAG, "onEvent: User ID : " +
-                                    currentUser.getUid());
-
-                            if (!doc.getDocument().getId().equals(
-                                    currentUser.getUid())) {
+                            if (doc.getType() == DocumentChange.Type.ADDED) {
 
                                 Log.d(TAG, "onEvent: Document ID : " +
                                         doc.getDocument().getId());
-                                User user = doc.getDocument()
-                                        .toObject(User.class);
-                                usersList.add(user);
-                                usersAdapter.notifyDataSetChanged();
-                            } else {
+                                Log.d(TAG, "onEvent: User ID : " +
+                                        currentUser.getUid());
 
-                                sourceUserName =
-                                        (String)doc.getDocument().get("name");
-                                sourceUserImage =
-                                        (String)doc.getDocument().get("image");
+                                if (!doc.getDocument().getId().equals(
+                                        currentUser.getUid())) {
+
+                                    Log.d(TAG, "onEvent: Document ID : " +
+                                            doc.getDocument().getId());
+                                    User user = doc.getDocument()
+                                            .toObject(User.class);
+                                    usersList.add(user);
+                                    usersAdapter.notifyDataSetChanged();
+                                } else {
+
+                                    sourceUserName =
+                                            (String)doc.getDocument().get("name");
+                                    sourceUserImage =
+                                            (String)doc.getDocument().get("image");
+                                }
                             }
                         }
+                        pbAllUsers.setVisibility(View.INVISIBLE);
                     }
-                    pbAllUsers.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
+                });
 
         lvAllUsers.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {

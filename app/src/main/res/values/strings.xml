@@ -19,7 +19,6 @@
     <string name="action_logout_text">Logout</string>
     <string name="action_location_text">Location Service</string>
     <string name="action_challenge_text">Challenges</string>
-    <string name="tvToday">Today</string>
     <string name="tvSteps">steps</string>
     <string name="tvMax">MAX</string>
     <string name="tvActive">Active</string>
@@ -34,7 +33,6 @@
     <string name="btn_stop_location">Stop</string>
 
     <!-- RoutesListActivity -->
-    <string name="all_routes">Your Routes</string>
     <string name="tv_no_routes">No Routes recorded</string>
 
     <!-- Route list element -->

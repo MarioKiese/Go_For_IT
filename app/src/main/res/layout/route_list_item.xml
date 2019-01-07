@@ -34,7 +34,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvRouteSteps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -61,7 +60,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvRouteTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -88,7 +86,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvRouteDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
@@ -116,7 +113,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvRouteCalories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"

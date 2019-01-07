@@ -17,6 +17,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 import de.goforittechnologies.go_for_it.R;
 
 /**
@@ -50,8 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etRegMailText;
     private EditText etRegPasswordText;
     private EditText etRegConfirmPasswordText;
-    private Button btRegister;
-    private Button btRegisterLogin;
     private ProgressBar pbRegister;
 
     private FirebaseAuth mAuth;
@@ -75,18 +75,11 @@ public class RegisterActivity extends AppCompatActivity {
         etRegMailText = findViewById(R.id.etRegMail);
         etRegPasswordText = findViewById(R.id.etRegPassword);
         etRegConfirmPasswordText = findViewById(R.id.etRegConfirmPassword);
-        btRegister = findViewById(R.id.btnRegister);
-        btRegisterLogin = findViewById(R.id.btnRegisterLogin);
+        Button btRegister = findViewById(R.id.btnRegister);
+        Button btRegisterLogin = findViewById(R.id.btnRegisterLogin);
         pbRegister = findViewById(R.id.pbRegister);
 
-        btRegisterLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                finish();
-
-            }
-        });
+        btRegisterLogin.setOnClickListener(view -> finish());
 
         btRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 } else {
 
                                     String errorMessage =
-                                    task.getException().getMessage();
+                                    Objects.requireNonNull(task.getException()).getMessage();
                                     Toast.makeText(
                                     RegisterActivity.this,
                                     "Error : " + errorMessage,

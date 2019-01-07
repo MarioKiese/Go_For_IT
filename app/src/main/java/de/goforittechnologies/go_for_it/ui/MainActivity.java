@@ -99,11 +99,11 @@ public class MainActivity extends AppCompatActivity {
    private PieDataSet set;
 
     //shared preferences
-    SharedPreferences mPreferences;
+    private SharedPreferences mPreferences;
 
     //Sensor
-    SensorManager sensorManager;
-    Sensor sensor;
+    private SensorManager sensorManager;
+    private Sensor sensor;
 
     // Firebase
     private FirebaseAuth mAuth;
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
      *
      */
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -177,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
             dataSourceStepData = new DataSourceStepData(this,
                     "StepDataTABLE_"
-                            + calendar.get(Calendar.MONTH)+1,1);
+                            + (calendar.get(Calendar.MONTH)+1),1);
 
             dataSourceStepData.open();
             for (int i = 1; i <=31; i++){
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         dataSourceStepData =
                 new DataSourceStepData(this,dbName, 0);
 
-        List<double[]> stepList = null;
+        List<double[]> stepList;
         try {
             dataSourceStepData.open();
             stepList = dataSourceStepData.getAllStepData();
@@ -254,22 +255,17 @@ public class MainActivity extends AppCompatActivity {
         //_________________________________________________//
         rbStepGoal.setMax(6);
         rbStepGoal.invalidate();
-        btnConfirmStepGoal.setOnClickListener(new View.OnClickListener() {
+        btnConfirmStepGoal.setOnClickListener(view -> {
+            float cntStar = rbStepGoal.getRating();
 
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onClick(View view) {
-                float cntStar = rbStepGoal.getRating();
+                Editor editor = mPreferences.edit();
+                editor.putInt("stepgoal", (int) (cntStar * 2000));
+                editor.apply();
 
-                    Editor editor = mPreferences.edit();
-                    editor.putInt("stepgoal", (int) (cntStar * 2000));
-                    editor.apply();
-
-                stepGoal = mPreferences.getInt("stepgoal", 0);
-                Log.d(TAG, "onClick: stepGoal: "+ stepGoal );
-                tvStepGoalValue.setText("Schrittziel: " + stepGoal
-                        + " Schritte");
-            }
+            stepGoal = mPreferences.getInt("stepgoal", 0);
+            Log.d(TAG, "onClick: stepGoal: "+ stepGoal );
+            tvStepGoalValue.setText("Schrittziel: " + stepGoal
+                    + " Schritte");
         });
 
         //_________________________________________________//

@@ -156,8 +156,7 @@ public class DataSourceStepData {
 
         TimeStamp time =
                 new TimeStamp(dbHelperStepData.stepDataTableName, timedayhour);
-        StepData stepData= new StepData(id, steps, time);
-        return stepData;
+        return new StepData(id, steps, time);
     }
     /**
      * method to return List-object out of all table values from selected table
@@ -193,7 +192,7 @@ public class DataSourceStepData {
 
         double[] day = new double[24];
         int i = 0;
-        int currentDay = 0;
+        int currentDay;
 
         while (i < entireStepDataList.size()){
             currentDay = entireStepDataList.get(i).getTime().getDay();

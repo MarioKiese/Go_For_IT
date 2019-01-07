@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import de.goforittechnologies.go_for_it.R;
@@ -48,7 +49,6 @@ public class DashboardActivity extends AppCompatActivity
 
     private BarChart barChart;
     private List<double[]> inputList;
-    private Toolbar tbDashboard;
     private SeekBar seekBarDay;
     private TextView tvSeekbarDayCategory;
     private TextView tvSeekbarDayValue;
@@ -58,10 +58,9 @@ public class DashboardActivity extends AppCompatActivity
     private int monthForHourUse;
     private Toast noTableToast = null;
 
-    String selectedPeriod;
-    private Calendar calendar;
+    private String selectedPeriod;
     private static final String TAG = "DashboardActivity";
-    DataSourceStepData dataSourceStepData;
+    private DataSourceStepData dataSourceStepData;
 
     /**
      * method to declare and initialise activity functions and variables.
@@ -75,7 +74,7 @@ public class DashboardActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         dataSourceStepData = null;
-        calendar = Calendar.getInstance(TimeZone.getDefault());
+        Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 
         barChart=  findViewById(R.id.barChart);
 
@@ -94,9 +93,9 @@ public class DashboardActivity extends AppCompatActivity
         tvSeekbarMonthCategory = findViewById(R.id.tvSeekbarMonthCategory);
         tvSeekbarMonthValue = findViewById(R.id.tvSeekbarMonthValue);
 
-        tbDashboard= findViewById(R.id.tbDashboard);
+        Toolbar tbDashboard = findViewById(R.id.tbDashboard);
         setSupportActionBar(tbDashboard);
-        getSupportActionBar().setTitle("Dashboard");
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Dashboard");
         //get the spinner from the xml.
 
         //create a list of items for the spinner.

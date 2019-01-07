@@ -25,6 +25,7 @@ public class StepData {
     }
 
     public StepData(double steps, TimeStamp time){
+        //noinspection ConstantConditions
         this.id = id;
         this.steps = steps;
         this.time = time;

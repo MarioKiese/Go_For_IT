@@ -16,7 +16,7 @@ import android.util.Log;
  * @see SQLiteDatabase
  */
 
-public class DbHelperRouteData extends SQLiteOpenHelper {
+class DbHelperRouteData extends SQLiteOpenHelper {
 
     private static final String TAG = "DbHelperRouteData";
 

@@ -15,20 +15,20 @@ import android.util.Log;
  * @see SQLiteDatabase
  */
 
-public class DbHelperStepData extends SQLiteOpenHelper {
+class DbHelperStepData extends SQLiteOpenHelper {
 
     private static final String TAG = "DbHelperStepData";
     private static final String DB_NAME = "GoForIT.db";
     private static final int DB_VERSION = 1;
 
-    String stepDataTableName = "StepDataTableDefault";
+    String stepDataTableName;
 
     static final String COLUMN_ID = "_id";
     static final String COLUMN_STEPS = "steps";
     static final String COLUMN_TIMESTAMP = "timestamp";
     private int mode;
 
-    private String SQL_CREATE = "";
+    private String SQL_CREATE;
     /**
      * constructor to create database and "create table" query (+ execution).
      * @param context context of usage

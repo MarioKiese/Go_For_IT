@@ -34,7 +34,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvActive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
@@ -51,7 +50,6 @@
                 android:textColor="@android:color/white" />
 
             <TextView
-                android:id="@+id/tvMinutes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
@@ -91,7 +89,6 @@
                 android:textColor="@android:color/white" />
 
             <TextView
-                android:id="@+id/tvMax"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
@@ -118,7 +115,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvBurned"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical|center"
@@ -153,7 +149,6 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvTravelled"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
@@ -183,7 +178,6 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvStepGoal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"

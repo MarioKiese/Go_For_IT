@@ -104,7 +104,7 @@ public class LocationRouteService extends Service implements LocationListener,
                     ActivityCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
-
+                Log.d(TAG, "onCreate: Permissions denied!");
             }
 
             HandlerThread handlerThread = new
@@ -210,6 +210,7 @@ public class LocationRouteService extends Service implements LocationListener,
     /**
      * method to create notification "Background location service in foreground"
      */
+    @SuppressWarnings("deprecation")
     private void createNotification() {
 
         Intent notificationIntent = new Intent(this,
@@ -218,7 +219,7 @@ public class LocationRouteService extends Service implements LocationListener,
                 PendingIntent.getActivity(this, 0,
                         notificationIntent, 0);
 
-        Notification notification = null;
+        Notification notification;
 
         if (android.os.Build.VERSION.SDK_INT >=
                 android.os.Build.VERSION_CODES.O) {

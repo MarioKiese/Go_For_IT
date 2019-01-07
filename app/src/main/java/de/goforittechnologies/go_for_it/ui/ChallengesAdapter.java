@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import de.goforittechnologies.go_for_it.R;
@@ -30,10 +29,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @see CircleImageView
  *
  */
-public class ChallengesAdapter extends ArrayAdapter<Challenge> {
+class ChallengesAdapter extends ArrayAdapter<Challenge> {
 
     private Context mContext;
-    private List<Challenge> challengesList = new ArrayList<>();
+    private List<Challenge> challengesList;
 
     /**
      *  constructor to connect context and list with member variables

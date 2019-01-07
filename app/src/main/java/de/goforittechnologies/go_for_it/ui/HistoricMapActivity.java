@@ -64,13 +64,7 @@ public class HistoricMapActivity extends AppCompatActivity {
 
         if (data != null) {
 
-            List<Location> route = data;
-
-            if (route != null) {
-
-                showRoute(route);
-
-            }
+            showRoute(data);
 
         }
 

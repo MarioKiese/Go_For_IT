@@ -27,6 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.Challenge;
@@ -52,10 +53,9 @@ SensorEventListener {
     private int oldSteps;
     private static final int STEPS_UPLOAD_RATE = 10;
     private SensorManager sensorManager;
-    private Sensor stepSensor;
 
     // Firebase
-    FirebaseFirestore firebaseFirestore;
+    private FirebaseFirestore firebaseFirestore;
     private String userID;
 
     // Binder
@@ -94,8 +94,7 @@ SensorEventListener {
         oldSteps = 0;
         sensorManager =
         (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        stepSensor =
-        sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
+        Sensor stepSensor = Objects.requireNonNull(sensorManager).getDefaultSensor(Sensor.TYPE_STEP_DETECTOR);
         sensorManager.registerListener(ChallengeStepCounterService.this,
                 stepSensor, SensorManager.SENSOR_DELAY_UI);
     }
@@ -168,7 +167,7 @@ SensorEventListener {
 
                     Log.d(TAG, "onComplete: Getting challenge IDs");
                     List<DocumentSnapshot> list =
-                    task.getResult().getDocuments();
+                    Objects.requireNonNull(task.getResult()).getDocuments();
                     for (DocumentSnapshot doc : list) {
 
                         String challengeID =
@@ -206,11 +205,11 @@ SensorEventListener {
 
                     Log.d(TAG, "onComplete: Getting challenge successful");
 
-                    if (task.getResult().exists()) {
+                    if (Objects.requireNonNull(task.getResult()).exists()) {
 
                         Challenge challenge =
                         task.getResult().toObject(Challenge.class);
-                        String status = challenge.getStatus();
+                        String status = Objects.requireNonNull(challenge).getStatus();
                         if (status.equals("running")) {
 
                             User user1 = challenge.getUser1();
@@ -289,24 +288,20 @@ SensorEventListener {
                                 .document(challengeID)
                                 .update("stepsUser1", newSteps)
                                 .addOnCompleteListener(
-                                new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(
-                                    @NonNull Task<Void> task) {
+                                        task1 -> {
 
-                                        if (task.isSuccessful()) {
+                                            if (task1.isSuccessful()) {
 
-                                            Log.d(TAG,
-                                            "onComplete: " +
-                                            "Challenge steps updated");
-                                        } else {
+                                                Log.d(TAG,
+                                                "onComplete: " +
+                                                "Challenge steps updated");
+                                            } else {
 
-                                            Log.d(TAG,
-                                            "onComplete: " +
-                                            "Error updating challenge steps");
-                                        }
-                                    }
-                                });
+                                                Log.d(TAG,
+                                                "onComplete: " +
+                                                "Error updating challenge steps");
+                                            }
+                                        });
                             } else {
 
                                 int currentSteps = challenge.getStepsUser2();
@@ -414,7 +409,7 @@ SensorEventListener {
                 PendingIntent.getActivity(this, 0,
                         notificationIntent, 0);
 
-        Notification notification = null;
+        Notification notification;
 
         if (android.os.Build.VERSION.SDK_INT >=
                 android.os.Build.VERSION_CODES.O) {
@@ -440,6 +435,7 @@ SensorEventListener {
                     .build();
         } else {
 
+            //noinspection deprecation
             notification =
                     new NotificationCompat.Builder(ChallengeStepCounterService.this)
                             .setContentTitle("Go For IT")
@@ -462,7 +458,7 @@ SensorEventListener {
      *
      */
 
-    public class LocationBinder extends Binder {
+    class LocationBinder extends Binder {
 
         public ChallengeStepCounterService getService() {
 

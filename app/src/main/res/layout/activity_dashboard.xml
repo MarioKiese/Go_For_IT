@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:titleTextColor="@android:color/white"></android.support.v7.widget.Toolbar>
+        app:titleTextColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,10 +27,9 @@
 
         <Spinner
             android:id="@+id/spinnerPeriod"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/colorAccentDark"
-            android:backgroundTint="@color/colorAccentDark" />
+            android:backgroundTint="@color/common_google_signin_btn_text_dark_focused" />
 
     </LinearLayout>
 
@@ -99,7 +98,6 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvInfoBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
