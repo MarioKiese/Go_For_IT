@@ -96,6 +96,7 @@ public class MapActivity extends AppCompatActivity {
     private int mSteps;
     private double mDistance;
     private double mCalories;
+    private double mWeight;
 
     LocationManager locationManager;
 
@@ -222,6 +223,11 @@ public class MapActivity extends AppCompatActivity {
                 .getSharedPreferences("MapsPref", MODE_PRIVATE);
         editor = pref.edit();
 
+        // Get weight
+        String weight = pref.getString("weight", "70");
+        Log.d(TAG, "onCreate: Weight : " + weight);
+        mWeight = Double.valueOf(weight);
+
         // Configure widgets
         if (pref.getBoolean("service_started", false)) {
 
@@ -272,89 +278,86 @@ public class MapActivity extends AppCompatActivity {
             btnStopLocation.setEnabled(true);
         });
 
-        btnStopLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnStopLocation.setOnClickListener(view -> {
 
-                unbindService();
-                stopService(new Intent(MapActivity.this,
-                        LocationRouteService.class));
+            unbindService();
+            stopService(new Intent(MapActivity.this,
+                    LocationRouteService.class));
 
-                chronometer.stop();
+            chronometer.stop();
 
-                AlertDialog.Builder dialogBuilder =
-                        new AlertDialog.Builder(MapActivity.this);
-                dialogBuilder.setTitle("Save route?");
+            AlertDialog.Builder dialogBuilder =
+                    new AlertDialog.Builder(MapActivity.this);
+            dialogBuilder.setTitle("Save route?");
 
-                // Set up the input
-                final EditText input = new EditText(MapActivity.this);
+            // Set up the input
+            final EditText input = new EditText(MapActivity.this);
 
-                // Specify the type of input expected
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                dialogBuilder.setView(input);
+            // Specify the type of input expected
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            dialogBuilder.setView(input);
 
-                // Set up the buttons
-                dialogBuilder.setPositiveButton("OK", null);
+            // Set up the buttons
+            dialogBuilder.setPositiveButton("OK", null);
 
-                dialogBuilder.setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+            dialogBuilder.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
 
-                AlertDialog alertDialog = dialogBuilder.create();
+            AlertDialog alertDialog = dialogBuilder.create();
 
-                // Implementation of a View.OnClickListener to control
-                // if dialog can be dismissed
-                // (not given with DialogInterface.OnClickListener)
-                alertDialog.setOnShowListener(new DialogInterface
-                        .OnShowListener() {
-                    @Override
-                    public void onShow(DialogInterface dialogInterface) {
+            // Implementation of a View.OnClickListener to control
+            // if dialog can be dismissed
+            // (not given with DialogInterface.OnClickListener)
+            alertDialog.setOnShowListener(new DialogInterface
+                    .OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
 
-                        Button positiveButton = alertDialog
-                                .getButton(DialogInterface.BUTTON_POSITIVE);
-                        positiveButton.setOnClickListener(
-                                new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String routeName = input.getText().toString();
+                    Button positiveButton = alertDialog
+                            .getButton(DialogInterface.BUTTON_POSITIVE);
+                    positiveButton.setOnClickListener(
+                            new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            String routeName = input.getText().toString();
 
-                                if (validateRouteName(routeName)) {
-                                    routeName = formatRouteName(routeName);
-                                    if (checkIfRouteNameExists(routeName)) {
-                                        Toast.makeText(MapActivity.this,
-                                        "Route name already exists! " +
-                                        "Please enter " +
-                                        "another name!",
-                                        Toast.LENGTH_LONG).show();
-                                    } else {
-                                        writeInDatabases(routeName);
-                                        alertDialog.dismiss();
-                                    }
-
-                                } else {
+                            if (validateRouteName(routeName)) {
+                                routeName = formatRouteName(routeName);
+                                if (checkIfRouteNameExists(routeName)) {
                                     Toast.makeText(MapActivity.this,
-                                            "Please enter a valid name",
-                                            Toast.LENGTH_LONG).show();
+                                    "Route name already exists! " +
+                                    "Please enter " +
+                                    "another name!",
+                                    Toast.LENGTH_LONG).show();
+                                } else {
+                                    writeInDatabases(routeName);
+                                    alertDialog.dismiss();
                                 }
+
+                            } else {
+                                Toast.makeText(MapActivity.this,
+                                        "Please enter a valid name",
+                                        Toast.LENGTH_LONG).show();
                             }
-                        });
+                        }
+                    });
 
-                    }
-                });
+                }
+            });
 
-                alertDialog.show();
+            alertDialog.show();
 
-                btnStartLocation.setEnabled(true);
-                btnStopLocation.setEnabled(false);
+            btnStartLocation.setEnabled(true);
+            btnStopLocation.setEnabled(false);
 
-                editor.putBoolean("service_started", false);
-                editor.apply();
+            editor.putBoolean("service_started", false);
+            editor.apply();
 
-            }
         });
     }
 
@@ -672,8 +675,7 @@ public class MapActivity extends AppCompatActivity {
     private double getCalories(double distance) {
 
         double calories;
-        double weight = 70;
-        calories = weight * 0.75 * distance / 1000.0;
+        calories = mWeight * 0.75 * distance / 1000.0;
         return calories;
     }
 

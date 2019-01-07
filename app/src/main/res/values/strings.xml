@@ -47,6 +47,8 @@
     <string name="setup_toolbar_text">Account Settings</string>
     <string name="et_setup_name_hint">Your Name ...</string>
     <string name="btn_setup">Save Account Settings</string>
+    <string name="et_setup_weight_hint">Your Weight ...</string>
+    <string name="et_setup_height_hint">Your Height ...</string>
 
     <!-- ChallengesOverviewActivity -->
     <string name="tv_requests">Requests</string>
@@ -92,7 +94,5 @@
     <string name="all_challenges_toolbar_text">All Challenges</string>
     <string name="tv_no_challenges">No Challenges finished</string>
     <string name="tvWinner">Winner</string>
-    <string name="et_setup_age_hint">Your Age ...</string>
-    <string name="et_setup_height_hint">Your Height ...</string>
 
 </resources>
