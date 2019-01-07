@@ -73,6 +73,8 @@ public class SetupActivity extends AppCompatActivity {
 
     // Widgets
     private EditText etSetupName;
+    private EditText etSetupWeight;
+    private EditText etSetupHeight;
     private Button btSetup;
     private Button btCreateTestdata;
     private Button btDeleteTestdata;
@@ -127,6 +129,8 @@ public class SetupActivity extends AppCompatActivity {
         rand = new Random();
 
         etSetupName = findViewById(R.id.etSetupName);
+        etSetupWeight = findViewById(R.id.etSetupWeight);
+        etSetupHeight = findViewById(R.id.etSetupHeight);
         ivSetupImage = findViewById(R.id.ivSetupImage);
         btSetup = findViewById(R.id.btnSetup);
         btCreateTestdata = findViewById(R.id.btnCreateTestdata);
@@ -140,6 +144,9 @@ public class SetupActivity extends AppCompatActivity {
         pref = getApplicationContext()
                 .getSharedPreferences("MapsPref", MODE_PRIVATE);
         editor = pref.edit();
+
+        etSetupWeight.setText(pref.getString("weight", ""));
+        etSetupHeight.setText(pref.getString("height", ""));
 
         firebaseFirestore.collection("Users").document(userID)
         .get().addOnCompleteListener(
@@ -255,11 +262,18 @@ public class SetupActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 String userName = etSetupName.getText().toString();
+                String userAge = etSetupWeight.getText().toString();
+                String userHeight = etSetupHeight.getText().toString();
                 pbSetup.setVisibility(View.VISIBLE);
 
                 if (isChanged) {
 
-                    if (!TextUtils.isEmpty(userName) && mainImageUri != null) {
+                    if (!TextUtils.isEmpty(userName) && mainImageUri != null
+                            && !TextUtils.isEmpty(userAge) && !TextUtils
+                            .isEmpty(userHeight)) {
+
+                        saveAgeAndHeightInSharedPreferences(userAge,
+                                userHeight);
 
                         userID = firebaseAuth.getCurrentUser().getUid();
 
@@ -300,10 +314,30 @@ public class SetupActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                    } else {
+
+                        Toast.makeText(SetupActivity.this,
+                                "Please fill all " +
+                                "fields", Toast.LENGTH_SHORT).show();
+                        pbSetup.setVisibility(View.INVISIBLE);
                     }
                 } else {
 
-                    storeDataInFirestore(null, userName);
+                    if (!TextUtils.isEmpty(userName) && mainImageUri != null
+                            && !TextUtils.isEmpty(userAge) && !TextUtils
+                            .isEmpty(userHeight)) {
+
+                        saveAgeAndHeightInSharedPreferences(userAge,
+                                userHeight);
+                        storeDataInFirestore(null, userName);
+                        pbSetup.setVisibility(View.INVISIBLE);
+                    } else {
+
+                        Toast.makeText(SetupActivity.this,
+                                "Please fill all " +
+                                        "fields", Toast.LENGTH_SHORT).show();
+                        pbSetup.setVisibility(View.INVISIBLE);
+                    }
                 }
 
             }
@@ -543,11 +577,12 @@ public class SetupActivity extends AppCompatActivity {
         return day;
     }
 
-    private void saveAgeAndHeightInSharedPreferences(int age, float height) {
+    private void saveAgeAndHeightInSharedPreferences(String age, String
+            height) {
 
-        editor.putInt("age", age);
+        editor.putString("weight", age);
         editor.apply();
-        editor.putFloat("height", height);
+        editor.putString("height", height);
         editor.apply();
     }
 }
