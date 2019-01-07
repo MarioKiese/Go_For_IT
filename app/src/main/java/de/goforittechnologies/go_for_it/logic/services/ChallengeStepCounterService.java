@@ -64,9 +64,7 @@ SensorEventListener {
      */
     @Override
     public IBinder onBind(Intent intent) {
-
-        Log.d(TAG, "onBind: connected");
-        return mBinder;
+        throw new UnsupportedOperationException("Not yet implemented");
     }
     /**
      * method to declare and initialise service functions and variables

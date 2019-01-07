@@ -148,7 +148,7 @@ public class MapActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 23) {
 
             if (!hasPermissions(this, PERMISSIONS)) {
-                // TODO Gibt es ActivityCompat auch in Support library v7
+
                 ActivityCompat.requestPermissions(
                         this, PERMISSIONS, PERMISSION_ALL);
             }
@@ -582,7 +582,6 @@ public class MapActivity extends AppCompatActivity {
             mapView.getController().setCenter(currentGeoPoint);
         } else {
 
-            //TODO: ggf. currentLocation mit NETWORK_PROVIDER ermitteln
             Toast.makeText(MapActivity.this,
             "Position is null", Toast.LENGTH_LONG).show();
         }
