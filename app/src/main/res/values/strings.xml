@@ -92,5 +92,7 @@
     <string name="all_challenges_toolbar_text">All Challenges</string>
     <string name="tv_no_challenges">No Challenges finished</string>
     <string name="tvWinner">Winner</string>
+    <string name="et_setup_age_hint">Your Age ...</string>
+    <string name="et_setup_height_hint">Your Height ...</string>
 
 </resources>

@@ -1,7 +1,6 @@
 package de.goforittechnologies.go_for_it.ui;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -26,7 +25,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.LogDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -38,7 +36,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.Random;
 
 import de.goforittechnologies.go_for_it.R;
@@ -81,13 +78,15 @@ public class SetupActivity extends AppCompatActivity {
     private Button btDeleteTestdata;
     private ProgressBar pbSetup;
     private CircleImageView ivSetupImage;
-    private Boolean firstTime = null;
-    SharedPreferences mPreferences;
 
     private Uri mainImageUri = null;
     private String userID;
     private boolean isChanged = false;
     private static final String TAG = "SetupActivity";
+
+    // Shared preferences
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
 
     // Firebase
     private StorageReference storageReference;
@@ -115,7 +114,6 @@ public class SetupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
-        DataSourceStepData dataSourceStepData;
 
         Toolbar tbSetup = findViewById(R.id.tbSetup);
         setSupportActionBar(tbSetup);
@@ -125,8 +123,8 @@ public class SetupActivity extends AppCompatActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        rand = new Random();
 
+        rand = new Random();
 
         etSetupName = findViewById(R.id.etSetupName);
         ivSetupImage = findViewById(R.id.ivSetupImage);
@@ -137,6 +135,11 @@ public class SetupActivity extends AppCompatActivity {
 
         pbSetup.setVisibility(View.VISIBLE);
         btSetup.setEnabled(false);
+
+        // Set shared preferences
+        pref = getApplicationContext()
+                .getSharedPreferences("MapsPref", MODE_PRIVATE);
+        editor = pref.edit();
 
         firebaseFirestore.collection("Users").document(userID)
         .get().addOnCompleteListener(
@@ -544,4 +547,11 @@ public class SetupActivity extends AppCompatActivity {
         return day;
     }
 
+    private void saveAgeAndHeightInSharedPreferences(int age, float height) {
+
+        editor.putInt("age", age);
+        editor.apply();
+        editor.putFloat("height", height);
+        editor.apply();
+    }
 }
