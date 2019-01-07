@@ -204,10 +204,6 @@ public class SetupActivity extends AppCompatActivity {
                     dataSourceStepData.close();
                 } catch (Exception e) {
 
-                    dataSourceStepData = new DataSourceStepData(
-                            SetupActivity.this,
-                            "StepDataTABLE_11",0);
-
                 }
 
             }
