@@ -322,10 +322,7 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                             Log.d(TAG,
                                 "onEvent: Request ID found: " +
                                 requestID);
-                            Toast.makeText(
-                            ChallengesOverviewActivity.this,
-                                "Request ID found: " + requestID,
-                                    Toast.LENGTH_SHORT).show();
+
 
                             if (requestID != null) {
 
@@ -417,10 +414,6 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                             } else {
 
                                 Log.d(TAG, "onEvent: Request ID is null");
-                                Toast.makeText(
-                                ChallengesOverviewActivity.this,
-                                "Request ID is null", Toast.LENGTH_SHORT)
-                                .show();
                             }
                         }
                     }
@@ -451,15 +444,13 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                     for (DocumentChange doc : queryDocumentSnapshots
                     .getDocumentChanges()) {
 
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
+                        if (doc.getType() == DocumentChange.Type.ADDED || doc.getType() ==
+                                DocumentChange.Type.MODIFIED) {
 
                             String challengeID = (String)doc.getDocument()
                             .get("challengeId");
                             Log.d(TAG, "onEvent: Challenge ID found: " +
                             challengeID);
-                            Toast.makeText(ChallengesOverviewActivity
-                            .this, "Challenge ID found: " + challengeID,
-                            Toast.LENGTH_SHORT).show();
 
                             if (challengeID != null) {
 
@@ -551,10 +542,6 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                                 Log.d(TAG,
                                 "onEvent: " +
                                 "Challenge ID is null");
-                                Toast.makeText(
-                                ChallengesOverviewActivity.this,
-                                "Challenge ID is null",
-                                Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -664,14 +651,15 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
 
-                    Log.d(TAG, "onComplete: Request is stored in Firestore");
+                    Log.d(TAG,
+                            "onComplete: Request is stored in Firestore");
                     Toast.makeText(ChallengesOverviewActivity.this,
-                    "Challenge is stored in Firestore",
+                    "Challenge is accepted",
                     Toast.LENGTH_SHORT).show();
                 } else {
 
                     Toast.makeText(ChallengesOverviewActivity.this,
-                    "Write Challenge in Firestore failed",
+                    "Challenge acception failed",
                     Toast.LENGTH_SHORT).show();
                 }
             }
@@ -705,16 +693,10 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
                     Log.d(TAG,
                     "onComplete: Challenge ist " +
                     "stored for source user / user 1");
-                    Toast.makeText(ChallengesOverviewActivity.this,
-                    "Challenge ist stored for source user / user 1",
-                    Toast.LENGTH_SHORT).show();
                 } else {
 
                     Log.d(TAG, "onComplete: Write " +
                     "challenge ID to user 1 failed");
-                    Toast.makeText(ChallengesOverviewActivity.this,
-                    "Write challenge ID to user 1 failed",
-                    Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -730,16 +712,10 @@ public class ChallengesOverviewActivity extends AppCompatActivity {
 
                     Log.d(TAG, "onComplete: Challenge is " +
                     "stored for target user / user 2");
-                    Toast.makeText(ChallengesOverviewActivity.this,
-                    "Challenge ist stored for target user / user 2",
-                    Toast.LENGTH_SHORT).show();
                 } else {
 
                     Log.d(TAG,
                     "onComplete: Write challenge ID to user 2 failed");
-                    Toast.makeText(ChallengesOverviewActivity.this,
-                    "Write challenge ID to user 2 failed",
-                    Toast.LENGTH_SHORT).show();
                 }
             }
         });

@@ -209,7 +209,6 @@ public class StepCounterService extends Service implements SensorEventListener {
                     .setContentTitle("Go For IT")
                     .setContentText("Your steps are counted!")
                     .setContentIntent(pendingIntent)
-                    .setTicker("2")
                     .build();
         } else {
 
@@ -217,7 +216,7 @@ public class StepCounterService extends Service implements SensorEventListener {
                     new NotificationCompat.Builder(StepCounterService.this)
                             .setContentTitle("Go For IT")
                             .setContentText("Your steps are counted!")
-                            .setSmallIcon(R.drawable.folie1)
+                            .setSmallIcon(R.drawable.logo)
                             .setContentIntent(pendingIntent)
                             .setStyle(new NotificationCompat.BigTextStyle())
                             .build();

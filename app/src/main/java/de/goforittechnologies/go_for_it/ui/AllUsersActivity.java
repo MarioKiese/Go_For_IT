@@ -208,10 +208,6 @@ public class AllUsersActivity extends AppCompatActivity {
                                         valueOf(input.getText().toString());
 
                                 if (stepTarget > 0) {
-                                    Toast.makeText(
-                                            AllUsersActivity.this,
-                                            "Valid step target!",
-                                            Toast.LENGTH_SHORT).show();
 
                                     User targetUser =
                                     ((User)adapterView
@@ -236,10 +232,6 @@ public class AllUsersActivity extends AppCompatActivity {
                                     
                                     manageRequest(challengeRequest);
 
-                                    Toast.makeText(
-                                            AllUsersActivity.this,
-                                            "UserID : " + targetUser,
-                                            Toast.LENGTH_SHORT).show();
                                     Log.d(TAG, "onClick: UserID " +
                                             targetUser);
 
@@ -305,12 +297,12 @@ public class AllUsersActivity extends AppCompatActivity {
                     Log.d(TAG,
                     "onComplete: Request is stored in Firestore");
                     Toast.makeText(AllUsersActivity.this,
-                    "Request is stored in Firestore",
+                    "Request is sent",
                     Toast.LENGTH_SHORT).show();
                 } else {
 
                     Toast.makeText(AllUsersActivity.this,
-                    "Write Request in Firestore failed",
+                    "Send request failed",
                     Toast.LENGTH_SHORT).show();
                 }
             }
@@ -345,9 +337,6 @@ public class AllUsersActivity extends AppCompatActivity {
 
                     Log.d(TAG,
                         "onComplete: Request ist stored for source user");
-                    Toast.makeText(AllUsersActivity.this,
-                            "Request ist stored for source user",
-                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -363,9 +352,6 @@ public class AllUsersActivity extends AppCompatActivity {
 
                     Log.d(TAG,
                     "onComplete: Request ist stored for target user");
-                    Toast.makeText(AllUsersActivity.this,
-                            "Request ist stored for target user",
-                            Toast.LENGTH_SHORT).show();
                 }
             }
         });

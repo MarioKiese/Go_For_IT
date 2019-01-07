@@ -436,7 +436,6 @@ SensorEventListener {
                     .setContentTitle("Go For IT")
                     .setContentText("Your challenges are managed!")
                     .setContentIntent(pendingIntent)
-                    .setTicker("2")
                     .build();
         } else {
 
@@ -444,7 +443,7 @@ SensorEventListener {
                     new NotificationCompat.Builder(ChallengeStepCounterService.this)
                             .setContentTitle("Go For IT")
                             .setContentText("Your challenges are managed!")
-                            .setSmallIcon(R.drawable.folie1)
+                            .setSmallIcon(R.drawable.logo)
                             .setContentIntent(pendingIntent)
                             .setStyle(new NotificationCompat.BigTextStyle())
                             .build();
