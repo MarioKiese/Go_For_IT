@@ -35,8 +35,6 @@ import android.widget.Toast;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Polyline;
-import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
-import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +124,6 @@ public class MapActivity extends AppCompatActivity {
 
         Log.i(TAG, "Thread id: " + Thread.currentThread().getId());
 
-
         // Check permission for location and storage
         if (Build.VERSION.SDK_INT >= 23) {
 
@@ -135,7 +132,6 @@ public class MapActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(
                         this, PERMISSIONS, PERMISSION_ALL);
             }
-
         }
 
         // Initialize database
@@ -172,10 +168,9 @@ public class MapActivity extends AppCompatActivity {
 
                 if (data != null) {
                     mRoute = data;
-                    if (mRoute != null) {
-                        showRoute(mRoute);
-                        showDistance(mRoute);
-                    }
+                    showRoute(mRoute);
+                    showDistance(mRoute);
+                    showCalories(mDistance);
                 }
             }
         };
@@ -187,7 +182,13 @@ public class MapActivity extends AppCompatActivity {
                 Log.i(TAG, "onReceive: Steps receiver got data");
 
                 mSteps = intent.getIntExtra("Steps", 0);
-                tvStepsValue.setText(String.valueOf(mSteps));
+                if (mSteps == 0) {
+
+                    tvStepsValue.setText("-");
+                } else {
+
+                    tvStepsValue.setText(String.valueOf(mSteps));
+                }
             }
         };
 
@@ -338,7 +339,6 @@ public class MapActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
     @Override
@@ -416,7 +416,6 @@ public class MapActivity extends AppCompatActivity {
 
             mServiceConnection = new ServiceConnection() {
 
-
                 @Override
                 public void onServiceConnected(ComponentName componentName,
                                                IBinder iBinder) {
@@ -432,12 +431,22 @@ public class MapActivity extends AppCompatActivity {
                                 .getmBaseTime());
                         chronometer.start();
 
+                        mSteps = mLocationRouteService
+                                .getmSteps();
+                        if (mSteps == 0) {
+
+                            tvStepsValue.setText("-");
+                        } else {
+
+                            tvStepsValue.setText(String
+                                    .valueOf(mLocationRouteService
+                                            .getmSteps()));
+                        }
                     }
 
                     mIsServiceBound = true;
 
                     Log.i(TAG, "bindService: connected");
-
                 }
 
                 @Override
@@ -446,16 +455,12 @@ public class MapActivity extends AppCompatActivity {
                     mIsServiceBound = false;
 
                     Log.i(TAG, "unbindService: disconnected");
-
                 }
-
             };
-
         }
 
         bindService(locationRouteIntent, mServiceConnection,
                 Context.BIND_AUTO_CREATE);
-
     }
 
     private void unbindService() {
@@ -464,9 +469,7 @@ public class MapActivity extends AppCompatActivity {
 
             unbindService(mServiceConnection);
             mIsServiceBound = false;
-
         }
-
     }
 
     public boolean hasPermissions(Context context, String[] permissions) {
@@ -479,15 +482,11 @@ public class MapActivity extends AppCompatActivity {
                         PackageManager.PERMISSION_GRANTED) {
 
                     return false;
-
                 }
-
             }
-
         }
 
         return true;
-
     }
 
     private void initializeMap() {
@@ -523,7 +522,6 @@ public class MapActivity extends AppCompatActivity {
             Toast.makeText(MapActivity.this,
             "Position is null", Toast.LENGTH_LONG).show();
         }
-
     }
 
     private void showRoute(List<Location> route) {
@@ -538,7 +536,7 @@ public class MapActivity extends AppCompatActivity {
         if (!route.isEmpty()) {
 
             mapView.getController().setCenter(
-            new GeoPoint(route.get(route.size()-1)));
+                    new GeoPoint(route.get(route.size()-1)));
             mapView.getOverlayManager().clear();
 
             if (route.size() > 1) {
@@ -582,16 +580,27 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
-    private double getCalories() {
+    private double getCalories(double distance) {
 
-        double calories = 0.0;
-        mCalories = calories;
+        double calories;
+        double weight = 70;
+        calories = weight * 0.75 * distance / 1000.0;
         return calories;
     }
 
-    private void showCalories() {
+    private void showCalories(double distance) {
 
+        mCalories = getCalories(distance);
+        mCalories = Math.round(mCalories*100);
+        mCalories = mCalories/100;
+        String value = String.valueOf(mCalories);
+        if (mCalories == 0.0) {
 
+            tvCaloriesValue.setText("-");
+        } else {
+
+            tvCaloriesValue.setText(value);
+        }
     }
 
     private void initializeDatabase() {
@@ -626,7 +635,7 @@ public class MapActivity extends AppCompatActivity {
 
             // Route data
             dataSourceRouteData.createRouteData(routeName, mSteps,
-            chronometer.getText().toString(), 300.0, mDistance);
+            chronometer.getText().toString(), mCalories, mDistance);
             dataSourceRouteData.getAllRouteData();
         }
     }

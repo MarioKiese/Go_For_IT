@@ -25,10 +25,13 @@ import android.os.Looper;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.ArrayList;
+
+import de.goforittechnologies.go_for_it.R;
 
 /**
  * @author  Mario Kiese and Tom Hammerbacher.
@@ -230,12 +233,23 @@ public class LocationRouteService extends Service implements LocationListener,
             assert manager != null;
             manager.createNotificationChannel(chan);
 
+
             notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
                     .setContentTitle("Go For IT")
                     .setContentText("Your route is being recorded!")
                     .setContentIntent(pendingIntent)
                     .setTicker("2")
                     .build();
+        } else {
+
+            notification =
+                    new NotificationCompat.Builder(LocationRouteService.this)
+                            .setContentTitle("Go For IT")
+                            .setContentText("Your route is being recorded!")
+                            .setSmallIcon(R.drawable.folie1)
+                            .setContentIntent(pendingIntent)
+                            .setStyle(new NotificationCompat.BigTextStyle())
+                            .build();
         }
 
         startForeground(12345678, notification);
@@ -281,4 +295,7 @@ public class LocationRouteService extends Service implements LocationListener,
 
     }
 
+    public int getmSteps() {
+        return mSteps;
+    }
 }

@@ -15,9 +15,9 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/folie1"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/folie1"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
@@ -60,6 +60,12 @@
         <activity
             android:name=".ui.DashboardActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.AllChallengesActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ChallengeDetailActivity"
+            android:screenOrientation="portrait"/>
 
         <service
             android:name=".logic.services.ChallengeStepCounterService"
@@ -77,9 +83,6 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
-        <activity android:name=".ui.AllChallengesActivity" />
-        <activity android:name=".ui.ChallengeDetailActivity"></activity>
     </application>
 
 </manifest>
