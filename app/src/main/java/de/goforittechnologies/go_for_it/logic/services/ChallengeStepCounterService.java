@@ -1,8 +1,13 @@
 package de.goforittechnologies.go_for_it.logic.services;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,6 +15,7 @@ import android.hardware.SensorManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.Challenge;
 import de.goforittechnologies.go_for_it.storage.User;
 
@@ -75,6 +82,9 @@ SensorEventListener {
         super.onCreate();
 
         Log.d(TAG, "onCreate: Start");
+
+        // Create notification for foreground service
+        createNotification();
 
         // Configure Firebase
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -393,6 +403,57 @@ SensorEventListener {
     }
 
     /**
+     * method to create notification "Challenge step counter service in
+     * foreground"
+     */
+    private void createNotification() {
+
+        Intent notificationIntent = new Intent(this,
+                LocationRouteService.class);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(this, 0,
+                        notificationIntent, 0);
+
+        Notification notification = null;
+
+        if (android.os.Build.VERSION.SDK_INT >=
+                android.os.Build.VERSION_CODES.O) {
+
+            String NOTIFICATION_CHANNEL_ID = "de.goforittechnologies.go_for_it";
+            String channelName = "Challenge Step Counter";
+            NotificationChannel chan = new NotificationChannel(
+                    NOTIFICATION_CHANNEL_ID, channelName,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            chan.setLightColor(Color.BLUE);
+            chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            NotificationManager manager = (NotificationManager)
+                    getSystemService(Context.NOTIFICATION_SERVICE);
+            assert manager != null;
+            manager.createNotificationChannel(chan);
+
+
+            notification = new Notification.Builder(this, NOTIFICATION_CHANNEL_ID)
+                    .setContentTitle("Go For IT")
+                    .setContentText("Your challenges are managed!")
+                    .setContentIntent(pendingIntent)
+                    .setTicker("2")
+                    .build();
+        } else {
+
+            notification =
+                    new NotificationCompat.Builder(ChallengeStepCounterService.this)
+                            .setContentTitle("Go For IT")
+                            .setContentText("Your challenges are managed!")
+                            .setSmallIcon(R.drawable.folie1)
+                            .setContentIntent(pendingIntent)
+                            .setStyle(new NotificationCompat.BigTextStyle())
+                            .build();
+        }
+
+        startForeground(12345679, notification);
+    }
+
+    /**
      * @author Mario Kiese.
      * @version 0.9.
      * This class is needed to return the ChallengeStepCounterService
@@ -400,6 +461,7 @@ SensorEventListener {
      * @see ChallengeStepCounterService
      *
      */
+
     public class LocationBinder extends Binder {
 
         public ChallengeStepCounterService getService() {

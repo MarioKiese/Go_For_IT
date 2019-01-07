@@ -89,5 +89,8 @@
     <string name="tvRival">Rival</string>
     <string name="tvCurrentSteps">Current Steps</string>
     <string name="tvStepTarget">Step Target</string>
+    <string name="all_challenges_toolbar_text">All Challenges</string>
+    <string name="tv_no_challenges">No Challenges finished</string>
+    <string name="tvWinner">Winner</string>
 
 </resources>

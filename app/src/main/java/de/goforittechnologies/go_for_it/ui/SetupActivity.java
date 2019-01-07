@@ -114,7 +114,6 @@ public class SetupActivity extends AppCompatActivity {
 
         Toolbar tbSetup = findViewById(R.id.tbSetup);
         setSupportActionBar(tbSetup);
-        getSupportActionBar().setTitle("Account Setup");
 
         firebaseAuth = FirebaseAuth.getInstance();
         userID = firebaseAuth.getCurrentUser().getUid();

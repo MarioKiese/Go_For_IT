@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
    private PieDataSet set;
 
     //shared preferences
-   SharedPreferences mPreferences;
+    SharedPreferences mPreferences;
 
     //Sensor
     SensorManager sensorManager;
