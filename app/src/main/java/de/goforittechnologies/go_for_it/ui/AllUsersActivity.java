@@ -86,6 +86,7 @@ public class AllUsersActivity extends AppCompatActivity {
      * @see FirebaseUser
      * @see AdapterView
      */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

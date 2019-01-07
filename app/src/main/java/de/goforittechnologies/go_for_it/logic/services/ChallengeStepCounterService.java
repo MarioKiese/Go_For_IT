@@ -29,7 +29,8 @@ import de.goforittechnologies.go_for_it.storage.User;
  * @author  Mario Kiese
  * @version 0.8.
  *
- *
+ * This service is used to log the steps of the challenge in the firestore
+ * database.
  *
  */
 
@@ -56,13 +57,20 @@ SensorEventListener {
     public ChallengeStepCounterService() {
     }
 
+    /**
+     *
+     * @param intent Intent for connecting service.
+     * @return IBinder to connect service to activity.
+     */
     @Override
     public IBinder onBind(Intent intent) {
 
         Log.d(TAG, "onBind: connected");
         return mBinder;
     }
-
+    /**
+     * method to declare and initialise service functions and variables
+     */
     @Override
     public void onCreate() {
 
@@ -84,6 +92,14 @@ SensorEventListener {
                 stepSensor, SensorManager.SENSOR_DELAY_UI);
     }
 
+    /**
+     * method to select user id out of intent
+     *
+     * @param intent intent the user id should be "cut out"
+     * @param flags no usage
+     * @param startId no usage
+     * @return code to restart service after destroying
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -92,6 +108,10 @@ SensorEventListener {
         return START_STICKY;
     }
 
+    /**
+     * method to unregister listener on service destroy
+     * @see SensorManager
+     */
     @Override
     public void onDestroy() {
 
@@ -99,6 +119,11 @@ SensorEventListener {
         super.onDestroy();
     }
 
+    /**
+     * method to count and store steps
+     *
+     * @param sensorEvent event triggered on every noticed step
+     */
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
@@ -116,6 +141,13 @@ SensorEventListener {
 
     }
 
+    /**
+     * method to inspect all challenges from user and filter running
+     * challenges and add steps to them.
+     *
+     * @param userID id of user who's challenges should be checked
+     * @param stepsToAdd step value to add to running challenges
+     */
     private void manageChallenges(String userID, int stepsToAdd) {
 
         firebaseFirestore.collection("Users")
@@ -145,6 +177,12 @@ SensorEventListener {
         });
     }
 
+    /**
+     * method to write steps in challenge
+     *
+     * @param challengeID id of challenge which step value should be update
+     * @param stepsToAdd step value that should be added to challenge
+     */
     private void writeStepsInChallenge(String challengeID, int stepsToAdd) {
 
         Log.d(TAG,
@@ -356,6 +394,14 @@ SensorEventListener {
         });
     }
 
+    /**
+     * @author Mario Kiese.
+     * @version 0.9.
+     * This class is needed to return the ChallengeStepCounterService
+     *
+     * @see ChallengeStepCounterService
+     *
+     */
     public class LocationBinder extends Binder {
 
         public ChallengeStepCounterService getService() {

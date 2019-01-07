@@ -56,6 +56,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - configure firebase-usage
+     * - set click listeners
+     *
+     * @see FirebaseAuth
+     * @see FirebaseUser
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,6 +151,13 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to check if current user is authenticated (if yes, navigate him
+     * to main Activity.
+     *
+     * @see MainActivity
+     * @see FirebaseAuth
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -155,6 +171,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to navigate user to main activity
+     *
+     * @see MainActivity
+     */
     private void sendToMain() {
 
         Intent mainIntent = new Intent(RegisterActivity.this,

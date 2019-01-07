@@ -53,6 +53,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  *
  * Corresponding layout: res.layout.activity_setup.xml
  *
+ * INFO: creating test data is only for test purpose! it may influence
+ *      * the activity's performance. please to not tap the buttons multiple
+ *      * times in a row.
  * By klicking on the "smilys" image or the users profile picture, a userfoto
  * can be loaded up and linked to the firebase account.
  *
@@ -89,6 +92,21 @@ public class SetupActivity extends AppCompatActivity {
 
     private Random rand;
 
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - configure firebase-usage
+     * - set click listeners
+     * - set complete listeners
+     * - create testdata
+     * INFO: creating test data is only for test purpose! it may influence
+     * the activity's performance. please to not tap the buttons multiple
+     * times in a row.
+     *
+     * @see FirebaseAuth
+     * @see DataSourceStepData
+
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -354,6 +372,15 @@ public class SetupActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to select image cropper to get image
+     *
+     * @param requestCode code for request (to select right activity)
+     * @param resultCode code for result
+     * @param data data
+     *
+     * @see CropImage
+     */
     @Override
     protected void onActivityResult(
     int requestCode, int resultCode, Intent data) {
@@ -381,6 +408,15 @@ public class SetupActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * method to store data in firestore account data
+     *
+     * @param task firestore request to upload
+     * @param userName name of user
+     *
+     * @see Uri
+     * @see FirebaseFirestore
+     */
     private void storeDataInFirestore(Task<Uri> task, String userName) {
 
         Uri downloadUri;
@@ -427,6 +463,11 @@ public class SetupActivity extends AppCompatActivity {
         Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * creating uni day test data set for one day
+     * @return double array of 24 values for every hour of one day with step
+     * values.
+     */
     private double[] buildUniDay1(){
         double[] day = new double[24];
         day[0] = day[1] = day[2] = day[3] = day[4] = day[5] = day[23] = 0;
@@ -449,7 +490,11 @@ public class SetupActivity extends AppCompatActivity {
         day[22] =   60    + rand.nextInt(30-10)+10;
         return day;
     }
-
+    /**
+     * creating alternative uni day test data set for one day
+     * @return double array of 24 values for every hour of one day with step
+     * values.
+     */
     private double[] buildUniDay2(){
         double[] day = new double[24];
         day[0] = day[1] = day[2] = day[3] = day[4] = day[5] = day[23] = 0;
@@ -472,7 +517,11 @@ public class SetupActivity extends AppCompatActivity {
         day[22] =   60    + rand.nextInt(30-10)+10;
         return day;
     }
-
+    /**
+     * creating work day test data set for one day
+     * @return double array of 24 values for every hour of one day with step
+     * values.
+     */
     private double[] buildWorkDay(){
         double[] day = new double[24];
         day[0] = day[1] = day[2] = day[3] = day[4] = day[5] = day[23] = 0;
@@ -496,7 +545,11 @@ public class SetupActivity extends AppCompatActivity {
         return day;
 
     }
-
+    /**
+     * creating weekend day test data set for one day
+     * @return double array of 24 values for every hour of one day with step
+     * values.
+     */
     private double[] buildWeekendDay() {
         double[] day = new double[24];
         day[0] = day[1] = day[2] = day[3] = day[4] = day[5]

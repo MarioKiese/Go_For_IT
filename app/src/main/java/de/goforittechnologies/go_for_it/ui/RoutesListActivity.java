@@ -52,7 +52,15 @@ public class RoutesListActivity extends AppCompatActivity {
     // Database
     DataSourceMapData dataSourceMapData;
     DataSourceRouteData dataSourceRouteData;
-
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - set click listeners
+     *
+     * @see DialogInterface
+     * @see AdapterView
+     * @see AlertDialog
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,6 +146,12 @@ public class RoutesListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to close database connections when destroying the activity
+     *
+     * @see DataSourceMapData
+     * @see DataSourceRouteData
+     */
     @Override
     protected void onDestroy() {
 
@@ -153,6 +167,12 @@ public class RoutesListActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    /**
+     * method to initialize database (connect to data source)
+     *
+     * @see DataSourceRouteData
+     * @see DataSourceMapData
+     */
     private void initializeDatabase() {
 
         // Test writing in Map database
@@ -171,6 +191,12 @@ public class RoutesListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to show all entries of route list
+     *
+     * @see RouteData
+     * @see RoutesAdapter
+     */
     private void showAllListEntries() {
 
         List<RouteData> routeDataList = dataSourceRouteData.getAllRouteData();
@@ -180,6 +206,15 @@ public class RoutesListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to delete a selected route and the corresponding map out of
+     * route list.
+     *
+     * @param routeData route data that should be deleted
+     *
+     * @see DataSourceMapData
+     * @see DataSourceRouteData
+     */
     private void deleteListEntry(RouteData routeData) {
 
         dataSourceRouteData.deleteRouteData(routeData);
@@ -187,6 +222,15 @@ public class RoutesListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to convert route data to location list
+     *
+     * @param routeName name of route that should be converted
+     * @return array list out of locations
+     *
+     * @see Location
+     * @see MapData
+     */
     private ArrayList<Location> convertRouteToLocationList(String routeName) {
 
         ArrayList<Location> routeLocationParcel = new ArrayList<>();
@@ -208,6 +252,16 @@ public class RoutesListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * method to select all map point from selected route out of database table.
+     *
+     * @param routeName name of route the map points should be selected.
+     *
+     * @return list out of map point from selected route.
+     *
+     * @see MapData
+     * @see DataSourceMapData
+     */
     private List<MapData> getRouteFromDatabase(String routeName) {
 
         List<MapData> route;
@@ -218,7 +272,16 @@ public class RoutesListActivity extends AppCompatActivity {
 
     }
 
-    // Communication methods
+    /**
+     * method to send routes from database to activity
+     *
+     * @param route list out of locations that should be send to activity
+     *
+     * @see Bundle
+     * @see HistoricMapActivity
+     * @see RoutesListActivity
+     */
+
     private void sendRouteFromDatabaseToActivity(ArrayList<Location> route) {
 
         Intent historicMapIntent =
