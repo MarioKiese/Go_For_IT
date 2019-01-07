@@ -97,13 +97,10 @@ public class AllChallengesActivity extends AppCompatActivity {
 
                             if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                                String challengeID =
-                                (String)doc.getDocument().get("challengeId");
-                                Log.d(TAG,
-                                "onEvent: Challenge ID found: " + challengeID);
-                                Toast.makeText(AllChallengesActivity.this,
-                                        "Challenge ID found: " +
-                                        challengeID, Toast.LENGTH_SHORT).show();
+                            String challengeID =
+                            (String)doc.getDocument().get("challengeId");
+                            Log.d(TAG,
+                            "onEvent: Challenge ID found: " + challengeID);
 
                                 if (challengeID != null) {
 
@@ -159,17 +156,14 @@ public class AllChallengesActivity extends AppCompatActivity {
                                     });
                                 } else {
 
-                                    Log.d(TAG,
-                                    "onEvent: Challenge ID is null");
-                                    Toast.makeText(
-                                    AllChallengesActivity.this,
-                                    "Challenge ID is " +
-                                            "null", Toast.LENGTH_SHORT).show();
-                                }
+                                Log.d(TAG,
+                                "onEvent: Challenge ID is null");
                             }
                         }
-                        pbAllChallenges.setVisibility(View.INVISIBLE);
                     }
-                });
+                    pbAllChallenges.setVisibility(View.INVISIBLE);
+
+            }
+        });
     }
 }

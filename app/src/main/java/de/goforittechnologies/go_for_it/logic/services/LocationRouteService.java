@@ -241,7 +241,6 @@ public class LocationRouteService extends Service implements LocationListener,
                     .setContentTitle("Go For IT")
                     .setContentText("Your route is being recorded!")
                     .setContentIntent(pendingIntent)
-                    .setTicker("2")
                     .build();
         } else {
 
@@ -249,7 +248,7 @@ public class LocationRouteService extends Service implements LocationListener,
                     new NotificationCompat.Builder(LocationRouteService.this)
                             .setContentTitle("Go For IT")
                             .setContentText("Your route is being recorded!")
-                            .setSmallIcon(R.drawable.folie1)
+                            .setSmallIcon(R.drawable.logo)
                             .setContentIntent(pendingIntent)
                             .setStyle(new NotificationCompat.BigTextStyle())
                             .build();
