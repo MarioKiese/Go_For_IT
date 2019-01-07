@@ -1,7 +1,9 @@
 package de.goforittechnologies.go_for_it.ui;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -79,6 +81,8 @@ public class SetupActivity extends AppCompatActivity {
     private Button btDeleteTestdata;
     private ProgressBar pbSetup;
     private CircleImageView ivSetupImage;
+    private Boolean firstTime = null;
+    SharedPreferences mPreferences;
 
     private Uri mainImageUri = null;
     private String userID;
@@ -111,6 +115,7 @@ public class SetupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
+        DataSourceStepData dataSourceStepData;
 
         Toolbar tbSetup = findViewById(R.id.tbSetup);
         setSupportActionBar(tbSetup);
@@ -120,8 +125,8 @@ public class SetupActivity extends AppCompatActivity {
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-
         rand = new Random();
+
 
         etSetupName = findViewById(R.id.etSetupName);
         ivSetupImage = findViewById(R.id.ivSetupImage);
@@ -179,7 +184,7 @@ public class SetupActivity extends AppCompatActivity {
         btDeleteTestdata.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DataSourceStepData dataSourceStepData = null;
+                DataSourceStepData dataSourceStepData;
                 try {
                     dataSourceStepData = new DataSourceStepData(
                             SetupActivity.this,
@@ -209,72 +214,40 @@ public class SetupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                DataSourceStepData dataSourceStepData;
 
-                DataSourceStepData dataSourceStepData = null;
-                boolean isfirst = false;
-                try {
-                    dataSourceStepData = new DataSourceStepData(
-                            SetupActivity.this,
-                            "StepDataTABLE_11", 1);
-                    isfirst = true;
-                }catch (Exception e) {
-                    isfirst = false;
-                    dataSourceStepData = new DataSourceStepData(
-                            SetupActivity.this,
-                            "StepDataTABLE_11",0);
-                    e.printStackTrace();
+                dataSourceStepData = new DataSourceStepData(
+                        SetupActivity.this,
+                        "StepDataTABLE_11", 0);
+
+
+                dataSourceStepData.open();
+
+                double[] day;
+                for (int i = 1; i <=30; i++){
+                    if (i%7 == 0 || i%7 == 6){
+                        day = buildWeekendDay();
+
+                    }
+                    else if (i%7 == 1 ||i%7 == 3){
+                        day = buildUniDay1();
+                    }
+                    else if(i%7 == 4){
+                        day = buildWorkDay();
+                    }
+                    else {
+                        day = buildUniDay2();
+                    }
+
+                    for (int j = 0; j <24; j++){
+                        Log.d(TAG,
+                        "onClick: Update i:j" +i+ ":" +j);
+                        dataSourceStepData
+                        .updateStepData(day[j],i+ ":" +j);
+
+                    }
                 }
-
-                if (isfirst){
-                        double[] day;
-                        for (int i = 1; i <= 30; i++) {
-                            if (i % 7 == 0 || i % 7 == 6) {
-                                day = buildWeekendDay();
-
-                            } else if (i % 7 == 1 || i % 7 == 3) {
-                                day = buildUniDay1();
-                            } else if (i % 7 == 4) {
-                                day = buildWorkDay();
-                            } else {
-                                day = buildUniDay2();
-                            }
-
-                            for (int j = 0; j < 24; j++) {
-                                Log.d(TAG,
-                                "onClick: Create i:j" + i + ":" + j);
-                                dataSourceStepData
-                                .createStepData(day[j], i + ":" + j);
-
-                            }
-                        }
-                    }
-                    else{
-                        double[] day;
-                        for (int i = 1; i <=30; i++){
-                            if (i%7 == 0 || i%7 == 6){
-                                day = buildWeekendDay();
-
-                            }
-                            else if (i%7 == 1 ||i%7 == 3){
-                                day = buildUniDay1();
-                            }
-                            else if(i%7 == 4){
-                                day = buildWorkDay();
-                            }
-                            else {
-                                day = buildUniDay2();
-                            }
-
-                            for (int j = 0; j <24; j++){
-                                Log.d(TAG,
-                                "onClick: Update i:j" +i+ ":" +j);
-                                dataSourceStepData
-                                .updateStepData(day[j],i+ ":" +j);
-
-                            }
-                        }
-                    }
-                    dataSourceStepData.close();
+                dataSourceStepData.close();
             }
         });
 
@@ -570,4 +543,5 @@ public class SetupActivity extends AppCompatActivity {
         day[22] = 60 + rand.nextInt(30 - 10) + 10;
         return day;
     }
+
 }

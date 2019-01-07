@@ -174,20 +174,35 @@ public class MainActivity extends AppCompatActivity {
         //_________________________________________________//
         if (isFirstTime()){
             //Create empty database for current month on first Start
-            for (int m = 1; m <=1; m++ ){
-                dataSourceStepData = new DataSourceStepData(this,
-                        "StepDataTABLE_"+ m,1);
 
-                dataSourceStepData.open();
-                for (int i = 1; i <=31; i++){
-                    for (int j = 0; j <24; j++){
-                        dataSourceStepData
-                        .createStepData(0,i+":"+j);
-                        //Log.d(TAG, "onCreate: StepDataEmpty:" + i + ":" +j);
-                    }
+            dataSourceStepData = new DataSourceStepData(this,
+                    "StepDataTABLE_"
+                            + calendar.get(Calendar.MONTH)+1,1);
+
+            dataSourceStepData.open();
+            for (int i = 1; i <=31; i++){
+                for (int j = 0; j <24; j++){
+                    dataSourceStepData
+                    .createStepData(0,i+":"+j);
+                    //Log.d(TAG, "onCreate: StepDataEmpty:" + i + ":" +j);
                 }
-                dataSourceStepData.close();
             }
+            dataSourceStepData.close();
+            //creating table for testdata (november)
+            dataSourceStepData = new DataSourceStepData(this,
+                    "StepDataTABLE_11",1);
+
+            dataSourceStepData.open();
+            for (int i = 1; i <=31; i++){
+                for (int j = 0; j <24; j++){
+                    dataSourceStepData
+                            .createStepData(0,i+":"+j);
+                    //Log.d(TAG, "onCreate: StepDataEmpty:" + i + ":" +j);
+                }
+            }
+            dataSourceStepData.close();
+
+
         }
 
         //_________________________________________________//

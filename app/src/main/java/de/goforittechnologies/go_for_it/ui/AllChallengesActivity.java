@@ -25,8 +25,18 @@ import javax.annotation.Nullable;
 
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.Challenge;
-import de.goforittechnologies.go_for_it.storage.User;
-
+/**
+ * @author  Mario Kiese and Tom Hammerbacher
+ * @version 0.8.
+ * @see AppCompatActivity
+ *
+ * This class shows all finished challenges
+ * Corresponding layout: res.layout.activity_all_challenges.xml.
+ *
+ * The user can inform himself about the finished challenges.
+ * In one list, he can see the two opponents, the step-goal value and the
+ * winner of the challenge
+ */
 public class AllChallengesActivity extends AppCompatActivity {
 
     private static final String TAG = "AllChallengesActivity";
@@ -45,7 +55,11 @@ public class AllChallengesActivity extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth auth;
     private String userID;
-
+    /**
+     * method to declare and initialise activity functions and variables.
+     * - connecting Views via R.id.
+     * - creating intent
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +87,11 @@ public class AllChallengesActivity extends AppCompatActivity {
 
         firebaseFirestore.collection("Users").document(userID)
                 .collection
-                ("Challenges").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                ("Challenges")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots,
+                                @Nullable FirebaseFirestoreException e) {
 
                 if (e!=null){
 
@@ -83,53 +99,78 @@ public class AllChallengesActivity extends AppCompatActivity {
                     pbAllChallenges.setVisibility(View.INVISIBLE);
                 } else {
 
-                    for (DocumentChange doc : queryDocumentSnapshots.getDocumentChanges()) {
+                    for (DocumentChange doc :
+                            queryDocumentSnapshots.getDocumentChanges()) {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                            String challengeID = (String)doc.getDocument().get("challengeId");
-                            Log.d(TAG, "onEvent: Challenge ID found: " + challengeID);
-                            Toast.makeText(AllChallengesActivity.this, "Challenge ID found: " +
+                            String challengeID =
+                            (String)doc.getDocument().get("challengeId");
+                            Log.d(TAG,
+                            "onEvent: Challenge ID found: " + challengeID);
+                            Toast.makeText(AllChallengesActivity.this,
+                                    "Challenge ID found: " +
                                     challengeID, Toast.LENGTH_SHORT).show();
 
                             if (challengeID != null) {
 
-                                firebaseFirestore.collection("Challenges").document(challengeID).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                firebaseFirestore
+                                .collection("Challenges")
+                                .document(challengeID)
+                                .addSnapshotListener(
+                                    new EventListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                    public void onEvent(
+                                    @Nullable DocumentSnapshot documentSnapshot,
+                                    @Nullable FirebaseFirestoreException e) {
 
                                         if (e != null) {
 
-                                            Log.d(TAG,"Error : " + e.getMessage());
+                                            Log.d(TAG,"Error : "
+                                            + e.getMessage());
                                         } else {
 
-                                            if (documentSnapshot != null && documentSnapshot.exists()) {
+                                            if (documentSnapshot != null
+                                            && documentSnapshot.exists()) {
 
-                                                Log.d(TAG, "Current data: " + documentSnapshot.getData());
-                                                Challenge challenge = documentSnapshot.toObject(Challenge.class);
-                                                Log.d(TAG, "onComplete: Firestore data converted to object");
+                                                Log.d(TAG,
+                                                "Current data: " +
+                                                documentSnapshot.getData());
+                                                Challenge challenge =
+                                                documentSnapshot
+                                                .toObject(Challenge.class);
+                                                Log.d(TAG,
+                                                "onComplete: " +
+                                                "Firestore data " +
+                                                "converted to object");
 
                                                 if (challenge.getStatus()
                                                         .equals("finished")) {
 
-                                                    Log.d(TAG, "onComplete: " +
+                                                    Log.d(TAG,
+                                                        "onComplete: " +
                                                             "Challenge is " +
                                                             "finished");
 
-                                                        allChallengesList.add(challenge);
-                                                        allChallengesAdapter
-                                                                .notifyDataSetChanged();
+                                                    allChallengesList
+                                                            .add(challenge);
+                                                    allChallengesAdapter
+                                                    .notifyDataSetChanged();
                                                 }
                                             } else {
-                                                Log.d(TAG, "Current data: null");
+                                                Log.d(TAG,
+                                                    "Current data: null");
                                             }
                                         }
                                     }
                                 });
                             } else {
 
-                                Log.d(TAG, "onEvent: Challenge ID is null");
-                                Toast.makeText(AllChallengesActivity.this, "Challenge ID is " +
+                                Log.d(TAG,
+                                "onEvent: Challenge ID is null");
+                                Toast.makeText(
+                                AllChallengesActivity.this,
+                                "Challenge ID is " +
                                         "null", Toast.LENGTH_SHORT).show();
                             }
                         }

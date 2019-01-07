@@ -69,6 +69,7 @@ public class DbHelperStepData extends SQLiteOpenHelper {
             catch (Exception ex) {
                 Log.e(TAG, "Fehler beim Anlegen der Tabelle: " +
                         ex.getMessage());
+                ex.printStackTrace();
             }
         }
         else{
