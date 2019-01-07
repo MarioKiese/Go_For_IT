@@ -17,19 +17,44 @@ import java.util.List;
 import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.User;
 import de.hdodenhof.circleimageview.CircleImageView;
-
+/**
+ * @author Mario Kiese and Tom Hammerbacher.
+ * @version 0.8.
+ * @see ArrayAdapter
+ *
+ * This adapter is used to convert list entries into dynamic list views with
+ * a specific layout.
+ *
+ * @see User
+ * @see CircleImageView
+ *
+ */
 public class UsersAdapter extends ArrayAdapter<User> {
 
     private Context mContext;
     private List<User> mUserList = new ArrayList<>();
-
+    /**
+     *  constructor to connect context and list with member variables
+     * @param context
+     * @param list
+     */
     public UsersAdapter(Context context, List<User> userList) {
         super(context, 0, userList);
 
         mContext = context;
         mUserList = userList;
     }
-
+    /**
+     * method to fill view elements with data content from challenge objects
+     *
+     * @param position list position
+     * @param convertView View
+     * @param parent viewGroup
+     *
+     * @return view to display
+     *
+     * @see User
+     */
     @NonNull
     @Override
     public View getView(int position,

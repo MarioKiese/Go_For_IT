@@ -18,26 +18,46 @@ import de.goforittechnologies.go_for_it.R;
 import de.goforittechnologies.go_for_it.storage.Request;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+
 /**
- * @author  Mario Kiese
+ * @author Mario Kiese and Tom Hammerbacher.
  * @version 0.8.
  * @see ArrayAdapter
  *
+ * This adapter is used to convert list entries into dynamic list views with
+ * a specific layout.
+ *
+ * @see Request
+ * @see CircleImageView
+ *
  */
-
 public class RequestsAdapter extends ArrayAdapter<Request> {
 
 
 
     private Context mContext;
     private List<Request> requestsList = new ArrayList<>();
-
+    /**
+     *  constructor to connect context and list with member variables
+     * @param context
+     * @param list
+     */
     public RequestsAdapter(@NonNull Context context, List<Request> list) {
         super(context, 0, list);
         mContext = context;
         requestsList = list;
     }
-
+    /**
+     * method to fill view elements with data content from challenge objects
+     *
+     * @param position list position
+     * @param convertView View
+     * @param parent viewGroup
+     *
+     * @return view to display
+     *
+     * @see Request
+     */
     @NonNull
     @Override
     public View getView(int position,
