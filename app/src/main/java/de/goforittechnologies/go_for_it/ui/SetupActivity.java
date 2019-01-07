@@ -2,6 +2,7 @@ package de.goforittechnologies.go_for_it.ui;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -24,7 +25,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.LogDescriptor;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +36,6 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.Random;
 
 import de.goforittechnologies.go_for_it.R;
@@ -85,6 +84,10 @@ public class SetupActivity extends AppCompatActivity {
     private boolean isChanged = false;
     private static final String TAG = "SetupActivity";
 
+    // Shared preferences
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+
     // Firebase
     private StorageReference storageReference;
     private FirebaseFirestore firebaseFirestore;
@@ -132,6 +135,11 @@ public class SetupActivity extends AppCompatActivity {
 
         pbSetup.setVisibility(View.VISIBLE);
         btSetup.setEnabled(false);
+
+        // Set shared preferences
+        pref = getApplicationContext()
+                .getSharedPreferences("MapsPref", MODE_PRIVATE);
+        editor = pref.edit();
 
         firebaseFirestore.collection("Users").document(userID)
         .get().addOnCompleteListener(
@@ -569,5 +577,13 @@ public class SetupActivity extends AppCompatActivity {
         day[21] = 150 + rand.nextInt(50 - 10) + 10;
         day[22] = 60 + rand.nextInt(30 - 10) + 10;
         return day;
+    }
+
+    private void saveAgeAndHeightInSharedPreferences(int age, float height) {
+
+        editor.putInt("age", age);
+        editor.apply();
+        editor.putFloat("height", height);
+        editor.apply();
     }
 }
